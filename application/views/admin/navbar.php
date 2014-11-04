@@ -47,25 +47,25 @@
                         </li>
 -->
                         <li>
-                        <a href="<?php echo base_url();?>"><i class="fa fa-dashboard fa-fw"></i>概况</a>
+                        <a href="<?php echo base_url();?>" <?php echo $navbar==1?"class='active'":" "?>><i class="fa fa-dashboard fa-fw"></i>概况</a>
                         </li>
                         <li class="active">
                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> 媒体商<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="<?php echo base_url();?>" class="active">统计信息</a>
+                                    <a href="<?php echo base_url();?>" <?php echo $navbar==2?"class='active'":" "?>>统计信息</a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo base_url();?>">广告位置</a>
+                                    <a href="<?php echo base_url();?>"  <?php echo $navbar==3?"class='active'":" "?> >广告位置</a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo base_url();?>">收益优化</a>
+                                    <a href="<?php echo base_url();?>index.php/dashboard/revenue" <?php echo $navbar==4?"class='active'":" "?>>收益优化</a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo base_url();?>index.php/dashboard/payments">付款记录</a>
+                                    <a href="<?php echo base_url();?>index.php/dashboard/payments" <?php echo $navbar==5?"class='active'":" "?>>付款记录</a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo base_url();?>">二级渠道</a>
+                                    <a href="<?php echo base_url();?>index.php/dashboard/subagents" <?php echo $navbar==6?"class='active'":" "?>>二级渠道</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
@@ -77,11 +77,11 @@
 -->
 
                         <li>
-                            <a href="<?php echo base_url();?>"><i class="fa fa-sitemap fa-fw"></i> 代理商</span></a>
+                            <a href="<?php echo base_url();?>index.php/dashboard/agents" <?php echo $navbar==7?"class='active'":" "?>><i class="fa fa-sitemap fa-fw"></i> 代理商</span></a>
                         </li>
 
                         <li>
-                            <a href="<?php echo base_url();?>"><i class="fa fa-wrench fa-fw"></i> 设置</span></a>
+                            <a href="<?php echo base_url();?>index.php/dashboard/settings" <?php echo $navbar==8?"class='active'":" "?>><i class="fa fa-wrench fa-fw"></i> 设置</span></a>
                         </li>
 
                     </ul>
