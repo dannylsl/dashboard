@@ -17,11 +17,6 @@
                         <i class="fa fa-user fa-fw"></i>  <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
-                        <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
-                        </li>
-                        <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
-                        </li>
-                        <li class="divider"></li>
                         <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
                         </li>
                     </ul>
@@ -53,10 +48,10 @@
                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> 媒体商<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="<?php echo base_url();?>" <?php echo $navbar==2?"class='active'":" "?>>统计信息</a>
+                                    <a href="<?php echo base_url();?>index.php/dashboard/statitic" <?php echo $navbar==2?"class='active'":" "?>>统计信息</a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo base_url();?>"  <?php echo $navbar==3?"class='active'":" "?> >广告位置</a>
+                                    <a href="<?php echo base_url();?>index.php/dashboard/adpos"  <?php echo $navbar==3?"class='active'":" "?> >广告位置</a>
                                 </li>
                                 <li>
                                     <a href="<?php echo base_url();?>index.php/dashboard/revenue" <?php echo $navbar==4?"class='active'":" "?>>收益优化</a>

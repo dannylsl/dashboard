@@ -13,12 +13,21 @@ class DashBoard extends CI_Controller {
 		$this->load->view('admin/footer');
 	}
 
-    public function payments() { //付款记录
-        $this->load->helper("url");
-        $data['navbar'] = "5";
+    public function statitic() {
+        $this->load->helper("url"); 
+        $data['navbar'] = "2";
 		$this->load->view('admin/header');
 		$this->load->view('admin/navbar',$data);
-		$this->load->view('admin/payments');
+		$this->load->view('admin/statitic');
+		$this->load->view('admin/footer');
+    }
+
+    public function adpos() {
+        $this->load->helper("url"); 
+        $data['navbar'] = "3";
+		$this->load->view('admin/header');
+		$this->load->view('admin/navbar',$data);
+		$this->load->view('admin/adpos');
 		$this->load->view('admin/footer');
     
     }
@@ -31,6 +40,16 @@ class DashBoard extends CI_Controller {
 		$this->load->view('admin/revenue');
 		$this->load->view('admin/footer');
          
+    }
+
+    public function payments() { //付款记录
+        $this->load->helper("url");
+        $data['navbar'] = "5";
+		$this->load->view('admin/header');
+		$this->load->view('admin/navbar',$data);
+		$this->load->view('admin/payments');
+		$this->load->view('admin/footer');
+    
     }
 
     public function subagents() {
