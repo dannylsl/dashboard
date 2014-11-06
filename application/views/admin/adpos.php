@@ -114,7 +114,7 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row" id="pc">
                     <div class="col-md-1"><h4>广告形态</h4></div>
                     <div class="col-md-5">
                         <ul class="nav nav-tabs">
@@ -324,25 +324,138 @@
                     </div>
                 </div> <!-- row 广告形态 -->
 
-                
+
+                <!-- FOR MOBILE -->
+                <div class="row" id="mobile">
+                    <div class="col-md-1"><h4>广告形态</h4></div>
+                    <div class="col-md-5">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#ADfloat_mobile" data-toggle="tab" aria-expanded="true">浮动广告</a></li>
+                            <li><a href="#ADfixed_mobile" data-toggle="tab">固定广告</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade active in" id="ADfloat_mobile">
+                            <!-- 浮动广告 -->
+                                <div class="tab-content"> 
+                                    <div class="tab-pane fade active in" id="dinglan_mobile"> 
+                                        <div class="btn-group" data-toggle="buttons" style="margin: 10px;">
+                                            <label class="btn btn-default">
+                                                <input type="radio" name="options" id="adOn" autocomplete="off" checked>20:3
+                                                <div style="background: rgb(0, 221, 119); width: 60px; height: 10px; margin-bottom: 23px;"></div>
+                                            </label>
+                                            <label class="btn btn-default">
+                                                <input type="radio" name="options" id="adOff" autocomplete="off" checked>100*70
+                                                <div style=" width: 60px; height: 10px; margin-bottom: 23px;">自定义</div>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="dilan_mobile"> 
+                                        <div class="btn-group" data-toggle="buttons" style="margin: 10px;">
+                                            <label class="btn btn-default">
+                                                <input type="radio" name="options" id="adOn" autocomplete="off" checked>20:3
+                                                <div style="background: rgb(0, 221, 119); width: 60px; height: 10px; margin-bottom: 23px;"></div>
+                                            </label>
+                                            <label class="btn btn-default">
+                                                <input type="radio" name="options" id="adOff" autocomplete="off" checked>100*70
+                                                <div style=" width: 60px; height: 10px; margin-bottom: 23px;">自定义</div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <ul class="nav nav-pills">
+                                    <li class="active">
+                                        <a href="#dinglan_mobile" data-toggle="tab" aria-expanded="fasle">顶栏</a>
+                                    </li>
+                                    <li>
+                                        <a href="#dilan_mobile" data-toggle="tab" aria-expanded="fasle">底栏</a>
+                                    </li>
+                                </ul>
+
+                            </div> <!-- 浮动广告 -->
+
+                            <div class="tab-pane fade" id="ADfixed_mobile"> <!-- 固定广告 -->
+                                <div class="tab-content">
+                                    <div class="tab-pane fade active in" id="gudingbili_mobile"> 
+                                        <div class="btn-group" data-toggle="buttons" style="margin: 10px;">
+                                            <label class="btn btn-default">
+                                                <input type="radio" name="options" id="adOn" autocomplete="off" checked>20:3
+                                                <div style="width:60px;height:10px;background:#00DD77;margin-bottom:23px"></div>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="zidingyi_mobile"> 
+                                       <fieldset style="margin:15px 15px 15px 35px">
+                                            <div class="row">
+                                                <div class="col-md-1">宽:</div>
+                                                <div class="col-md-3"><input type="number" name="width" value="300" class="form-control"></div>
+                                                <div class="col-md-3">
+                                                    <select style="width:80px;" name="widthunit" class="form-control">
+                                                        <option value="px">px</option>
+                                                        <option value="%">%</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="row" style="margin-top:10px;">
+                                                <div class="col-md-1">高:</div>
+                                                <div class="col-md-3"><input type="number" name="width" value="300" class="form-control"></div>
+                                                <div class="col-md-3">
+                                                    <select style="width:80px;" name="widthunit" class="form-control">
+                                                        <option value="px">px</option>
+                                                        <option value="%">%</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+
+                                    <ul class="nav nav-pills">
+                                        <li class="active">
+                                            <a href="#gudingbili_mobile" data-toggle="tab" aria-expanded="fasle">固定比例</a>
+                                        </li>
+                                        <li>
+                                            <a href="#zidingyi_mobile" data-toggle="tab" aria-expanded="fasle">自定义</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div> <!-- 固定广告 -->
+                        </div>
+                    </div>
+                </div> <!-- row 广告形态 -->
+
+                <!-- MOBILE END --> 
+
                 <div class="row" style="margin-top:10px;">
                     <div class="col-md-1"><h4>配置效果</h4></div>
                     <div class="col-md-5">
                         <div style="margin-left:10px;margin-top:10px">
                             <strong style="font-size:14px">广告类型:</strong>
                             <div class="row-fluid" style="margin-bottom:10px;margin-top:10px">
-                                <div class="span1" style="width:70px">
-                                <label><input type="checkbox" checked="checked" name="adType" style="margin-bottom:6px" value="txt">文本</label>
-                                </div>
-                                <div class="span1" style="width:70px">
-                                <label><input type="checkbox" name="adType" value="img" style="margin-bottom:6px">图像</label>
-                                </div>
-                                <div class="span1" style="width:70px">
-                                <label><input type="checkbox" name="link" value="link" style="margin-bottom:6px">文字链</label>
-                                </div>
+                                 <label class="checkbox-inline">
+                                  <input type="checkbox" id="inlineCheckbox1" value="option1"> 文本
+                                </label>
+                                <label class="checkbox-inline">
+                                  <input type="checkbox" id="inlineCheckbox2" value="option2"> 图像
+                                </label>
+                                <label class="checkbox-inline">
+                                  <input type="checkbox" id="inlineCheckbox3" value="option3"> 文字链
+                                </label>
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-1"><h4>关键字黑名单</h4></div>
+                    <div class="col-md-4"><textarea class="form-control"></textarea></div>
+                </div>
+
+                <div class="row" style="margin-top:10px;">
+                    <div class="col-md-1"><h4>url黑名单</h4></div>
+                    <div class="col-md-4"><textarea class="form-control"></textarea></div>
                 </div>
 
 
