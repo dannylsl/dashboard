@@ -14,6 +14,12 @@
                     </div>
                     <div class="col-md-9" align="right">
                         <div class="btn btn-primary" style="float:left">所有广告位走势图</div>
+                        <div class="col-md-1" style="margin-left:10px;"> 
+                            <select style="width:80px;" name="widthunit" class="form-control">
+                                <option value="">PID</option>
+                                <option value="">PID</option>
+                            </select>
+                        </div>
                         <div class="form-group input-group" style="width:150px;float:left;margin: 0px 3px;">
                             <span class="input-group-addon">起始</span>
                             <input type="text" class="form-control" id="startdate" data-date-format="yyyy-mm-dd">

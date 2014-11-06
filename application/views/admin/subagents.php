@@ -24,12 +24,13 @@
                             </div>
                         </div>
                         <button class="btn btn-primary">搜索</button>
+                        <button class="btn btn-primary">添加PID</button>
                     </div>
                     <div class="row">
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <tr>
-                                    <th>序号</th>
+                                    <th>PID</th>
                                     <th>日期</th>
                                     <th>展示量</th>
                                     <th>总点击量</th>
