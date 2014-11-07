@@ -46,8 +46,8 @@ class DashBoard extends CI_Controller {
         $this->load->helper('captcha');
 
         $vals = array(
-            'img_path' => './images/captcha/',
-            'img_url' => base_url().'images/captcha/',
+            'img_path' => dirname(BASEPATH).'/images/captcha/',
+            'img_url' => base_url('images/captcha').'/',
             'img_width'=> 60,
             'img_height'=> 30,
         );
