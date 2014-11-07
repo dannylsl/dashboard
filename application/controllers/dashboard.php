@@ -6,6 +6,7 @@ class DashBoard extends CI_Controller {
         parent::__construct();
         $this->load->database();
         $this->load->model("dashboard_model");
+        $this->load->model("captcha_model");
     }
 
     public function islogined() {
@@ -28,43 +29,55 @@ class DashBoard extends CI_Controller {
 //        header("Location:".base_url()."index.php/dashboard/login"); 
     }
 
-    public function index()
-    {
-        $this->load->helper("url");
-        $data['navbar'] = "1";
-        $data['accemail'] = $this->islogined();
-
-        $this->load->view('admin/header');
-        $this->load->view('admin/navbar',$data);
-        $this->load->view('admin/index');
-        $this->load->view('admin/footer');
-    }
-
     public function login() {
         $this->load->helper("url");
         $this->load->helper("form");
-        $this->load->helper('captcha');
 
-        $vals = array(
-            'img_path' => dirname(BASEPATH).'/images/captcha/',
-            'img_url' => base_url('images/captcha').'/',
-            'img_width'=> 60,
-            'img_height'=> 30,
-        );
-
-        $cap = create_captcha($vals);
-        $data = array(
-            'captcha_time' => $cap['time'],
-            'ip_address' => $this->input->ip_address(),
-            'word' => $cap['word']
-        );
-
-        $query = $this->db->insert_string('captcha', $data);
-        $this->db->query($query);
-
-        $data['cap'] = $cap['image'];
+        $data['cap'] = $this->captcha_model->getCaptcha();
         $this->load->view('login', $data);
 
+    }
+
+
+    public function register() {
+        $this->load->helper("url"); 
+        $this->load->helper("form");
+
+        $data['cap'] = $this->captcha_model->getCaptcha();
+
+        $this->load->view('register',$data);
+    }
+
+    public function isUserExist() { // For Ajax 
+        $accemail = $this->input->post('email');
+        if($this->dashboard_model->isUserExist($accemail) == false) {
+            echo "0"; 
+        }else {
+            echo "1"; 
+        } 
+    }
+
+    public function newuser() {
+        $this->load->helper("url");  
+        $this->load->helper("email");  
+
+        $accemail = $this->input->post("email");
+        $password = $this->input->post("password");
+        $captcha = $this->input->post("captcha");
+
+        header("content-type:text/html;charset=utf-8");
+        if ( $this->captcha_model->checkCaptcha($captcha) == false ) {
+            echo "<script>alert('验证码错误');history.back(-1);</script>";
+        }else {
+            if(!valid_email($accemail)) {
+                echo "<script>alert('邮箱不合法.');history.back(-1);</script>";
+                return; 
+            }
+            if( $this->dashboard_model->newUser($accemail, $password) ) {
+                echo "<script>alert('注册成功');location.href=\'".base_url()."\'</script>";
+            }else
+                echo "<script>alert('添加失败.');history.back(-1);</script>";
+        }
     }
 
     public function usercheck() {
@@ -73,7 +86,7 @@ class DashBoard extends CI_Controller {
         $accemail = $this->input->post('email'); 
         $password = $this->input->post('password'); 
         $captcha  = $this->input->post('captcha');
-
+/*
         $expiration = time()-7200; // 2小时限制
         $this->db->query("DELETE FROM captcha WHERE captcha_time < ".$expiration); 
 
@@ -82,10 +95,11 @@ class DashBoard extends CI_Controller {
         $binds = array($_POST['captcha'], $this->input->ip_address(), $expiration);
         $query = $this->db->query($sql, $binds);
         $row = $query->row();
-
         if ($row->count == 0) {
-            echo "验证码错误";
-            echo "<script>location.href=\"".base_url()."index.php/dashboard/login\"</script>";
+ */
+        if ( $this->captcha_model->checkCaptcha($captcha) == false ) {
+            header("content-type:text/html;charset=utf-8");
+            echo "<script>alert('验证码错误');location.href=\"".base_url()."index.php/dashboard/login\"</script>";
         }else{
             if(true == $this->dashboard_model->userValidate($accemail, $password)) {
                 $this->session->set_userdata(array("accemail"=>$accemail));
@@ -96,6 +110,18 @@ class DashBoard extends CI_Controller {
                 //echo base_url()."index.php/dashboard/login";
             };
         }
+    }
+
+    public function index()
+    {
+        $this->load->helper("url");
+        $data['navbar'] = "1";
+        $data['accemail'] = $this->islogined();
+
+        $this->load->view('admin/header');
+        $this->load->view('admin/navbar',$data);
+        $this->load->view('admin/index');
+        $this->load->view('admin/footer');
     }
 
     public function statitic() {

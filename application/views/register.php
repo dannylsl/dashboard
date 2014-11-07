@@ -39,24 +39,33 @@
             <div class="col-md-4 col-md-offset-4">
                 <div class="login-panel panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">登录页面</h3>
+                        <h3 class="panel-title">用户注册</h3>
                     </div>
                     <div class="panel-body">
-                        <?php  echo form_open("dashboard/usercheck");?>
+                        <?php  echo form_open("dashboard/newuser");?>
                             <fieldset>
+
                                 <div class="form-group">
-                                    <label>邮箱</label>
-                                    <input class="form-control" placeholder="请输入邮箱" name="email" type="email" autofocus>
+                                    <label>邮箱<span id="ret_email"></span><input type="hidden" id="state_email" value='0'></label>
+                                    <input class="form-control" placeholder="请输入邮箱" name="email" id="email" type="email" autofocus>
                                 </div>
+
                                 <div class="form-group">
-                                    <label>密码</label>
-                                    <input class="form-control" placeholder="请输入密码" name="password" type="password" value="">
+                                    <label>密码<span id="ret_password"></span><input type="hidden" id="state_password" value='0'></label>
+                                    <input class="form-control" placeholder="请输入密码" name="password" id="password" type="password" value="">
                                 </div>
+
+                                <div class="form-group">
+                                    <label>确认密码<span id="ret_repassword"></span></label>
+                                    <input class="form-control" placeholder="请输入密码" name="repassword" id="repassword" type="password" value="">
+                                </div>
+
                                 <div class="form-group">
                                     <div>验证码</div>
-                                    <input class="form-control"  name="captcha" style= "width:120px;float:left;margin-right:10px;" placeholder="" value="" >
+                                    <input class="form-control"  name="captcha" id="captcha" style= "width:120px;float:left;margin-right:10px;" placeholder="" value="" >
                                     <?php echo $cap; ?>
                                 </div>
+
                             <!-- 
                                 <div class="checkbox">
                                     <label>
@@ -64,13 +73,14 @@
                                     </label>
                                 </div>
                             -->
+
                                 <!-- Change this to a button or input when using this as a form -->
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <button type="submit" class="btn btn-lg btn-success btn-block">Login</button>
+                                        <button type="button" id="regbtn" class="btn btn-lg btn-success btn-block">注册</button>
                                     </div>
                                     <div class="col-md-6">
-                                        <a href="<?php echo base_url();?>index.php/dashboard/register" class="btn btn-lg btn-default btn-block">注册</a>
+                                        <a href="<?php echo base_url();?>index.php/dashboard/login" class="btn btn-lg btn-default btn-block">登录</a>
                                     </div>
                                 </div>
                             </fieldset>
@@ -80,7 +90,12 @@
             </div>
         </div>
     </div>
+    <!-- jQuery -->
+    <script src="<?php echo base_url();?>js/jquery.js"></script>
 
+    <script src="<?php echo base_url();?>js/reg.js"></script>
 
 </body>
 </html>
+
+
