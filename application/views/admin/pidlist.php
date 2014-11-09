@@ -6,7 +6,7 @@
     </div>
 
     <div class="row">
-        <ul class="nav nav-pills">
+        <ul class="nav nav-tabs">
             <?php
                 $pid_count = 1;
                 foreach($pidlist as $pidinfo) {

@@ -16,8 +16,11 @@
                         <div class="btn btn-primary" style="float:left">所有广告位走势图</div>
                         <div class="col-md-1" style="margin-left:10px;"> 
                             <select style="width:80px;" name="widthunit" class="form-control">
-                                <option value="">PID</option>
-                                <option value="">PID</option>
+                            <?php
+                            foreach($pidlist as $pidinfo) {
+                                echo "<option value=\"{$pidinfo['pid_name']}\">{$pidinfo['pid_name']}</option>";
+                            }    
+                            ?>
                             </select>
                         </div>
                         <div class="form-group input-group" style="width:150px;float:left;margin: 0px 3px;">
@@ -62,7 +65,7 @@
                                     <td>279</td>
                                     <td>0.122%</td>
                                     <td>&yen;0.00</td>
-                                    <td>修改 | 每日详细 | 代码</td>
+                                    <td>每日详细</td>
                                 </tr>
                                 <tr>
                                     <td>2014-11-03</td>
@@ -70,7 +73,7 @@
                                     <td>279</td>
                                     <td>0.122%</td>
                                     <td>&yen;0.00</td>
-                                    <td>修改 | 每日详细 | 代码</td>
+                                    <td>每日详细</td>
                                 </tr>
                             </table>
                         </div>
