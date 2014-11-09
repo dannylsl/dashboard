@@ -5,14 +5,11 @@ class Dashboard_model extends CI_Model {
     }
     
     public function userValidate($accemail, $password) {
-        $sql = "SELECT count(*) as count FROM `accinfo` WHERE `accemail`= ? AND password = ?"; 
+        $sql = "SELECT * FROM `accinfo` WHERE `accemail`= ? AND password = ?"; 
         $binds = array($accemail, md5($password));
         $query =  $this->db->query($sql, $binds);
         $row = $query->row();
-        if($row->count == 0) {
-            return false; 
-        }else
-            return true;
+        return $row->acc_id;
     }
 
     public function isUserExist($email) {
@@ -40,5 +37,29 @@ class Dashboard_model extends CI_Model {
         }
     }
 
+    public function getPidList($acc_id) {
+        $query = $this->db->get_where('accpidmap',array('acc_id' => $acc_id));
+        return $query->result_array();
+    }
+
+    public function getSlotList($pid) {
+        $query = $this->db->get_where('slotlist',array('pid' => $pid));
+        return $query->result_array();
+    }
+
+    public function newpid($acc_id, $pidinfo) {
+        $data = array("acc_id"=>$acc_id, "pid_name"=>$pidinfo);
+        $this->db->insert("accpidmap", $data); 
+        if($this->db->affected_rows() > 0)
+            return true;
+        return false;
+    }
+
+    public function newSlot($data_arr) {
+        $this->db->insert('slotlist', $data_arr); 
+        if($this->db->affected_rows() > 0)
+            return true;
+        return false;
+    }
 
 }

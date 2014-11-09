@@ -12,11 +12,11 @@ class DashBoard extends CI_Controller {
     public function islogined() {
         $this->load->helper("url");
         $this->load->library('session');
-        $accemail = $this->session->userdata('accemail');
-        if( $accemail == "") {
+        $acc_id = $this->session->userdata('acc_id');
+        if( $acc_id <= 0) {
             header("Location:".base_url()."index.php/dashboard/login"); 
         }else{
-            return $accemail;
+            return $acc_id;
         }
     } 
 
@@ -86,23 +86,15 @@ class DashBoard extends CI_Controller {
         $accemail = $this->input->post('email'); 
         $password = $this->input->post('password'); 
         $captcha  = $this->input->post('captcha');
-/*
-        $expiration = time()-7200; // 2小时限制
-        $this->db->query("DELETE FROM captcha WHERE captcha_time < ".$expiration); 
 
-        // 然后再看是否有验证码存在:
-        $sql = "SELECT COUNT(*) AS count FROM captcha WHERE word = ? AND ip_address = ? AND captcha_time > ?";
-        $binds = array($_POST['captcha'], $this->input->ip_address(), $expiration);
-        $query = $this->db->query($sql, $binds);
-        $row = $query->row();
-        if ($row->count == 0) {
- */
         if ( $this->captcha_model->checkCaptcha($captcha) == false ) {
             header("content-type:text/html;charset=utf-8");
             echo "<script>alert('验证码错误');location.href=\"".base_url()."index.php/dashboard/login\"</script>";
         }else{
-            if(true == $this->dashboard_model->userValidate($accemail, $password)) {
+            $acc_id = $this->dashboard_model->userValidate($accemail, $password);
+            if( $acc_id  > 0 ) {
                 $this->session->set_userdata(array("accemail"=>$accemail));
+                $this->session->set_userdata(array("acc_id"=>$acc_id));
                 //echo base_url();
                 header("Location:".base_url()); 
             }else {
@@ -116,7 +108,8 @@ class DashBoard extends CI_Controller {
     {
         $this->load->helper("url");
         $data['navbar'] = "1";
-        $data['accemail'] = $this->islogined();
+        $data['acc_id'] = $this->islogined();
+        $data['accemail'] = $this->session->userdata("accemail");
 
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);
@@ -127,7 +120,8 @@ class DashBoard extends CI_Controller {
     public function statitic() {
         $this->load->helper("url"); 
         $data['navbar'] = "2";
-        $data['accemail'] = $this->islogined();
+        $data['acc_id'] = $this->islogined();
+        $data['accemail'] = $this->session->userdata("accemail");
 
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);
@@ -138,19 +132,96 @@ class DashBoard extends CI_Controller {
     public function adpos() {
         $this->load->helper("url"); 
         $data['navbar'] = "3";
-        $data['accemail'] = $this->islogined();
+        $data['acc_id'] = $this->islogined();
+        $data['accemail'] = $this->session->userdata("accemail");
+        $data['pidlist'] = $this->dashboard_model->getPidList($data['acc_id']); 
 
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);
-        $this->load->view('admin/adpos');
+        $this->load->view('admin/adpos', $data);
         $this->load->view('admin/footer');
 
+    }
+
+
+    public function pidlist() {
+        $this->load->helper("url");
+        $this->load->helper("form");
+        $data['navbar'] = "4";
+        $data['acc_id'] = $this->islogined();
+        $data['accemail'] = $this->session->userdata("accemail");
+        $pidlist = $this->dashboard_model->getPidList($data['acc_id']); 
+
+        $slotlist_arr = array();
+        foreach($pidlist as $pidinfo) {
+            $slotlist_arr[$pidinfo['pid_name']] = $this->dashboard_model->getSlotList($pidinfo['pid']);
+        } 
+        $data['pidlist'] = $pidlist;
+        $data['slotlist_arr'] = $slotlist_arr;
+
+        $this->load->view('admin/header');
+        $this->load->view('admin/navbar',$data);
+        $this->load->view('admin/pidlist');
+        $this->load->view('admin/footer');
+
+    }
+
+    public function newpid($pidinfo) {
+        $data['acc_id'] = $this->islogined();
+        $accemail = $this->session->userdata('accemail');
+        $email_arr = explode('@', $accemail);
+        $pidinfo = $email_arr[0].'_'.$pidinfo;
+        if($this->dashboard_model->newpid($data['acc_id'], $pidinfo)) {
+            echo "1";
+        }else {
+            echo "0";
+        };
+    }
+
+    public function newSlot() {
+        $data['acc_id'] = $this->islogined();
+        $pid = $this->input->post('pid'); 
+
+        $slotname = $this->input->post('slotname');
+        $status = $this->input->post('status');
+        $options = $this->input->post('options');
+        $keywords_blacklist = $this->input->post('keywords_blacklist');
+        $url_blacklist = $this->input->post('url_blacklist');
+
+        $opt_arr = explode('#', $options);
+        $type_pos = explode('_', $opt_arr[0]);
+        $type = $type_pos[0];
+        $position = $type_pos[1];
+        $width_height = explode('_', $opt_arr[1]);
+        $width = $width_height[0];
+        $height = $width_height[1];
+
+        $data_arr = array(
+            'acc_id'=>$data['acc_id'],
+            'pid'=>$pid,
+            'slot_name'=> $slotname,
+            'status'=> $status,
+            'type'=>$type,
+            'position'=>$position,
+            'height'=> $height,
+            'width'=> $width,
+            'keywords_blacklist'=> $keywords_blacklist,
+            'url_blacklist'=> $url_blacklist,
+        );
+
+        if($this->dashboard_model->newSlot($data_arr)) {
+            header("Location:".base_url()."index.php/dashboard/pidlist"); 
+        }else{
+            echo "<script>alert('failed');</script>";
+        };
+         
     }
 
     public function revenue() {
         $this->load->helper("url");
         $data['navbar'] = "4";
-        $data['accemail'] = $this->islogined();
+        $data['acc_id'] = $this->islogined();
+        $data['accemail'] = $this->session->userdata("accemail");
 
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);
@@ -162,7 +233,8 @@ class DashBoard extends CI_Controller {
     public function payments() { //付款记录
         $this->load->helper("url");
         $data['navbar'] = "5";
-        $data['accemail'] = $this->islogined();
+        $data['acc_id'] = $this->islogined();
+        $data['accemail'] = $this->session->userdata("accemail");
 
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);
@@ -174,7 +246,8 @@ class DashBoard extends CI_Controller {
     public function subagents() {
         $this->load->helper("url");
         $data['navbar'] = "6";
-        $data['accemail'] = $this->islogined();
+        $data['acc_id'] = $this->islogined();
+        $data['accemail'] = $this->session->userdata("accemail");
 
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);
@@ -185,7 +258,8 @@ class DashBoard extends CI_Controller {
     public function agents() {
         $this->load->helper("url");
         $data['navbar'] = "7";
-        $data['accemail'] = $this->islogined();
+        $data['acc_id'] = $this->islogined();
+        $data['accemail'] = $this->session->userdata("accemail");
 
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);
@@ -196,7 +270,8 @@ class DashBoard extends CI_Controller {
     public function settings() {
         $this->load->helper("url");
         $data['navbar'] = "8";
-        $data['accemail'] = $this->islogined();
+        $data['acc_id'] = $this->islogined();
+        $data['accemail'] = $this->session->userdata("accemail");
 
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);

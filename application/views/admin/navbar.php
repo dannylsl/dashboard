@@ -60,7 +60,10 @@
                                     <a href="<?php echo base_url();?>index.php/dashboard/payments" <?php echo $navbar==5?"class='active'":" "?>>付款记录</a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo base_url();?>index.php/dashboard/subagents" <?php echo $navbar==6?"class='active'":" "?>>二级渠道</a>
+                                    <a href="<?php echo base_url();?>index.php/dashboard/pidlist" <?php echo $navbar==6?"class='active'":" "?>>PID管理</a>
+                                    <!--
+                                    <a href="<?php echo base_url();?>index.php/dashboard/subagents" <?php echo $navbar==6?"class='active'":" "?>>二级渠道</a> 
+                                    -->
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
