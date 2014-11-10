@@ -62,4 +62,10 @@ class Dashboard_model extends CI_Model {
         return false;
     }
 
+    public function getSlotDataByDay($pid, $start, $end) {
+        $sql = "SELECT stat.slot_id,date,time,pv,click,income, slot_name FROM `stat` LEFT JOIN `slotlist` ON stat.slot_id = slotlist.slot_id WHERE `date`>='{$start}' AND `date` <= '{$end}' AND stat.pid = '{$pid}' ";
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
 }

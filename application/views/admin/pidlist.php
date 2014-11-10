@@ -54,14 +54,14 @@
                         echo "<td>{$slot['type']}</td>";
                         echo "<td>{$slot['width']}</td>";
                         echo "<td>{$slot['height']}</td>";
-                        echo "<td>修改 | 代码</td></tr>";
+                        echo "<td>修改 | <a style='cursor:pointer;' onclick=\"showCode({$slot_id},{$pidinfo['pid']},'{$slot['type']}','{$slot['position']}',{$slot['width']},{$slot['height']})\">代码</a></td></tr>";
                         $slot_id++;
                     }
                     echo "</table></div>";
 //                    echo $pidinfo['pid_name'];
 
                     echo "<br><button class=\"btn btn-primary\" data-toggle=\"modal\" role=\"button\" data-target=\"#adDialog\" id=\"btnDialog\" onClick=\"openDialog({$pidinfo['pid']})\"><i class=\"fa fa-plus\"></i> 添加广告位</button>";
-                    echo "<a href=\"".base_url()."index.php/dashboard/adpos\" class=\"btn btn-default\" style=\"margin-left:10px;\">查看详情</a>";
+                    echo "<a href=\"".base_url()."index.php/dashboard/detail/{$pidinfo['pid']}\" class=\"btn btn-default\" style=\"margin-left:10px;\">查看详情</a>";
                     echo "</div>";
                 }
             ?>
@@ -142,15 +142,15 @@
 
                                         <div class="btn-group" data-toggle="buttons" style="margin: 10px;">
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOn" autocomplete="off" value="float_youxiaojiao#300_250">300*250
+                                                <input type="radio" name="options" id="adOn" autocomplete="off" value="float_youxiajiao#300_250">300*250
                                                 <div style="width:40px;height:31px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="float_youxiaojiao#300_300">300*300
+                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="float_youxiajiao#300_300">300*300
                                                 <div style="width:40px;height:31px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="float_youxiaojiao#250_250">250*250
+                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="float_youxiajiao#250_250">250*250
                                                 <div style="width:40px;height:31px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                         </div>
@@ -235,27 +235,27 @@
                                     <div class="tab-pane fade" id="juxing"> 
                                         <div class="btn-group" data-toggle="buttons" style="margin: 10px;">
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOn" autocomplete="off" value="fixed_juxing_320_250">320*250
+                                                <input type="radio" name="options" id="adOn" autocomplete="off" value="fixed_juxing#320_250">320*250
                                                 <div style="width:40px;height:32px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="fixed_juxing_250_250">250*250
+                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="fixed_juxing#250_250">250*250
                                                 <div style="width:32px;height:32px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="fixed_juxing_200_200">200*200
+                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="fixed_juxing#200_200">200*200
                                                 <div style="width:32px;height:32px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="fixed_juxing_336_280">336*280
+                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="fixed_juxing#336_280">336*280
                                                 <div style="width:40px;height:32px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOff" autocomplete="off">125*125
+                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="fixed_juxing#125_125">125*125
                                                 <div style="width:32px;height:32px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOff" autocomplete="off">360*300
+                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="fixed_juxing#360_300">360*300
                                                 <div style="width:40px;height:32px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                         </div>
@@ -324,7 +324,39 @@
           </div>
         </div>
 
+    <!-- Code -->
+        <div class="modal fade" id="codeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">代码</h4>
+              </div>
+              <div class="modal-body">
+                <div class="highlight">
+<pre><code>&lt;script&gt;
+var ad_param = new Array();
+ad_param["pid"] = '<span id="code_pid"></span>';
+ad_param["id"] = '<span id="code_slotid"></span>';
+ad_param["adtype"] = '<span id="code_type"></span>';
+ad_param["adloc"] = '<span id="code_pos"></span>';
+ad_param["iw"] = '<span id="code_width"></span>';
+ad_param["ih"] = '<span id="code_height"></span>';
+&lt;/script&gt;
+&lt;script src="http://adhouyi.com/ad_test/hs.js"&gt;&lt;/script&gt;
+</pre></code>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
 </div>
+
+
 <script>
 $(document).ready(function() {
     $("#pidbtn").click(function() {
@@ -347,4 +379,16 @@ function openDialog(pid) {
     $("#pid").val(pid);
 }
 
+function showCode(slotId, pid, type, position, width, height) {
+    $('#code_pid').html(pid);
+    $('#code_slotid').html(slotId);
+    $('#code_type').html(type);
+    $('#code_pos').html(position);
+    $('#code_width').html(width);
+    $('#code_height').html(height);
+    $("#codeModal").modal();
+}
+
 </script>
+
+

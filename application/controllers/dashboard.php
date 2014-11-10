@@ -143,11 +143,29 @@ class DashBoard extends CI_Controller {
 
     }
 
+    public function detail($pid) {
+        $this->load->helper("url"); 
+        $data['navbar'] = "3";
+        $data['acc_id'] = $this->islogined();
+        $data['accemail'] = $this->session->userdata("accemail");
+        $data['sel_pid'] = $pid;
+        $data['start_date'] = date("Y-m-d");
+        $data['end_date'] = date("Y-m-d");
+        $data['slotlist'] = $this->dashboard_model->getSlotList($pid);
+        $data['pidlist'] = $this->dashboard_model->getPidList($data['acc_id']); 
+        $data['slotData'] = $this->dashboard_model->getSlotDataByDay($pid, $data['start_date'],$data['end_date']);
+
+        $this->load->view('admin/header');
+        $this->load->view('admin/navbar',$data);
+        $this->load->view('admin/detail',$data);
+        $this->load->view('admin/footer');
+    }
+
 
     public function pidlist() {
         $this->load->helper("url");
         $this->load->helper("form");
-        $data['navbar'] = "4";
+        $data['navbar'] = "6";
         $data['acc_id'] = $this->islogined();
         $data['accemail'] = $this->session->userdata("accemail");
         $pidlist = $this->dashboard_model->getPidList($data['acc_id']); 
@@ -278,5 +296,6 @@ class DashBoard extends CI_Controller {
         $this->load->view('admin/settings');
         $this->load->view('admin/footer');
     }
+
 }
 
