@@ -153,7 +153,13 @@ class DashBoard extends CI_Controller {
         $data['end_date'] = date("Y-m-d");
         $data['slotlist'] = $this->dashboard_model->getSlotList($pid);
         $data['pidlist'] = $this->dashboard_model->getPidList($data['acc_id']); 
-        $data['slotData'] = $this->dashboard_model->getSlotDataByDay($pid, $data['start_date'],$data['end_date']);
+//        $data['slotData'] = $this->dashboard_model->getSlotDataByDay($pid, $data['start_date'],$data['end_date']);
+        
+        $slotData = array();
+        foreach($data['slotlist'] as $slot) {
+            $slotData[$slot['slot_name']] = $this->dashboard_model->getSlotData($slot['slot_id'],  $data['start_date'], $data['end_date']); 
+        }
+        $data['slotData'] = $slotData;
 
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);

@@ -53,7 +53,6 @@
                     <table class="table table-striped">
                         <tr>
                             <th>名称</th>
-                            <th>日期</th>
                             <th>展示量</th>
                             <th>总点击量</th>
                             <th>点击率</th>
@@ -61,15 +60,18 @@
                             <th>操作</th>
                         </tr>
                         <?php
-                        foreach($slotData as $slot) {
-                            $clickRate = round($slot['click']/$slot['pv']*100, 2)."%";
+//                        print_r($slotData);
+                        foreach($slotlist as $slot) {
+                            if($slotData[$slot['slot_name']]['sum_pv'] != 0)
+                                $clickRate = round($slotData[$slot['slot_name']]['sum_click']/$slotData[$slot['slot_name']]['sum_pv']*100, 2)."%";
+                            else 
+                                $clickRate = 0;
                             echo "<tr>";
                             echo "<td>{$slot['slot_name']}</td>";
-                            echo "<td>{$slot['date']}</td>";
-                            echo "<td>{$slot['pv']}</td>";
-                            echo "<td>{$slot['click']}</td>";
+                            echo "<td>{$slotData[$slot['slot_name']]['sum_pv']}</td>";
+                            echo "<td>{$slotData[$slot['slot_name']]['sum_click']}</td>";
                             echo "<td>{$clickRate}</td>";
-                            echo "<td>&yen;{$slot['income']}</td>";
+                            echo "<td>&yen;{$slotData[$slot['slot_name']]['sum_income']}</td>";
                             echo "<td>每日详细</td>";
                             echo "</tr>";
                         }

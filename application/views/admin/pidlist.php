@@ -231,7 +231,6 @@
                                         </div>
                                     </div>
 
-     
                                     <div class="tab-pane fade" id="juxing"> 
                                         <div class="btn-group" data-toggle="buttons" style="margin: 10px;">
                                             <label class="btn btn-default">
@@ -334,6 +333,7 @@
               </div>
               <div class="modal-body">
                 <div class="highlight">
+
 <pre><code>&lt;script&gt;
 var ad_param = new Array();
 ad_param["pid"] = '<span id="code_pid"></span>';
@@ -345,6 +345,7 @@ ad_param["ih"] = '<span id="code_height"></span>';
 &lt;/script&gt;
 &lt;script src="http://adhouyi.com/ad_test/hs.js"&gt;&lt;/script&gt;
 </pre></code>
+
                 </div>
               </div>
               <div class="modal-footer">
@@ -353,11 +354,11 @@ ad_param["ih"] = '<span id="code_height"></span>';
             </div>
           </div>
         </div>
-
 </div>
 
 
 <script>
+
 $(document).ready(function() {
     $("#pidbtn").click(function() {
         var index= $("#pid_index").val();
