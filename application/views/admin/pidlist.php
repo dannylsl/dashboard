@@ -54,13 +54,14 @@
                         echo "<td>{$slot['type']}</td>";
                         echo "<td>{$slot['width']}</td>";
                         echo "<td>{$slot['height']}</td>";
-                        echo "<td>修改 | 查看 | 代码</td></tr>";
+                        echo "<td>修改 | 代码</td></tr>";
                         $slot_id++;
                     }
                     echo "</table></div>";
 //                    echo $pidinfo['pid_name'];
 
                     echo "<br><button class=\"btn btn-primary\" data-toggle=\"modal\" role=\"button\" data-target=\"#adDialog\" id=\"btnDialog\" onClick=\"openDialog({$pidinfo['pid']})\"><i class=\"fa fa-plus\"></i> 添加广告位</button>";
+                    echo "<a href=\"".base_url()."index.php/dashboard/adpos\" class=\"btn btn-default\" style=\"margin-left:10px;\">查看详情</a>";
                     echo "</div>";
                 }
             ?>
