@@ -74,4 +74,35 @@ class Dashboard_model extends CI_Model {
         return $query->row_array();
     }
 
+    public function getXAxisHour($sel_date) {
+        $arr = array();
+        $arr[0] = "'".$sel_date."'";
+        for($i = 1; $i < 24; $i++) {
+             $arr[$i] = "'".$i.":00'";
+        }
+        return implode(',',$arr);
+    }
+
+    public function getHourData($sel_date,$slot_id = 0) {
+        $sql = "SELECT time, pv, click FROM `stat` WHERE `date`='{$sel_date}' AND `slot_id`='{$slot_id}' ORDER BY time"; ; 
+        $query = $this->db->query($sql);
+        $arr = $query->result_array();
+        $pv_arr = array_fill(0,24, 0);
+        $click_arr = array_fill(0,24, 0);
+        $rate_arr = array_fill(0,24, 0);
+
+        foreach($arr as $v) {
+            $time_arr = explode(':', $v['time']);
+            $pv_arr[$time_arr[0]] = $v['pv'];
+            $click_arr[$time_arr[0]] = $v['click'];
+
+            if($pv_arr[$time_arr[0]] != 0)
+                $rate_arr[$time_arr[0]] = round($click_arr[$time_arr[0]]/$pv_arr[$time_arr[0]]*100,2);
+            else
+                $rate_arr[$time_arr[0]] = 0;
+        }
+        return array("pv" => implode(',',$pv_arr),"click" => implode(',',$click_arr), "rate"=>implode(',',$rate_arr),
+                    "pv_arr"=>$pv_arr, "click_arr"=>$click_arr, "rate_arr"=>$rate_arr);
+    }
+
 }

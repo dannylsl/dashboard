@@ -153,13 +153,14 @@ class DashBoard extends CI_Controller {
         $data['end_date'] = date("Y-m-d");
         $data['slotlist'] = $this->dashboard_model->getSlotList($pid);
         $data['pidlist'] = $this->dashboard_model->getPidList($data['acc_id']); 
-//        $data['slotData'] = $this->dashboard_model->getSlotDataByDay($pid, $data['start_date'],$data['end_date']);
         
         $slotData = array();
         foreach($data['slotlist'] as $slot) {
             $slotData[$slot['slot_name']] = $this->dashboard_model->getSlotData($slot['slot_id'],  $data['start_date'], $data['end_date']); 
         }
         $data['slotData'] = $slotData;
+        $data['xAxis'] = $this->dashboard_model->getXAxisHour($data['start_date']);
+        $data['yAxis'] = $this->dashboard_model->getHourData($data['start_date'], 0);
 
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);
@@ -167,6 +168,10 @@ class DashBoard extends CI_Controller {
         $this->load->view('admin/footer');
     }
 
+    public function daySearch($pid, $start, $end) {
+        $data['acc_id'] = $this->islogined();
+         
+    }
 
     public function pidlist() {
         $this->load->helper("url");
