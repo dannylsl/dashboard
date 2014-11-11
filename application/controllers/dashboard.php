@@ -160,7 +160,7 @@ class DashBoard extends CI_Controller {
         }
         $data['slotData'] = $slotData;
         $data['xAxis'] = $this->dashboard_model->getXAxisHour($data['start_date']);
-        $data['yAxis'] = $this->dashboard_model->getHourData($data['start_date'], 0);
+        $data['yAxis'] = $this->dashboard_model->getSlotHourData($data['start_date'], 0);
 
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);
@@ -168,9 +168,62 @@ class DashBoard extends CI_Controller {
         $this->load->view('admin/footer');
     }
 
-    public function daySearch($pid, $start, $end) {
+    public function slotdetail($slot_id, $start, $end) { //Ajax Json return
         $data['acc_id'] = $this->islogined();
-         
+        $this->dashboard_model->getSlotDataDetail($slot_id, $start, $end); 
+    }
+
+    public function daySearch($pid, $start, $end) {
+        $this->load->helper("url"); 
+        $data['navbar'] = "3";
+        $data['acc_id'] = $this->islogined();
+        $data['accemail'] = $this->session->userdata("accemail");
+        $data['sel_pid'] = $pid;
+        $data['start_date'] = $start;
+        $data['end_date'] = $end;
+        $data['slotlist'] = $this->dashboard_model->getSlotList($pid);
+        $data['pidlist'] = $this->dashboard_model->getPidList($data['acc_id']); 
+        
+        $slotData = array();
+        foreach($data['slotlist'] as $slot) {
+            $slotData[$slot['slot_name']] = $this->dashboard_model->getSlotData($slot['slot_id'],  $data['start_date'], $data['end_date']); 
+        }
+        $data['slotData'] = $slotData;
+        $data['xAxis'] = $this->dashboard_model->getXAxisDay($data['start_date'], $data['end_date']);
+        $data['yAxis'] = $this->dashboard_model->getDayData($data['start_date'], $data['end_date'], $pid);
+
+        $this->load->view('admin/header');
+        $this->load->view('admin/navbar',$data);
+        $this->load->view('admin/detail',$data);
+        $this->load->view('admin/footer');
+        
+    }
+
+    public function hourSearch($pid, $start, $end) {
+        $this->load->helper("url"); 
+        $data['navbar'] = "3";
+        $data['acc_id'] = $this->islogined();
+        $data['accemail'] = $this->session->userdata("accemail");
+        $data['sel_pid'] = $pid;
+        $data['start_date'] = $start;
+        $data['end_date'] = $end;
+        $data['slotlist'] = $this->dashboard_model->getSlotList($pid);
+        $data['pidlist'] = $this->dashboard_model->getPidList($data['acc_id']); 
+        
+        $slotData = array();
+        foreach($data['slotlist'] as $slot) {
+            $slotData[$slot['slot_name']] = $this->dashboard_model->getSlotData($slot['slot_id'],  $data['start_date'], $data['end_date']); 
+        }
+        $data['slotData'] = $slotData;
+        $data['xAxis'] = $this->dashboard_model->getXAxisDayHours($data['start_date'], $data['end_date']);
+        $data['yAxis'] = $this->dashboard_model->getPidHourData($data['start_date'], $data['end_date'], $pid);
+
+        $this->load->view('admin/header');
+        $this->load->view('admin/navbar',$data);
+        $this->load->view('admin/detail',$data);
+        $this->load->view('admin/footer');
+       
+        
     }
 
     public function pidlist() {

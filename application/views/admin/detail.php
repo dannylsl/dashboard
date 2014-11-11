@@ -31,7 +31,7 @@
                             <span class="input-group-addon">终止</span>
                             <input type="text" class="form-control" id="enddate" data-date-format="yyyy-mm-dd" value="<?php echo $end_date;?>">
                         </div>
-                        <button class="btn btn-default" style="float:left;margin-left:5px;">天查询</button>
+                        <button class="btn btn-default" style="float:left;margin-left:5px;" OnClick="daySearch()">天查询</button>
                         <button class="btn btn-default" style="float:left;margin-left:5px;">时查询</button>
                     </div>
                 </div>
@@ -69,8 +69,10 @@
                             echo "<td>{$slotData[$slot['slot_name']]['sum_click']}</td>";
                             echo "<td>{$clickRate}</td>";
                             echo "<td>&yen;{$slotData[$slot['slot_name']]['sum_income']}</td>";
-                            echo "<td><a onClick=\"detailInfo()\" style=\"cursor:pointer;\">每日详细</a></td>";
+                            echo "<td><a onClick=\"detailInfo({$slot['slot_id']}, '{$start_date}', '{$end_date}')\" style=\"cursor:pointer;\">每日详细</a> ";
+                            echo " | <a onClick=\"closeInfo({$slot['slot_id']})\" style=\"cursor:pointer\">关闭</a></td>";
                             echo "</tr>";
+                            echo "<tr><td colspan='6' class='warning' style='display:none;' id='slotTable_{$slot['slot_id']}'></td></tr>";
                         }
                         ?>
                     </table>
@@ -96,19 +98,23 @@ $(function () {
             text: ''
         },
         xAxis: [{
-            categories: [<?php echo $xAxis?>]
+            type: 'datetime', 
+            //categories: [<?php echo $xAxis?>]
+            dateTimeLabelFormats: {
+                day: "%Y-%m-%d"
+            }
         }],
         yAxis: [{ // Primary yAxis
             labels: {
                 formatter: function() {
-                    return this.value +'°C';
+                    return this.value +' %';
                 },
                 style: {
                     color: '#89A54E'
                 }
             },
             title: {
-                text: '总展示量',
+                text: '总点击率',
                 style: {
                     color: '#89A54E'
                 }
@@ -125,7 +131,7 @@ $(function () {
             },
             labels: {
                 formatter: function() {
-                    return this.value +' mm';
+                    return this.value +' ';
                 },
                 style: {
                     color: '#4572A7'
@@ -135,14 +141,139 @@ $(function () {
         }, { // Tertiary yAxis
             gridLineWidth: 0,
             title: {
-                text: '总点击率',
+                text: '总展示量',
                 style: {
                     color: '#AA4643'
                 }
             },
             labels: {
                 formatter: function() {
-                    return this.value +' mb';
+                    return this.value +' ';
+                },
+                style: {
+                    color: '#AA4643'
+                }
+            },
+            opposite: true
+        }],
+        tooltip: {
+            shared: true,
+            formatter: function() {
+                Highcharts.dateFormat("%Y-%m-%d"), 
+            },
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'left',
+            x: 120,
+            verticalAlign: 'top',
+            y: 80,
+            floating: true,
+            backgroundColor: '#FFFFFF'
+        },
+        series: [{
+            name: '总展示量',
+            color: '#4572A7',
+            type: 'column',
+            yAxis: 1,
+            pointInterval: 3600*1000,
+            pointStart: Date.UTC(2014,10,01),
+            data: [<?php echo $yAxis['pv']?>],
+            tooltip: {
+                valueSuffix: ''
+            }
+
+        }, {
+            name: '总点击量',
+            type: 'spline',
+            color: '#AA4643',
+            yAxis: 2,
+            //data: [1016, 1016, 1015.9, 1015.5, 1012.3, 1009.5, 1009.6, 1010.2, 1013.1, 1016.9, 1018.2, 1016.7],
+            pointInterval: 3600*1000,
+            pointStart: Date.UTC(2014,10,01),
+            data: [<?php echo $yAxis['click']?>],
+            marker: {
+                enabled: false
+            },
+            dashStyle: 'shortdot',
+            tooltip: {
+                valueSuffix: ' '
+            }
+
+        }, {
+            name: '总点击率',
+            color: '#89A54E',
+            type: 'spline',
+            //data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
+            pointInterval: 3600*1000,
+            pointStart: Date.UTC(2014,10,01),
+            data: [<?php echo $yAxis['rate']?>],
+            tooltip: {
+                valueSuffix: ' %'
+            }
+        }]
+    });
+});				
+
+function showChart(title, subtitle, xAxisData, pvData, clickData, rateData) {
+    $('#container').highcharts({
+        chart: {
+            zoomType: 'xy'
+        },
+        title: {
+            text: title
+        },
+        subtitle: {
+            text: subtitle
+        },
+        xAxis: [{
+            type: 'datetime', 
+            categories:  xAxisData ,
+        }],
+        yAxis: [{ // Primary yAxis
+            labels: {
+                formatter: function() {
+                    return this.value +' %';
+                },
+                style: {
+                    color: '#89A54E'
+                }
+            },
+            title: {
+                text: '总点击率',
+                style: {
+                    color: '#89A54E'
+                }
+            },
+            opposite: true
+        }, { // Secondary yAxis
+            gridLineWidth: 0,
+            title: {
+                text: '总点击量',
+                style: {
+                    color: '#4572A7'
+                }
+            },
+            labels: {
+                formatter: function() {
+                    return this.value +'';
+                },
+                style: {
+                    color: '#4572A7'
+                }
+            }
+
+        }, { // Tertiary yAxis
+            gridLineWidth: 0,
+            title: {
+                text: '总展示量',
+                style: {
+                    color: '#AA4643'
+                }
+            },
+            labels: {
+                formatter: function() {
+                    return this.value +' ';
                 },
                 style: {
                     color: '#AA4643'
@@ -167,9 +298,9 @@ $(function () {
             color: '#4572A7',
             type: 'column',
             yAxis: 1,
-            data: [<?php echo $yAxis['pv']?>],
+            data:  pvData ,
             tooltip: {
-                valueSuffix: ' mm'
+                valueSuffix: ' pv'
             }
 
         }, {
@@ -178,13 +309,13 @@ $(function () {
             color: '#AA4643',
             yAxis: 2,
             //data: [1016, 1016, 1015.9, 1015.5, 1012.3, 1009.5, 1009.6, 1010.2, 1013.1, 1016.9, 1018.2, 1016.7],
-            data: [<?php echo $yAxis['click']?>],
+            data:  clickData ,
             marker: {
                 enabled: false
             },
             dashStyle: 'shortdot',
             tooltip: {
-                valueSuffix: ' mb'
+                valueSuffix: ' '
             }
 
         }, {
@@ -192,24 +323,45 @@ $(function () {
             color: '#89A54E',
             type: 'spline',
             //data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
-            data: [<?php echo $yAxis['rate']?>],
+            data:  rateData ,
             tooltip: {
                 valueSuffix: ' %'
             }
         }]
-    });
-});				
+    })
+}
 
 function daySearch() {
     var start = $("#startdate").val();
     var end = $("#enddate").val();
     var pid = $("select").val();
 
+    location.href="<?php echo base_url();?>index.php/dashboard/daySearch/"+pid+"/"+start+"/"+end; 
+}
+
+function hourSearch() {
+    var start = $("#startdate").val();
+    var end = $("#enddate").val();
+    var pid = $("select").val();
+
+    location.href="<?php echo base_url();?>index.php/dashboard/daySearch/"+pid+"/"+start+"/"+end; 
+}
+
+function detailInfo(slot_id, start,end) {
     $.ajax({
-        url:"<?php echo base_url();?>index.php/dashboard/daySearch/"+pid+"/"+start+"/"+end, 
+        url:"<?php echo base_url()?>index.php/dashboard/slotdetail/"+slot_id+"/"+start+"/"+end,
         dataType:"json",
-        
+        success:function(data) {
+            showChart('','', data['xAxis'], data['pv'], data['click'], data['rate']);
+            $("#slotTable_"+slot_id).html(data['table']);
+            $("#slotTable_"+slot_id).fadeIn();
+        }
     });
+}
+
+function closeInfo(slot_id) {
+    $("#slotTable_"+slot_id).fadeOut();
+    $("#slotTable_"+slot_id).html();
 }
 </script>
 
