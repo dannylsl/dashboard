@@ -140,7 +140,6 @@ class DashBoard extends CI_Controller {
         $this->load->view('admin/navbar',$data);
         $this->load->view('admin/adpos', $data);
         $this->load->view('admin/footer');
-
     }
 
     public function detail($pid) {
@@ -151,7 +150,7 @@ class DashBoard extends CI_Controller {
         $data['sel_pid'] = $pid;
         $data['start_date'] = date("Y-m-d");
         $data['end_date'] = date("Y-m-d");
-        $data['slotlist'] = $this->dashboard_model->getSlotList($pid);
+        $data['slotlist'] = $this->dashboard_model->getSlotList($pid, $data['acc_id']);
         $data['pidlist'] = $this->dashboard_model->getPidList($data['acc_id']); 
         
         $slotData = array();
@@ -159,7 +158,8 @@ class DashBoard extends CI_Controller {
             $slotData[$slot['slot_name']] = $this->dashboard_model->getSlotData($slot['slot_id'],  $data['start_date'], $data['end_date']); 
         }
         $data['slotData'] = $slotData;
-        $data['xAxis'] = $this->dashboard_model->getXAxisHour($data['start_date']);
+        //$data['xAxis'] = $this->dashboard_model->getXAxisHour($data['start_date']);
+        $data['xAxis'] = $this->dashboard_model->getStartAndInterval($data['start_date'], 'hour');
         $data['yAxis'] = $this->dashboard_model->getSlotHourData($data['start_date'], 0);
 
         $this->load->view('admin/header');
@@ -181,16 +181,17 @@ class DashBoard extends CI_Controller {
         $data['sel_pid'] = $pid;
         $data['start_date'] = $start;
         $data['end_date'] = $end;
-        $data['slotlist'] = $this->dashboard_model->getSlotList($pid);
+        $data['slotlist'] = $this->dashboard_model->getSlotList($pid, $data['acc_id']);
         $data['pidlist'] = $this->dashboard_model->getPidList($data['acc_id']); 
-        
+
         $slotData = array();
         foreach($data['slotlist'] as $slot) {
             $slotData[$slot['slot_name']] = $this->dashboard_model->getSlotData($slot['slot_id'],  $data['start_date'], $data['end_date']); 
         }
         $data['slotData'] = $slotData;
-        $data['xAxis'] = $this->dashboard_model->getXAxisDay($data['start_date'], $data['end_date']);
-        $data['yAxis'] = $this->dashboard_model->getDayData($data['start_date'], $data['end_date'], $pid);
+    //  $data['xAxis'] = $this->dashboard_model->getXAxisDay($data['start_date'], $data['end_date']);
+        $data['xAxis'] = $this->dashboard_model->getStartAndInterval($data['start_date'], 'day');
+        $data['yAxis'] = $this->dashboard_model->getDayData($data['start_date'], $data['end_date'], $pid, $data['acc_id']);
 
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);
@@ -207,7 +208,7 @@ class DashBoard extends CI_Controller {
         $data['sel_pid'] = $pid;
         $data['start_date'] = $start;
         $data['end_date'] = $end;
-        $data['slotlist'] = $this->dashboard_model->getSlotList($pid);
+        $data['slotlist'] = $this->dashboard_model->getSlotList($pid, $data['acc_id']);
         $data['pidlist'] = $this->dashboard_model->getPidList($data['acc_id']); 
         
         $slotData = array();
@@ -215,8 +216,9 @@ class DashBoard extends CI_Controller {
             $slotData[$slot['slot_name']] = $this->dashboard_model->getSlotData($slot['slot_id'],  $data['start_date'], $data['end_date']); 
         }
         $data['slotData'] = $slotData;
-        $data['xAxis'] = $this->dashboard_model->getXAxisDayHours($data['start_date'], $data['end_date']);
-        $data['yAxis'] = $this->dashboard_model->getPidHourData($data['start_date'], $data['end_date'], $pid);
+        //$data['xAxis'] = $this->dashboard_model->getXAxisDayHours($data['start_date'], $data['end_date']);
+        $data['xAxis'] = $this->dashboard_model->getStartAndInterval($data['start_date'], 'hour');
+        $data['yAxis'] = $this->dashboard_model->getPidHourData($data['start_date'], $data['end_date'], $pid, $data['acc_id']);
 
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);
@@ -236,7 +238,7 @@ class DashBoard extends CI_Controller {
 
         $slotlist_arr = array();
         foreach($pidlist as $pidinfo) {
-            $slotlist_arr[$pidinfo['pid_name']] = $this->dashboard_model->getSlotList($pidinfo['pid']);
+            $slotlist_arr[$pidinfo['pid_name']] = $this->dashboard_model->getSlotList($pidinfo['pid'], $data['acc_id']);
         } 
         $data['pidlist'] = $pidlist;
         $data['slotlist_arr'] = $slotlist_arr;

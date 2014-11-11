@@ -13,6 +13,7 @@
                         <div class="btn btn-primary" style="float:left">所有广告位走势图</div>
                         <div class="col-md-1" style="margin-left:10px;"> 
                             <select style="width:100px;" name="widthunit" class="form-control">
+                                <option value="0">ALL</option>
                             <?php
                             foreach($pidlist as $pidinfo) {
                                 echo "<option value=\"{$pidinfo['pid']}\"";
@@ -32,7 +33,7 @@
                             <input type="text" class="form-control" id="enddate" data-date-format="yyyy-mm-dd" value="<?php echo $end_date;?>">
                         </div>
                         <button class="btn btn-default" style="float:left;margin-left:5px;" OnClick="daySearch()">天查询</button>
-                        <button class="btn btn-default" style="float:left;margin-left:5px;">时查询</button>
+                        <button class="btn btn-default" style="float:left;margin-left:5px;" Onclick="hourSearch()">时查询</button>
                     </div>
                 </div>
                 <div class="panel-body">
@@ -64,7 +65,7 @@
                             else 
                                 $clickRate = 0;
                             echo "<tr>";
-                            echo "<td>{$slot['slot_name']}</td>";
+                            echo "<td>[{$slot['pid_name']}] {$slot['slot_name']}</td>";
                             echo "<td>{$slotData[$slot['slot_name']]['sum_pv']}</td>";
                             echo "<td>{$slotData[$slot['slot_name']]['sum_click']}</td>";
                             echo "<td>{$clickRate}</td>";
@@ -99,7 +100,6 @@ $(function () {
         },
         xAxis: [{
             type: 'datetime', 
-            //categories: [<?php echo $xAxis?>]
             dateTimeLabelFormats: {
                 day: "%Y-%m-%d"
             }
@@ -158,9 +158,6 @@ $(function () {
         }],
         tooltip: {
             shared: true,
-            formatter: function() {
-                Highcharts.dateFormat("%Y-%m-%d"), 
-            },
         },
         legend: {
             layout: 'vertical',
@@ -176,8 +173,8 @@ $(function () {
             color: '#4572A7',
             type: 'column',
             yAxis: 1,
-            pointInterval: 3600*1000,
-            pointStart: Date.UTC(2014,10,01),
+            pointInterval: <?php echo $xAxis['interval']?>,
+            pointStart: Date.UTC(<?php echo $xAxis['start'][0];?>,<?php echo $xAxis['start'][1] - 1;?>,<?php echo $xAxis['start'][2];?>),
             data: [<?php echo $yAxis['pv']?>],
             tooltip: {
                 valueSuffix: ''
@@ -189,8 +186,8 @@ $(function () {
             color: '#AA4643',
             yAxis: 2,
             //data: [1016, 1016, 1015.9, 1015.5, 1012.3, 1009.5, 1009.6, 1010.2, 1013.1, 1016.9, 1018.2, 1016.7],
-            pointInterval: 3600*1000,
-            pointStart: Date.UTC(2014,10,01),
+            pointInterval: <?php echo $xAxis['interval']?>,
+            pointStart: Date.UTC(<?php echo $xAxis['start'][0];?>,<?php echo $xAxis['start'][1] - 1;?>,<?php echo $xAxis['start'][2];?>),
             data: [<?php echo $yAxis['click']?>],
             marker: {
                 enabled: false
@@ -205,8 +202,8 @@ $(function () {
             color: '#89A54E',
             type: 'spline',
             //data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
-            pointInterval: 3600*1000,
-            pointStart: Date.UTC(2014,10,01),
+            pointInterval: <?php echo $xAxis['interval']?>,
+            pointStart: Date.UTC(<?php echo $xAxis['start'][0];?>,<?php echo $xAxis['start'][1] - 1;?>,<?php echo $xAxis['start'][2];?>),
             data: [<?php echo $yAxis['rate']?>],
             tooltip: {
                 valueSuffix: ' %'
@@ -228,7 +225,7 @@ function showChart(title, subtitle, xAxisData, pvData, clickData, rateData) {
         },
         xAxis: [{
             type: 'datetime', 
-            categories:  xAxisData ,
+//            categories:  xAxisData ,
         }],
         yAxis: [{ // Primary yAxis
             labels: {
@@ -298,6 +295,8 @@ function showChart(title, subtitle, xAxisData, pvData, clickData, rateData) {
             color: '#4572A7',
             type: 'column',
             yAxis: 1,
+            pointInterval: xAxisData['interval'],
+            pointStart: Date.UTC(xAxisData['start'][0], xAxisData['start'][1] - 1,xAxisData['start'][2]),
             data:  pvData ,
             tooltip: {
                 valueSuffix: ' pv'
@@ -309,6 +308,8 @@ function showChart(title, subtitle, xAxisData, pvData, clickData, rateData) {
             color: '#AA4643',
             yAxis: 2,
             //data: [1016, 1016, 1015.9, 1015.5, 1012.3, 1009.5, 1009.6, 1010.2, 1013.1, 1016.9, 1018.2, 1016.7],
+            pointInterval: xAxisData['interval'],
+            pointStart: Date.UTC(xAxisData['start'][0], xAxisData['start'][1] - 1,xAxisData['start'][2]),
             data:  clickData ,
             marker: {
                 enabled: false
@@ -323,6 +324,8 @@ function showChart(title, subtitle, xAxisData, pvData, clickData, rateData) {
             color: '#89A54E',
             type: 'spline',
             //data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
+            pointInterval: xAxisData['interval'],
+            pointStart: Date.UTC(xAxisData['start'][0], xAxisData['start'][1] - 1,xAxisData['start'][2]),
             data:  rateData ,
             tooltip: {
                 valueSuffix: ' %'
@@ -344,7 +347,7 @@ function hourSearch() {
     var end = $("#enddate").val();
     var pid = $("select").val();
 
-    location.href="<?php echo base_url();?>index.php/dashboard/daySearch/"+pid+"/"+start+"/"+end; 
+    location.href="<?php echo base_url();?>index.php/dashboard/hourSearch/"+pid+"/"+start+"/"+end; 
 }
 
 function detailInfo(slot_id, start,end) {

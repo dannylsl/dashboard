@@ -42,8 +42,16 @@ class Dashboard_model extends CI_Model {
         return $query->result_array();
     }
 
-    public function getSlotList($pid) {
-        $query = $this->db->get_where('slotlist',array('pid' => $pid));
+    public function getSlotList($pid, $acc_id) {
+        if($pid != 0) {
+            $sql = "SELECT slotlist.*, accpidmap.pid_name FROM `slotlist` LEFT JOIN `accpidmap` ON slotlist.pid = accpidmap.pid WHERE slotlist.pid='{$pid}'";
+            //$query = $this->db->get_where('slotlist',array('pid' => $pid));
+        }else {
+            $sql = "SELECT slotlist.*, accpidmap.pid_name FROM `slotlist` LEFT JOIN `accpidmap` ON slotlist.pid = accpidmap.pid WHERE slotlist.acc_id='{$acc_id}'";
+//            $query = $this->db->get_where('slotlist',array('acc_id'=>$acc_id));
+        }
+        $query = $this->db->query($sql);
+
         return $query->result_array();
     }
 
@@ -104,7 +112,7 @@ class Dashboard_model extends CI_Model {
                 $tableHtml .= "</tr>";
             };
             $tableHtml .= "</table></div>";
-            echo json_encode(array("xAxis"=>$this->getXAxisHourJSON($start),"pv" =>$pv_arr,"click" => $click_arr, "rate"=>$rate_arr , "table"=>$tableHtml));
+            echo json_encode(array("xAxis"=>$this->getStartAndInterval($start,'hour'),"pv" =>$pv_arr,"click" => $click_arr, "rate"=>$rate_arr , "table"=>$tableHtml));
         }
         else { //DAY
             $sql = "SELECT date,SUM(pv) as sum_pv, SUM(click) as sum_click, SUM(income) as sum_income FROM `stat` WHERE `date`>='{$start}' AND `date`<='{$end}' AND `slot_id`='{$slot_id}' GROUP BY `date` ";
@@ -145,10 +153,20 @@ class Dashboard_model extends CI_Model {
             };
             $tableHtml .= "</table></div>";
 
-            echo json_encode(array("xAxis"=>$date_arr,"pv" =>$pv_arr,"click" => $click_arr, "rate"=>$rate_arr , "table"=>$tableHtml));
+            echo json_encode(array("xAxis"=>$this->getStartAndInterval($start,'day'),"pv" =>$pv_arr,"click" => $click_arr, "rate"=>$rate_arr , "table"=>$tableHtml));
 
 
         } 
+    }
+
+    public function getStartAndInterval($start, $dayOrHour) {
+        if($dayOrHour == "day") {
+            $start_arr = explode('-', $start);
+            return array("start"=>$start_arr, "interval"=>24*3600*1000);
+        }else if($dayOrHour == "hour") {
+            $start_arr = explode('-', $start);
+            return array("start"=>$start_arr, "interval"=>3600*1000);
+        }
     }
 
     public function getXAxisDayJSON($start, $end) {
@@ -209,8 +227,12 @@ class Dashboard_model extends CI_Model {
         return implode(',', $res); 
     }
 
-    public function getDayData($start, $end, $pid) {
-        $sql = "SELECT date,SUM(pv) as sum_pv, SUM(click) as sum_click, SUM(income) as sum_income FROM `stat` WHERE `date`>='{$start}' AND `date`<='{$end}' AND `pid`='{$pid}' GROUP BY `date` ";
+    public function getDayData($start, $end, $pid, $acc_id) {
+        if($pid != 0)
+            $sql = "SELECT date,SUM(pv) as sum_pv, SUM(click) as sum_click, SUM(income) as sum_income FROM `stat` WHERE `date`>='{$start}' AND `date`<='{$end}' AND `pid`='{$pid}'  AND `acc_id` = '{$acc_id}' GROUP BY `date` ";
+        else
+            $sql = "SELECT date,SUM(pv) as sum_pv, SUM(click) as sum_click, SUM(income) as sum_income FROM `stat` WHERE `date`>='{$start}' AND `date`<='{$end}' AND `acc_id` = '{$acc_id}' GROUP BY `date` ";
+
         $query = $this->db->query($sql);
         $arr = $query->result_array();
         $obj_start = date_create($start);
@@ -235,8 +257,11 @@ class Dashboard_model extends CI_Model {
         return array("pv" => implode(',',$pv_arr),"click" => implode(',',$click_arr), "rate"=>implode(',',$rate_arr));
     }
 
-    public function getPidHourData($start, $end, $pid) {
-        $sql = "SELECT date, time, sum(pv) as sum_pv, sum(click) as sum_click, sum(income) as sum_income FROM `stat` WHERE `date`>='{$start}' AND `date`<='{$end}' AND `pid`='{$pid}' GROUP BY date, time ";
+    public function getPidHourData($start, $end, $pid, $acc_id) {
+        if($pid != 0)
+            $sql = "SELECT date, time, sum(pv) as sum_pv, sum(click) as sum_click, sum(income) as sum_income FROM `stat` WHERE `date`>='{$start}' AND `date`<='{$end}' AND `pid`='{$pid}' AND `acc_id`='{$acc_id}' GROUP BY date, time ";
+        else
+            $sql = "SELECT date, time, sum(pv) as sum_pv, sum(click) as sum_click, sum(income) as sum_income FROM `stat` WHERE `date`>='{$start}' AND `date`<='{$end}' AND `acc_id`='{$acc_id}' GROUP BY date, time ";
         $query = $this->db->query($sql);
         $arr = $query->result_array();
         //print_r($arr);
