@@ -65,6 +65,12 @@
                     echo "</div>";
                 }
             ?>
+            <div class="tab-pane fade active in" id="tab-pane1">
+            </div>
+            <div class="tab-pane fade" id="tab-pane2">
+            </div>
+            <div class="tab-pane fade" id="tab-pane3">
+            </div>
         </div>
     </div>
 
