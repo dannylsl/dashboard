@@ -161,6 +161,7 @@ class DashBoard extends CI_Controller {
         //$data['xAxis'] = $this->dashboard_model->getXAxisHour($data['start_date']);
         $data['xAxis'] = $this->dashboard_model->getStartAndInterval($data['start_date'], 'hour');
         $data['yAxis'] = $this->dashboard_model->getSlotHourData($data['start_date'], 0);
+        $data['chartTitle'] = $this->dashboard_model->getChartTitle($data['acc_id'], $pid, 0, $data['start_date'], $data['end_date'],"hour");
 
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);
@@ -168,9 +169,9 @@ class DashBoard extends CI_Controller {
         $this->load->view('admin/footer');
     }
 
-    public function slotdetail($slot_id, $start, $end) { //Ajax Json return
+    public function slotdetail($pid, $slot_id, $start, $end) { //Ajax Json return
         $data['acc_id'] = $this->islogined();
-        $this->dashboard_model->getSlotDataDetail($slot_id, $start, $end); 
+        $this->dashboard_model->getSlotDataDetail($data['acc_id'], $pid, $slot_id, $start, $end); 
     }
 
     public function daySearch($pid, $start, $end) {
@@ -192,6 +193,7 @@ class DashBoard extends CI_Controller {
     //  $data['xAxis'] = $this->dashboard_model->getXAxisDay($data['start_date'], $data['end_date']);
         $data['xAxis'] = $this->dashboard_model->getStartAndInterval($data['start_date'], 'day');
         $data['yAxis'] = $this->dashboard_model->getDayData($data['start_date'], $data['end_date'], $pid, $data['acc_id']);
+        $data['chartTitle'] = $this->dashboard_model->getChartTitle($data['acc_id'], $pid, 0, $data['start_date'], $data['end_date'],"day");
 
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);
@@ -219,6 +221,7 @@ class DashBoard extends CI_Controller {
         //$data['xAxis'] = $this->dashboard_model->getXAxisDayHours($data['start_date'], $data['end_date']);
         $data['xAxis'] = $this->dashboard_model->getStartAndInterval($data['start_date'], 'hour');
         $data['yAxis'] = $this->dashboard_model->getPidHourData($data['start_date'], $data['end_date'], $pid, $data['acc_id']);
+        $data['chartTitle'] = $this->dashboard_model->getChartTitle($data['acc_id'], $pid, 0, $data['start_date'], $data['end_date'],"hour");
 
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);

@@ -9,8 +9,8 @@
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading" style="overflow:auto;">
-                    <div class="col-md-12" align="right">
-                        <div class="btn btn-primary" style="float:left">所有广告位走势图</div>
+                    <div class="col-md-10" align="right">
+                        <div class="btn btn-primary" style="float:left;cursor:pointer;" OnClick="daySearch()">所有广告位走势图</div>
                         <div class="col-md-1" style="margin-left:10px;"> 
                             <select style="width:100px;" name="widthunit" class="form-control">
                                 <option value="0">ALL</option>
@@ -70,7 +70,7 @@
                             echo "<td>{$slotData[$slot['slot_name']]['sum_click']}</td>";
                             echo "<td>{$clickRate}</td>";
                             echo "<td>&yen;{$slotData[$slot['slot_name']]['sum_income']}</td>";
-                            echo "<td><a onClick=\"detailInfo({$slot['slot_id']}, '{$start_date}', '{$end_date}')\" style=\"cursor:pointer;\">每日详细</a> ";
+                            echo "<td><a onClick=\"detailInfo({$slot['pid']},{$slot['slot_id']}, '{$start_date}', '{$end_date}')\" style=\"cursor:pointer;\">每日详细</a> ";
                             echo " | <a onClick=\"closeInfo({$slot['slot_id']})\" style=\"cursor:pointer\">关闭</a></td>";
                             echo "</tr>";
                             echo "<tr><td colspan='6' class='warning' style='display:none;' id='slotTable_{$slot['slot_id']}'></td></tr>";
@@ -93,19 +93,21 @@ $(function () {
             zoomType: 'xy'
         },
         title: {
-            text: ''
+            text: '<?php echo $chartTitle['title'];?>'
         },
         subtitle: {
-            text: ''
+            text: '<?php echo $chartTitle['subtitle'];?>'
         },
         xAxis: [{
             type: 'datetime', 
-            dateTimeLabelFormats: {
-                day: "%Y-%m-%d"
-            }
         }],
+        tooltip: {
+            xDateFormat:'%Y-%m-%d %H',
+            shared: true,
+        },
         yAxis: [{ // Primary yAxis
             labels: {
+                enabled:false,
                 formatter: function() {
                     return this.value +' %';
                 },
@@ -130,6 +132,7 @@ $(function () {
                 }
             },
             labels: {
+                enabled:false,
                 formatter: function() {
                     return this.value +' ';
                 },
@@ -143,10 +146,11 @@ $(function () {
             title: {
                 text: '总展示量',
                 style: {
-                    color: '#AA4643'
+                    color: '#AA4643',
                 }
             },
             labels: {
+                enabled:false,
                 formatter: function() {
                     return this.value +' ';
                 },
@@ -156,9 +160,6 @@ $(function () {
             },
             opposite: true
         }],
-        tooltip: {
-            shared: true,
-        },
         legend: {
             layout: 'vertical',
             align: 'left',
@@ -229,6 +230,7 @@ function showChart(title, subtitle, xAxisData, pvData, clickData, rateData) {
         }],
         yAxis: [{ // Primary yAxis
             labels: {
+                enabled:false,
                 formatter: function() {
                     return this.value +' %';
                 },
@@ -252,6 +254,7 @@ function showChart(title, subtitle, xAxisData, pvData, clickData, rateData) {
                 }
             },
             labels: {
+                enabled:false,
                 formatter: function() {
                     return this.value +'';
                 },
@@ -269,6 +272,7 @@ function showChart(title, subtitle, xAxisData, pvData, clickData, rateData) {
                 }
             },
             labels: {
+                enabled:false,
                 formatter: function() {
                     return this.value +' ';
                 },
@@ -279,7 +283,8 @@ function showChart(title, subtitle, xAxisData, pvData, clickData, rateData) {
             opposite: true
         }],
         tooltip: {
-            shared: true
+            shared: true,
+            xDateFormat: '%Y-%m-%d %H'
         },
         legend: {
             layout: 'vertical',
@@ -350,12 +355,12 @@ function hourSearch() {
     location.href="<?php echo base_url();?>index.php/dashboard/hourSearch/"+pid+"/"+start+"/"+end; 
 }
 
-function detailInfo(slot_id, start,end) {
+function detailInfo(pid, slot_id, start,end) {
     $.ajax({
-        url:"<?php echo base_url()?>index.php/dashboard/slotdetail/"+slot_id+"/"+start+"/"+end,
+        url:"<?php echo base_url()?>index.php/dashboard/slotdetail/"+pid+"/"+slot_id+"/"+start+"/"+end,
         dataType:"json",
         success:function(data) {
-            showChart('','', data['xAxis'], data['pv'], data['click'], data['rate']);
+            showChart(data['title'],data['subtitle'], data['xAxis'], data['pv'], data['click'], data['rate']);
             $("#slotTable_"+slot_id).html(data['table']);
             $("#slotTable_"+slot_id).fadeIn();
         }

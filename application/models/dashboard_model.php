@@ -82,7 +82,7 @@ class Dashboard_model extends CI_Model {
         return $query->row_array();
     }
 
-    public function getSlotDataDetail($slot_id, $start, $end) {
+    public function getSlotDataDetail($acc_id, $pid, $slot_id, $start, $end) {
         if($start == $end) { //HOUR
             $sql = "SELECT time,pv,click,income FROM `stat` WHERE `date`>='{$start}' AND `date`<='{$end}' AND `slot_id`='{$slot_id}'"; 
             $query = $this->db->query($sql);
@@ -112,7 +112,9 @@ class Dashboard_model extends CI_Model {
                 $tableHtml .= "</tr>";
             };
             $tableHtml .= "</table></div>";
-            echo json_encode(array("xAxis"=>$this->getStartAndInterval($start,'hour'),"pv" =>$pv_arr,"click" => $click_arr, "rate"=>$rate_arr , "table"=>$tableHtml));
+
+            $title = $this->getChartTitle($acc_id, $pid, $slot_id, $start, $end, "hour");
+            echo json_encode(array("xAxis"=>$this->getStartAndInterval($start,'hour'),"pv" =>$pv_arr,"click" => $click_arr, "rate"=>$rate_arr ,"title"=>$title['title'], "subtitle"=>$title['subtitle'], "table"=>$tableHtml));
         }
         else { //DAY
             $sql = "SELECT date,SUM(pv) as sum_pv, SUM(click) as sum_click, SUM(income) as sum_income FROM `stat` WHERE `date`>='{$start}' AND `date`<='{$end}' AND `slot_id`='{$slot_id}' GROUP BY `date` ";
@@ -153,10 +155,33 @@ class Dashboard_model extends CI_Model {
             };
             $tableHtml .= "</table></div>";
 
-            echo json_encode(array("xAxis"=>$this->getStartAndInterval($start,'day'),"pv" =>$pv_arr,"click" => $click_arr, "rate"=>$rate_arr , "table"=>$tableHtml));
+            $title = $this->getChartTitle($acc_id, $pid, $slot_id, $start, $end, "day");
+            echo json_encode(array("xAxis"=>$this->getStartAndInterval($start,'day'),"pv" =>$pv_arr,"click" => $click_arr, "rate"=>$rate_arr, "title" =>$title['title'] ,  "subtitle"=>$title['subtitle'], "table"=>$tableHtml));
 
 
         } 
+    }
+
+    public function getChartTitle($acc_id, $pid, $slot_id, $start, $end, $dayOrHour="day") {
+        if($pid != 0) {
+            $query = $this->db->get_where('accpidmap', array('pid'=>$pid));
+            $pidinfo = $query->row_array();
+            if($slot_id != 0) {
+                $query = $this->db->get_where('slotlist', array('slot_id'=>$slot_id));
+                $slotinfo = $query->row_array();
+            }else{
+                $slotinfo['slot_name'] = "所有广告位";
+            } 
+        }else{
+            $pidinfo['pid_name'] = "所有广告位"; 
+            $slotinfo['slot_name'] = "";
+        }
+        if($dayOrHour == "day")
+            $scale = "天查询";
+        else if($dayOrHour == "hour")
+            $scale = "时查询";
+
+        return array('title'=>$pidinfo['pid_name']." ".$slotinfo['slot_name']." ".$scale,'subtitle'=>$start."至".$end);
     }
 
     public function getStartAndInterval($start, $dayOrHour) {
