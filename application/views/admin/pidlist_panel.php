@@ -7,59 +7,50 @@
 
     <div class="row">
 
-    <?php
-    foreach($pidlist as $pidinfo) {
-        echo "<div class='row' style='margin:10px;'>";
-        echo "<span class='btn btn-success btn-lg' style='border-radius:10px;' onclick=\"toggleSlot({$pidinfo['pid']})\">";
-        echo "<i id='icon_pid_{$pidinfo['pid']}' class='fa fa-minus-circle'></i> {$pidinfo['pid_name']}";
-        echo "</span>";
-            
-        echo "</div>";             
 
-        echo "<div class='row' id='slots_{$pidinfo['pid']}'>";
-        foreach( $slotlist_arr[$pidinfo['pid_name']] as $slot)  {
-            echo "<div class='row' style='margin:0px 10px;'>";
-            echo "<span class='btn btn-primary' style='padding:5px 10px;margin: 5px 40px; cursor:pointer;' onClick='toggleTable({$slot['slot_id']})'>";
-            echo "<i id='icon_slot_{$slot['slot_id']}' class='fa fa-plus-circle'></i> {$slot['slot_name']}</span></div>";
+        <?php
+            foreach($pidlist as $pidinfo) :
+        ?>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                <?php  echo $pidinfo['pid_name']; ?>
+                </div> 
+                <div class="panel-body">
+                <?php 
+                    echo "<div class=\"table-responsive\" style=\"margin-top:10px;\">";
+                    echo "<table class=\"table table-striped\">";
+                    echo "<tr>"; 
+                    echo "<th>序号</th>";
+                    echo "<th>广告位名称</th>";
+                    echo "<th>广告位状态</th>";
+                    echo "<th>广告类型</th>";
+                    echo "<th>宽度</th>";
+                    echo "<th>高度</th>";
+                    echo "<th>操作</th>";
+                    echo "</tr>";
+                    $slot_id = 1;
+                    foreach( $slotlist_arr[$pidinfo['pid_name']] as $slot) {
+                        echo "<tr><td>{$slot_id}</td>";
+                        echo "<td>[{$slot['pid_name']}] {$slot['slot_name']}</td>";
+                        echo "<td>{$slot['status']}</td>";
+                        echo "<td>{$slot['type']}</td>";
+                        echo "<td>{$slot['width']}</td>";
+                        echo "<td>{$slot['height']}</td>";
+                        echo "<td>修改 | <a style='cursor:pointer;' onclick=\"showCode({$slot_id},{$pidinfo['pid']},'{$slot['type']}','{$slot['position']}',{$slot['width']},{$slot['height']})\">代码</a></td></tr>";
+                        $slot_id++;
+                    }
+                    echo "</table></div>";
+//                    echo $pidinfo['pid_name'];
 
-            echo "<div class=\"row\">";
-            echo "<div id=\"slot_table_{$slot['slot_id']}\" class=\"col-md-6\" style=\"margin-left: 40px; padding-right: 5px; padding-left: 20px;display:none;\">";
-            echo "<div class=\"table-responsive\" style=\"margin-top:10px;\">";
-            echo "<table class=\"table table-striped\">";
-            echo "<tr>"; 
-            echo "<th>序号</th>";
-            echo "<th>广告位名称</th>";
-            echo "<th>广告位状态</th>";
-            echo "<th>广告类型</th>";
-            echo "<th>宽度</th>";
-            echo "<th>高度</th>";
-            echo "<th>操作</th>";
-            echo "</tr>";
-            $slot_id = 1;
-            foreach( $slotlist_arr[$pidinfo['pid_name']] as $slot) {
-                echo "<tr><td>{$slot_id}</td>";
-                echo "<td>[{$slot['pid_name']}] {$slot['slot_name']}</td>";
-                echo "<td>{$slot['status']}</td>";
-                echo "<td>{$slot['type']}</td>";
-                echo "<td>{$slot['width']}</td>";
-                echo "<td>{$slot['height']}</td>";
-                echo "<td>修改 | <a style='cursor:pointer;' onclick=\"showCode({$slot_id},{$pidinfo['pid']},'{$slot['type']}','{$slot['position']}',{$slot['width']},{$slot['height']})\">代码</a></td></tr>";
-                $slot_id++;
-            }
-            echo "</table></div>";
-            echo "</div>";
-            echo "</div>";
-        }
-        echo "<div style='margin-left:40px;'><button class=\"btn btn-primary btn-sm\" data-toggle=\"modal\" role=\"button\" data-target=\"#adDialog\" id=\"btnDialog\" onClick=\"openDialog({$pidinfo['pid']})\" style=\"margin-left:10px;\"><i class=\"fa fa-plus\"></i> 添加广告位</button>";
-        echo "<a href=\"".base_url()."index.php/dashboard/detail/{$pidinfo['pid']}\" class=\"btn btn-default btn-sm\" style=\"margin-left:10px;\">查看详情</a>";
-        echo "</div>";
-        echo "</div>";
-    }
-    ?>
+                    echo "<br><button class=\"btn btn-primary\" data-toggle=\"modal\" role=\"button\" data-target=\"#adDialog\" id=\"btnDialog\" onClick=\"openDialog({$pidinfo['pid']})\"><i class=\"fa fa-plus\"></i> 添加广告位</button>";
+                    echo "<a href=\"".base_url()."index.php/dashboard/detail/{$pidinfo['pid']}\" class=\"btn btn-default\" style=\"margin-left:10px;\">查看详情</a>";
+                ?>
 
-    <button id="pidbtn" class="btn btn-danger"><i class="fa fa-plus"></i> 添加PID</button>
-
-
+                </div>
+            </div>
+        <?php
+            endforeach;
+        ?>
 
 
 <!--
@@ -431,24 +422,6 @@ $(document).ready(function() {
 
 function openDialog(pid) {
     $("#pid").val(pid);
-}
-
-
-function toggleTable(slot_id) {
-    $("#slot_table_"+slot_id).toggle(300);
-    if( $("#icon_slot_"+slot_id).attr("class") == "fa fa-plus-circle" )
-        $("#icon_slot_"+slot_id).attr("class", 'fa fa-minus-circle');
-    else
-        $("#icon_slot_"+slot_id).attr("class", 'fa fa-plus-circle');
-}
-
-function toggleSlot(pid) {
-    $("#slots_"+pid).toggle(300);
-
-    if( $("#icon_pid_"+pid).attr("class") == "fa fa-plus-circle" )
-        $("#icon_pid_"+pid).attr("class", 'fa fa-minus-circle');
-    else
-        $("#icon_pid_"+pid).attr("class", 'fa fa-plus-circle');
 }
 
 function showCode(slotId, pid, type, position, width, height) {

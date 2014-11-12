@@ -7,23 +7,32 @@
 
     <div class="row">
 
+
+    <div class="table-responsive" style="margin-top:10px;">
+    <table class="table table-striped">
+        <tr> 
+            <th>序号</th>
+            <th>PID名称</th>
+            <th>操作</th>
+        </tr>
+
     <?php
-    foreach($pidlist as $pidinfo) {
-        echo "<div class='row' style='margin:10px;'>";
-        echo "<span class='btn btn-success btn-lg' style='border-radius:10px;' onclick=\"toggleSlot({$pidinfo['pid']})\">";
-        echo "<i id='icon_pid_{$pidinfo['pid']}' class='fa fa-minus-circle'></i> {$pidinfo['pid_name']}";
-        echo "</span>";
-            
-        echo "</div>";             
-
-        echo "<div class='row' id='slots_{$pidinfo['pid']}'>";
-        foreach( $slotlist_arr[$pidinfo['pid_name']] as $slot)  {
-            echo "<div class='row' style='margin:0px 10px;'>";
-            echo "<span class='btn btn-primary' style='padding:5px 10px;margin: 5px 40px; cursor:pointer;' onClick='toggleTable({$slot['slot_id']})'>";
-            echo "<i id='icon_slot_{$slot['slot_id']}' class='fa fa-plus-circle'></i> {$slot['slot_name']}</span></div>";
-
-            echo "<div class=\"row\">";
-            echo "<div id=\"slot_table_{$slot['slot_id']}\" class=\"col-md-6\" style=\"margin-left: 40px; padding-right: 5px; padding-left: 20px;display:none;\">";
+    $pid_index = 1;
+    foreach($pidlist as $pidinfo) :
+    ?>
+        <tr> 
+            <th><?php echo $pid_index;$pid_index++;?></th>
+            <th><?php echo $pidinfo['pid_name']?></th>
+            <th>
+            <?php 
+            echo "<button class=\"btn btn-sucess btn-sm\"  id=\"expand_btn_{$pidinfo['pid']}\" style=\"margin-right:10px;\" onclick=\"toggleTable({$pidinfo['pid']})\">展开</button>";
+            echo "<button class=\"btn btn-primary btn-sm\" data-toggle=\"modal\" role=\"button\" data-target=\"#adDialog\" id=\"btnDialog\" onClick=\"openDialog({$pidinfo['pid']})\"><i class=\"fa fa-plus\"></i> 添加广告位</button>";
+            echo "<a href=\"".base_url()."index.php/dashboard/detail/{$pidinfo['pid']}\" class=\"btn btn-default btn-sm\" style=\"margin-left:10px;\">查看详情</a>";
+            ?>
+            </th>
+        </tr>
+        <tr><td colspan="3" class="info" id="pid_slot_<?php echo $pidinfo['pid']?>" style="display:none;">
+        <?php 
             echo "<div class=\"table-responsive\" style=\"margin-top:10px;\">";
             echo "<table class=\"table table-striped\">";
             echo "<tr>"; 
@@ -47,16 +56,15 @@
                 $slot_id++;
             }
             echo "</table></div>";
-            echo "</div>";
-            echo "</div>";
-        }
-        echo "<div style='margin-left:40px;'><button class=\"btn btn-primary btn-sm\" data-toggle=\"modal\" role=\"button\" data-target=\"#adDialog\" id=\"btnDialog\" onClick=\"openDialog({$pidinfo['pid']})\" style=\"margin-left:10px;\"><i class=\"fa fa-plus\"></i> 添加广告位</button>";
-        echo "<a href=\"".base_url()."index.php/dashboard/detail/{$pidinfo['pid']}\" class=\"btn btn-default btn-sm\" style=\"margin-left:10px;\">查看详情</a>";
-        echo "</div>";
-        echo "</div>";
-    }
-    ?>
+//                    echo $pidinfo['pid_name'];
 
+        ?>
+
+        </td></tr>
+    <?php
+        endforeach;            
+    ?>
+    </table></div>
     <button id="pidbtn" class="btn btn-danger"><i class="fa fa-plus"></i> 添加PID</button>
 
 
@@ -433,22 +441,13 @@ function openDialog(pid) {
     $("#pid").val(pid);
 }
 
-
-function toggleTable(slot_id) {
-    $("#slot_table_"+slot_id).toggle(300);
-    if( $("#icon_slot_"+slot_id).attr("class") == "fa fa-plus-circle" )
-        $("#icon_slot_"+slot_id).attr("class", 'fa fa-minus-circle');
-    else
-        $("#icon_slot_"+slot_id).attr("class", 'fa fa-plus-circle');
-}
-
-function toggleSlot(pid) {
-    $("#slots_"+pid).toggle(300);
-
-    if( $("#icon_pid_"+pid).attr("class") == "fa fa-plus-circle" )
-        $("#icon_pid_"+pid).attr("class", 'fa fa-minus-circle');
-    else
-        $("#icon_pid_"+pid).attr("class", 'fa fa-plus-circle');
+function toggleTable(pid) {
+    $("#pid_slot_"+pid).toggle(300);
+    if($("#expand_btn_"+pid).html() == "展开") {
+        $("#expand_btn_"+pid).html("收缩");
+    }else{
+        $("#expand_btn_"+pid).html("展开");
+    };
 }
 
 function showCode(slotId, pid, type, position, width, height) {

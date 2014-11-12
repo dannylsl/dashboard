@@ -248,7 +248,7 @@ class DashBoard extends CI_Controller {
 
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);
-        $this->load->view('admin/pidlist');
+        $this->load->view('admin/pidlist_table',$data);
         $this->load->view('admin/footer');
 
     }
