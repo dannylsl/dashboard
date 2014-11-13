@@ -23,7 +23,7 @@ class DashBoard extends CI_Controller {
     public function logout() {
         $this->load->helper("url");
         $this->load->library('session');
-        $userdata = array('accemail'=>"", 'email'=>'');
+        $userdata = array('acc_id'=>"",'accemail'=>"", 'email'=>'');
         $this->session->unset_userdata($userdata); 
         header("Location:".base_url());
 //        header("Location:".base_url()."index.php/dashboard/login"); 
@@ -35,7 +35,6 @@ class DashBoard extends CI_Controller {
 
         $data['cap'] = $this->captcha_model->getCaptcha();
         $this->load->view('login', $data);
-
     }
 
 
@@ -95,6 +94,8 @@ class DashBoard extends CI_Controller {
             if( $acc_id  > 0 ) {
                 $this->session->set_userdata(array("accemail"=>$accemail));
                 $this->session->set_userdata(array("acc_id"=>$acc_id));
+                $this->session->set_userdata(array("password"=>md5($password)));
+                $this->dashboard_model->userlogin($acc_id);
                 //echo base_url();
                 header("Location:".base_url()); 
             }else {
@@ -356,9 +357,11 @@ class DashBoard extends CI_Controller {
 
     public function settings() {
         $this->load->helper("url");
+        $this->load->helper("form");
         $data['navbar'] = "8";
         $data['acc_id'] = $this->islogined();
         $data['accemail'] = $this->session->userdata("accemail");
+        $data['settings'] = $this->dashboard_model->get_settings($data['acc_id']);
 
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);
@@ -366,5 +369,38 @@ class DashBoard extends CI_Controller {
         $this->load->view('admin/footer');
     }
 
+    public function settings_save() {
+        $acc_id = $this->islogined();
+        $this->load->helper("url");
+        $settings['accname'] = $this->input->post('accname');
+        $settings['company'] = $this->input->post('company');
+        $settings['url'] = $this->input->post('url');
+        $settings['flow'] = $this->input->post('flow');
+        $settings['adminlist'] = $this->input->post('adminlist');
+        $this->dashboard_model->update_settings($acc_id, $settings);
+
+        header("Location:".base_url()."index.php/dashboard/settings");
+    }
+
+    public function update_pwd() {
+        $acc_id = $this->islogined();
+        $pwd = md5($this->input->post("pwd"));
+        $newpwd = $this->input->post("newpwd");
+        $repwd = $this->input->post("repwd");
+        if($pwd != $this->session->userdata("password")) {
+            echo "-1"; // 原始密码错误 
+        }else {
+            if($newpwd != $repwd) {
+                echo "-2";// 两次新密码不匹配
+            }else {
+                if($this->dashboard_model->update_pwd($acc_id, md5($newpwd))) {
+                    $this->session->set_userdata("password", md5($newpwd)); 
+                    echo "1"; //更新成功
+                }
+                else
+                    echo "0"; //没有变化
+            }
+        }
+    }
 }
 

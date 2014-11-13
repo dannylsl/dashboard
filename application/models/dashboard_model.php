@@ -21,6 +21,13 @@ class Dashboard_model extends CI_Model {
         }
     }
 
+    public function userlogin($acc_id) {
+        $ip = $this->input->ip_address();
+        $logindate = date("Y-m-d H:i:s");
+        $this->db->where('acc_id', $acc_id);
+        $this->db->update("accinfo", array("lastentryip"=>$ip,"lastentrytime"=>$logindate));
+    }
+
     public function newUser($email, $password) {
         $regtime = date("Y-m-d H:i:s");  
         $md5pwd = md5($password);
@@ -334,6 +341,25 @@ class Dashboard_model extends CI_Model {
         }
         return array("pv" => implode(',',$pv_arr),"click" => implode(',',$click_arr), "rate"=>implode(',',$rate_arr),
                     "pv_arr"=>$pv_arr, "click_arr"=>$click_arr, "rate_arr"=>$rate_arr);
+    }
+
+    public function get_settings($acc_id) {
+        $query = $this->db->get_where('accinfo', array('acc_id'=>$acc_id)); 
+        return $query->row_array();
+    }
+
+    public function update_settings($acc_id, $settings) {
+        $this->db->where('acc_id', $acc_id); 
+        $this->db->update('accinfo', $settings);
+    }
+    public function update_pwd($acc_id, $password) {
+        $this->db->where('acc_id', $acc_id);
+        $this->db->update('accinfo', array("password"=>$password));
+        if( $this->db->affected_rows() > 0) {
+            return true; 
+        }else {
+            return false; 
+        }
     }
 
 }
