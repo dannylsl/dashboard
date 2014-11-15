@@ -21,6 +21,26 @@ class Dashboard_model extends CI_Model {
         }
     }
 
+    public function userInfo($acc_id) {
+        $query = $this->db->get_where('accinfo', array('acc_id'=>$acc_id)); 
+        return $query->row_array(); 
+    }
+
+    public function activeuser($acc_id, $md5_email) {
+        $userinfo = $this->userinfo($acc_id);
+        if( $md5_email != md5($userinfo['accemail']) ) {
+            return false; 
+        }else{
+            $this->db->where("acc_id", $acc_id);
+            $this->db->update("accinfo", array("status" => 1));    
+            if($this->db->affected_rows() > 0) {
+                return true;
+            }else{
+                return false;
+            }
+        }
+    }
+
     public function userlogin($acc_id) {
         $ip = $this->input->ip_address();
         $logindate = date("Y-m-d H:i:s");
@@ -35,13 +55,16 @@ class Dashboard_model extends CI_Model {
         if($this->isUserExist($email) == true)
             return false;
 
-        $sql = "INSERT INTO `accinfo`(`accemail`,`password`, `registertime`,`state`) VALUES('{$email}', '{$md5pwd}', '{$regtime}', '{$state}')";
+        $sql = "INSERT INTO `accinfo`(`accemail`,`password`, `registertime`,`status`) VALUES('{$email}', '{$md5pwd}', '{$regtime}', '{$state}')";
         $this->db->query($sql);
-        if($this->db->affected_rows() == 0) {
+        return $this->db->insert_id(); 
+/*
+        if($this->db->insert_id() == 0) {
             return false; 
         }else {
-            return true;
+            return insert;
         }
+ */
     }
 
     public function getPidList($acc_id) {

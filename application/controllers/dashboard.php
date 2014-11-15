@@ -72,8 +72,9 @@ class DashBoard extends CI_Controller {
                 echo "<script>alert('邮箱不合法.');history.back(-1);</script>";
                 return; 
             }
-            if( $this->dashboard_model->newUser($accemail, $password) ) {
-                echo "<script>alert('注册成功');location.href=\'".base_url()."\'</script>";
+            if( $acc_id = $this->dashboard_model->newUser($accemail, $password) ) {
+                $this->active_email($acc_id);
+                echo "<script>alert('注册成功,账号激活邮件已发送到您的邮箱');location.href=\'".base_url()."\'</script>";
             }else
                 echo "<script>alert('添加失败.');history.back(-1);</script>";
         }
@@ -362,6 +363,7 @@ class DashBoard extends CI_Controller {
         $data['acc_id'] = $this->islogined();
         $data['accemail'] = $this->session->userdata("accemail");
         $data['settings'] = $this->dashboard_model->get_settings($data['acc_id']);
+        $data['userinfo'] = $this->dashboard_model->userinfo($data['acc_id']);
 
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);
@@ -383,6 +385,7 @@ class DashBoard extends CI_Controller {
     }
 
     public function update_pwd() {
+        $this->load->helper("url");
         $acc_id = $this->islogined();
         $pwd = md5($this->input->post("pwd"));
         $newpwd = $this->input->post("newpwd");
@@ -401,6 +404,40 @@ class DashBoard extends CI_Controller {
                     echo "0"; //没有变化
             }
         }
+    }
+
+    public function active_email($acc_id) {
+        $this->load->helper("url");
+        $userinfo = $this->dashboard_model->userinfo($acc_id);
+        $to = $userinfo['accemail'];
+        $config['protocol']     = 'smtp';
+        $config['smtp_host']    = 'ssl://smtp.exmail.qq.com';
+        $config['smtp_user']    = 'ad@adhouyi.com';
+        $config['smtp_pass']    = 'ad123456';
+        $config['smtp_port']    = '465';
+        $config['charset']      = 'utf-8';
+        $config['mailtype']     = 'text';
+        $config['smtp_timeout'] = '5';
+        $config['newline'] = "\r\n";
+        $this->load->library ('email', $config);
+        $this->email->from ('ad@adhouyi.com', '宏聚时代');
+        $this->email->to ($to, 'AAA');
+        $this->email->subject ('账号激活通知');
+        $content = "你好\r\n 感谢您注册我们的服务，请点击下面的连接激活您的账号\r\n".base_url()."index.php/dashboard/activeuser/{$acc_id}/".md5($to)."/\r\n\r\n".date("Y-m-d");
+        $this->email->message ($content);
+        $this->email->send (); 
+
+        //echo $this->email->print_debugger();
+    }
+
+    public function activeuser($acc_id, $email_md5) {
+        if($this->dashboard_model->activeuser($acc_id, $email_md5)) {
+        //active success
+            echo "<script>alert(\"账号激活成功\");</script>"; 
+        }else {
+        //active failed
+            echo "<script>alert(\"账号激活失败\");</script>"; 
+        };  
     }
 }
 

@@ -49,6 +49,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">修改密码</div>
                 <div class="panel-body">
+                <div style="margin-bottom: 10px;">账号状态: <?php echo $userinfo['status']?"<span class='btn btn-success'>已激活</span>":"<span class='btn btn-danger'>未激活</span>";?></div>
                     <div id="pwd_msg" style="display:none;"></div>
                     <?php  echo form_open("dashboard/password_update");?>
                         <div class="table-reponsive">
