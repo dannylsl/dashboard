@@ -59,6 +59,10 @@
                         </tr>
                         <?php
 //                        print_r($slotData);
+                        $total_pv = 0;
+                        $total_click = 0;
+                        $total_income = 0;
+
                         foreach($slotlist as $slot) {
                             if($slotData[$slot['slot_name']]['sum_pv'] != 0)
                                 $clickRate = round($slotData[$slot['slot_name']]['sum_click']/$slotData[$slot['slot_name']]['sum_pv']*100, 2)."%";
@@ -74,7 +78,18 @@
                             echo " | <a onClick=\"closeInfo({$slot['slot_id']})\" style=\"cursor:pointer\">关闭</a></td>";
                             echo "</tr>";
                             echo "<tr><td colspan='6' class='warning' style='display:none;' id='slotTable_{$slot['slot_id']}'></td></tr>";
+                            $total_pv += $slotData[$slot['slot_name']]['sum_pv'];
+                            $total_click += $slotData[$slot['slot_name']]['sum_click'];
+                            $total_income += $slotData[$slot['slot_name']]['sum_income'];
+
+                            if($total_pv != 0) {
+                                $total_rate = round($total_click/$total_pv*100,2)."%";
+                            }else {
+                                $total_rate = "0.00%";
+                            }
                         }
+                        if($total_flag)
+                            echo "<tr class='success'><td>小计</td><td>{$total_pv}</td><td>{$total_click}</td><td>{$total_rate}</td><td>&yen;{$total_income}</td><td></td></tr>";
                         ?>
                     </table>
                 </div>

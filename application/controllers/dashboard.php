@@ -119,6 +119,29 @@ class DashBoard extends CI_Controller {
         $this->load->view('admin/footer');
     }
 
+    public function overview()
+    {
+        $this->load->helper("url");
+        $data['navbar'] = "1";
+        $data['acc_id'] = $this->islogined();
+        $data['accemail'] = $this->session->userdata("accemail");
+        
+        $pid = 0;
+        $data['end_date'] = date("Y-m-d");
+        $data['start_date'] = date("Y-m-d", time() - 86400*14);
+
+        $data['xAxis'] = $this->dashboard_model->getStartAndInterval($data['start_date'], 'day');
+        $data['yAxis'] = $this->dashboard_model->getDayData($data['start_date'], $data['end_date'], $pid, $data['acc_id']);
+        $data['chartTitle'] = $this->dashboard_model->getChartTitle($data['acc_id'], $pid, 0, $data['start_date'], $data['end_date'],"day");
+
+        $this->load->view('admin/header');
+        $this->load->view('admin/navbar',$data);
+        $this->load->view('admin/overview');
+        $this->load->view('admin/footer');
+    }
+
+
+
     public function statitic() {
         $this->load->helper("url"); 
         $data['navbar'] = "2";
@@ -154,6 +177,7 @@ class DashBoard extends CI_Controller {
         $data['end_date'] = date("Y-m-d");
         $data['slotlist'] = $this->dashboard_model->getSlotList($pid, $data['acc_id']);
         $data['pidlist'] = $this->dashboard_model->getPidList($data['acc_id']); 
+        $data['total_flag'] = 0;
         
         $slotData = array();
         foreach($data['slotlist'] as $slot) {
@@ -169,6 +193,7 @@ class DashBoard extends CI_Controller {
         $this->load->view('admin/navbar',$data);
         $this->load->view('admin/detail',$data);
         $this->load->view('admin/footer');
+
     }
 
     public function slotdetail($pid, $slot_id, $start, $end) { //Ajax Json return
@@ -176,12 +201,13 @@ class DashBoard extends CI_Controller {
         $this->dashboard_model->getSlotDataDetail($data['acc_id'], $pid, $slot_id, $start, $end); 
     }
 
-    public function daySearch($pid, $start, $end) {
+    public function daySearch($pid, $start, $end, $total = 0) {
         $this->load->helper("url"); 
         $data['navbar'] = "3";
         $data['acc_id'] = $this->islogined();
         $data['accemail'] = $this->session->userdata("accemail");
         $data['sel_pid'] = $pid;
+        $data['total_flag'] = $total;
         $data['start_date'] = $start;
         $data['end_date'] = $end;
         $data['slotlist'] = $this->dashboard_model->getSlotList($pid, $data['acc_id']);
@@ -211,6 +237,7 @@ class DashBoard extends CI_Controller {
         $data['accemail'] = $this->session->userdata("accemail");
         $data['sel_pid'] = $pid;
         $data['start_date'] = $start;
+        $data['total_flag'] = 0;
         $data['end_date'] = $end;
         $data['slotlist'] = $this->dashboard_model->getSlotList($pid, $data['acc_id']);
         $data['pidlist'] = $this->dashboard_model->getPidList($data['acc_id']); 

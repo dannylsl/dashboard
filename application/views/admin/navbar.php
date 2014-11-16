@@ -42,7 +42,7 @@
                         </li>
 -->
                         <li>
-                        <a href="<?php echo base_url();?>" <?php echo $navbar==1?"class='active'":" "?>><i class="fa fa-dashboard fa-fw"></i>概况</a>
+                        <a href="<?php echo base_url();?>index.php/dashboard/overview" <?php echo $navbar==1?"class='active'":" "?>><i class="fa fa-dashboard fa-fw"></i>概况</a>
                         </li>
                         <li class="active">
                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> 媒体商<span class="fa arrow"></span></a>
@@ -72,11 +72,11 @@
                         <li>
                             <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
                         </li>
--->
 
                         <li>
                             <a href="<?php echo base_url();?>index.php/dashboard/agents" <?php echo $navbar==7?"class='active'":" "?>><i class="fa fa-sitemap fa-fw"></i> 代理商</span></a>
                         </li>
+-->
 
                         <li>
                             <a href="<?php echo base_url();?>index.php/dashboard/settings" <?php echo $navbar==8?"class='active'":" "?>><i class="fa fa-wrench fa-fw"></i> 设置</span></a>
