@@ -41,7 +41,7 @@ $(function () {
             type: 'datetime', 
         }],
         tooltip: {
-            xDateFormat:'%Y-%m-%d %H',
+            xDateFormat:'%Y-%m-%d %H 时',
             shared: true,
         },
         yAxis: [{ // Primary yAxis

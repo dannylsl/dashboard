@@ -112,6 +112,12 @@ class Dashboard_model extends CI_Model {
         return $query->row_array();
     }
 
+    public function getStatiticData($acc_id,$start,$end) {
+        $sql = "SELECT date as date, sum(pv) as pv, sum(click) as click, sum(income) as income FROM `stat` WHERE `date` >='{$start}' AND `date` <= '{$end}' AND `acc_id`='{$acc_id}' GROUP BY date ORDER BY date";
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
+
     public function getSlotDataDetail($acc_id, $pid, $slot_id, $start, $end) {
         if($start == $end) { //HOUR
             $sql = "SELECT time,pv,click,income FROM `stat` WHERE `date`>='{$start}' AND `date`<='{$end}' AND `slot_id`='{$slot_id}'"; 
@@ -122,6 +128,7 @@ class Dashboard_model extends CI_Model {
             $rate_arr = array_fill(0,24, 0);
             foreach($arr as $v) {
                 $time_arr = explode(':', $v['time']);
+                $time_arr[0] = intval($time_arr[0]);
                 $pv_arr[$time_arr[0]] = (int)$v['pv'];
                 $click_arr[$time_arr[0]] = (int)$v['click'];
 
@@ -345,7 +352,13 @@ class Dashboard_model extends CI_Model {
     }
 
     public function getSlotHourData($sel_date,$slot_id = 0) {
-        $sql = "SELECT time, pv, click FROM `stat` WHERE `date`='{$sel_date}' AND `slot_id`='{$slot_id}' ORDER BY time"; ; 
+        $acc_id = $this->session->userdata('acc_id');
+
+        if($slot_id != 0)
+            $sql = "SELECT time, pv, click FROM `stat` WHERE `date`='{$sel_date}' AND `slot_id`='{$slot_id}' AND `acc_id` = '{$acc_id}' ORDER BY time"; 
+        else
+            $sql = "SELECT time, sum(pv) as pv, sum(click) as click FROM `stat` WHERE `date`='{$sel_date}' AND `acc_id`='{$acc_id}' GROUP BY `time` ORDER BY time"; 
+
         $query = $this->db->query($sql);
         $arr = $query->result_array();
         $pv_arr = array_fill(0,24, 0);
@@ -354,6 +367,7 @@ class Dashboard_model extends CI_Model {
 
         foreach($arr as $v) {
             $time_arr = explode(':', $v['time']);
+            $time_arr[0] = intval($time_arr[0]);
             $pv_arr[$time_arr[0]] = $v['pv'];
             $click_arr[$time_arr[0]] = $v['click'];
 

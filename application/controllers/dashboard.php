@@ -148,11 +148,102 @@ class DashBoard extends CI_Controller {
         $data['acc_id'] = $this->islogined();
         $data['accemail'] = $this->session->userdata("accemail");
 
+        $pid = 0;
+        $data['end_date'] = date("Y-m-d");
+        $data['start_date'] = date("Y-m-d", time() - 86400*7);
+
+        $data['xAxis1'] = $this->dashboard_model->getStartAndInterval($data['start_date'], 'hour');
+        $data['yAxis1'] = $this->dashboard_model->getSlotHourData($data['start_date'], 0);
+        $data['xAxis'] = $this->dashboard_model->getStartAndInterval($data['end_date'], 'hour');
+        $data['yAxis'] = $this->dashboard_model->getSlotHourData($data['end_date'], 0);
+        $data['chartTitle'] = array('title'=>'','subtitle'=>'');
+
+        $data['cur_month'] = date("Y-m");
+        $data['last_month'] = date("Y-m",strtotime('-1 month'));
+        $cur_month_start = date("Y-m")."-01";
+        $cur_month_end = date("Y-m-t");
+        $last_month_start = date("Y-m",strtotime('-1 month'))."-01";
+        $last_month_end = date("Y-m-t", strtotime('-1 month'));
+        $data['xAxisMonth'] = $this->dashboard_model->getStartAndInterval($cur_month_start, 'day');
+        $data['yAxisMonth'] = $this->dashboard_model->getDayData($cur_month_start, $cur_month_end, $pid, $data['acc_id']);
+        $data['yAxisLastMonth'] = $this->dashboard_model->getDayData($last_month_start, $last_month_end, $pid, $data['acc_id']);
+
+        $data['statiticData'] = $this->dashboard_model->getStatiticData($data['acc_id'], date("Y-m-d",time() - 86400*14), $data['end_date']);
+
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);
         $this->load->view('admin/statitic');
         $this->load->view('admin/footer');
     }
+
+    public function weekCmp($start, $end) {
+        $this->load->helper("url"); 
+        $data['navbar'] = "2";
+        $data['acc_id'] = $this->islogined();
+        $data['accemail'] = $this->session->userdata("accemail");
+
+        $pid = 0;
+        $data['end_date'] = $end; //date("Y-m-d");
+        $data['start_date'] = $start; //date("Y-m-d", time() - 86400*7);
+
+        $data['xAxis1'] = $this->dashboard_model->getStartAndInterval($data['start_date'], 'hour');
+        $data['yAxis1'] = $this->dashboard_model->getSlotHourData($data['start_date'], 0);
+        $data['xAxis'] = $this->dashboard_model->getStartAndInterval($data['end_date'], 'hour');
+        $data['yAxis'] = $this->dashboard_model->getSlotHourData($data['end_date'], 0);
+        $data['chartTitle'] = array('title'=>'','subtitle'=>'');
+
+        $data['cur_month'] = date("Y-m");
+        $data['last_month'] = date("Y-m",strtotime('-1 month'));
+        $cur_month_start = date("Y-m")."-01";
+        $cur_month_end = date("Y-m-t");
+        $last_month_start = date("Y-m",strtotime('-1 month'))."-01";
+        $last_month_end = date("Y-m-t", strtotime('-1 month'));
+        $data['xAxisMonth'] = $this->dashboard_model->getStartAndInterval($cur_month_start, 'day');
+        $data['yAxisMonth'] = $this->dashboard_model->getDayData($cur_month_start, $cur_month_end, $pid, $data['acc_id']);
+        $data['yAxisLastMonth'] = $this->dashboard_model->getDayData($last_month_start, $last_month_end, $pid, $data['acc_id']);
+
+        $data['statiticData'] = $this->dashboard_model->getStatiticData($data['acc_id'], date("Y-m-d",time() - 86400*14), date("Y-m-d"));
+
+        $this->load->view('admin/header');
+        $this->load->view('admin/navbar',$data);
+        $this->load->view('admin/statitic');
+        $this->load->view('admin/footer');
+    }
+
+    public function monthCmp($start, $end) {
+        $this->load->helper("url"); 
+        $data['navbar'] = "2";
+        $data['acc_id'] = $this->islogined();
+        $data['accemail'] = $this->session->userdata("accemail");
+
+        $pid = 0;
+        $data['end_date'] = date("Y-m-d");
+        $data['start_date'] = date("Y-m-d", time() - 86400*7);
+
+        $data['xAxis1'] = $this->dashboard_model->getStartAndInterval($data['start_date'], 'hour');
+        $data['yAxis1'] = $this->dashboard_model->getSlotHourData($data['start_date'], 0);
+        $data['xAxis'] = $this->dashboard_model->getStartAndInterval($data['end_date'], 'hour');
+        $data['yAxis'] = $this->dashboard_model->getSlotHourData($data['end_date'], 0);
+        $data['chartTitle'] = array('title'=>'','subtitle'=>'');
+
+        $data['cur_month'] = $end;
+        $data['last_month'] = $start;
+        $cur_month_start = $end."-01";
+        $cur_month_end = date("Y-m-t", strtotime($end));
+        $last_month_start = date("Y-m",strtotime($start))."-01";
+        $last_month_end = date("Y-m-t", strtotime($start));
+        $data['xAxisMonth'] = $this->dashboard_model->getStartAndInterval($cur_month_start, 'day');
+        $data['yAxisMonth'] = $this->dashboard_model->getDayData($cur_month_start, $cur_month_end, $pid, $data['acc_id']);
+        $data['yAxisLastMonth'] = $this->dashboard_model->getDayData($last_month_start, $last_month_end, $pid, $data['acc_id']);
+
+        $data['statiticData'] = $this->dashboard_model->getStatiticData($data['acc_id'], date("Y-m-d",time() - 86400*14), date("Y-m-d"));
+
+        $this->load->view('admin/header');
+        $this->load->view('admin/navbar',$data);
+        $this->load->view('admin/statitic');
+        $this->load->view('admin/footer');
+    }
+
 
     public function adpos() {
         $this->load->helper("url"); 
@@ -175,8 +266,8 @@ class DashBoard extends CI_Controller {
         $data['sel_pid'] = $pid;
         $data['start_date'] = date("Y-m-d");
         $data['end_date'] = date("Y-m-d");
-        $data['slotlist'] = $this->dashboard_model->getSlotList($pid, $data['acc_id']);
         $data['pidlist'] = $this->dashboard_model->getPidList($data['acc_id']); 
+        $data['slotlist'] = $this->dashboard_model->getSlotList($pid, $data['acc_id']);
         $data['total_flag'] = 0;
         
         $slotData = array();

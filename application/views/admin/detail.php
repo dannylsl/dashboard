@@ -62,6 +62,7 @@
                         $total_pv = 0;
                         $total_click = 0;
                         $total_income = 0;
+                        $total_rate = "0.00%";
 
                         foreach($slotlist as $slot) {
                             if($slotData[$slot['slot_name']]['sum_pv'] != 0)
@@ -82,11 +83,8 @@
                             $total_click += $slotData[$slot['slot_name']]['sum_click'];
                             $total_income += $slotData[$slot['slot_name']]['sum_income'];
 
-                            if($total_pv != 0) {
+                            if($total_pv != 0)
                                 $total_rate = round($total_click/$total_pv*100,2)."%";
-                            }else {
-                                $total_rate = "0.00%";
-                            }
                         }
                         if($total_flag)
                             echo "<tr class='success'><td>小计</td><td>{$total_pv}</td><td>{$total_click}</td><td>{$total_rate}</td><td>&yen;{$total_income}</td><td></td></tr>";
@@ -393,5 +391,4 @@ function closeInfo(slot_id) {
     <script>
         $("#startdate").datepicker();
         $("#enddate").datepicker();
-
     </script>
