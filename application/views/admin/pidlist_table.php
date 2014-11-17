@@ -149,7 +149,7 @@
                 <div class="row">
                     <div class="col-md-1"><h4>广告名称</h4></div>
                     <div class="col-md-2"><input type="text" class="form-control" name="slotname" placeholder="请输入广告名称"></div>
-                    <input type="text" value="0" id="pid" name="pid">
+                    <input type="hidden" value="0" id="pid" name="pid">
                 </div>
 
                 <div class="row">
@@ -203,15 +203,15 @@
 
                                         <div class="btn-group" data-toggle="buttons" style="margin: 10px;">
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOn" autocomplete="off" value="float_youxiajiao#300_250">300*250
+                                                <input type="radio" name="options" autocomplete="off" value="float_youxiajiao#300_250">300*250
                                                 <div style="width:40px;height:31px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="float_youxiajiao#300_300">300*300
+                                                <input type="radio" name="options" autocomplete="off" value="float_youxiajiao#300_300">300*300
                                                 <div style="width:40px;height:31px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="float_youxiajiao#250_250">250*250
+                                                <input type="radio" name="options" autocomplete="off" value="float_youxiajiao#250_250">250*250
                                                 <div style="width:40px;height:31px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                         </div>
@@ -221,11 +221,11 @@
                                     <div class="tab-pane fade" id="dilan"> 
                                         <div class="btn-group" data-toggle="buttons" style="margin: 10px;">
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOff" autocomplete="off">95%*20
+                                                <input type="radio" name="options" autocomplete="off">95%*20
                                                 <div style="width:40px;height:31px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOff" autocomplete="off">95%*30
+                                                <input type="radio" name="options" autocomplete="off">95%*30
                                                 <div style="width:40px;height:31px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                         </div>
@@ -234,19 +234,19 @@
                                     <div class="tab-pane fade" id="celan"> 
                                         <div class="btn-group" data-toggle="buttons" style="margin: 10px;">
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOn" autocomplete="off" value="float_celan#120_240">120*240
+                                                <input type="radio" name="options" autocomplete="off" value="float_celan#120_240">120*240
                                                 <div style="width:17px;height:32px;background:#00DD77;margin-left:20px;"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="float_celan#120_270">120*270
+                                                <input type="radio" name="options" autocomplete="off" value="float_celan#120_270">120*270
                                                 <div style="width:17px;height:32px;background:#00DD77;margin-left:20px;"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="float_celan#120_600">120*600
+                                                <input type="radio" name="options" autocomplete="off" value="float_celan#120_600">120*600
                                                 <div style="width:10px;height:32px;background:#00DD77;margin-left:20px;"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="float_celan#160_600">160*600
+                                                <input type="radio" name="options" autocomplete="off" value="float_celan#160_600">160*600
                                                 <div style="width:11px;height:32px;background:#00DD77;margin-left:20px;"></div>
                                             </label>
                                         </div>
@@ -274,19 +274,19 @@
                                     <div class="tab-pane fade active in" id="hengfu"> 
                                         <div class="btn-group" data-toggle="buttons" style="margin: 10px;">
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOn" autocomplete="off" value="fixed_hengfu#760_90">760*90
+                                                <input type="radio" name="options"  autocomplete="off" value="fixed_hengfu#760_90">760*90
                                                 <div style="width:60px;height:10px;background:#00DD77;margin-bottom:23px"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="fixed_hengfu#728_90">728*90
+                                                <input type="radio" name="options"  autocomplete="off" value="fixed_hengfu#728_90">728*90
                                                 <div style="width:57px;height:10px;background:#00DD77;margin-bottom:23px"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="fixed_hengfu#640_60">640*60
+                                                <input type="radio" name="options"  autocomplete="off" value="fixed_hengfu#640_60">640*60
                                                 <div style="width:60px;height:15px;background:#00DD77;margin-bottom:18px"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="fixed_hengfu#960_90">960*90
+                                                <input type="radio" name="options"  autocomplete="off" value="fixed_hengfu#960_90">960*90
                                                 <div style="width:60px;height:8px;background:#00DD77;margin-bottom:25px"></div>
                                             </label>
                                         </div>
@@ -295,27 +295,27 @@
                                     <div class="tab-pane fade" id="juxing"> 
                                         <div class="btn-group" data-toggle="buttons" style="margin: 10px;">
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOn" autocomplete="off" value="fixed_juxing#320_250">320*250
+                                                <input type="radio" name="options" autocomplete="off" value="fixed_juxing#320_250">320*250
                                                 <div style="width:40px;height:32px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="fixed_juxing#250_250">250*250
+                                                <input type="radio" name="options" autocomplete="off" value="fixed_juxing#250_250">250*250
                                                 <div style="width:32px;height:32px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="fixed_juxing#200_200">200*200
+                                                <input type="radio" name="options" autocomplete="off" value="fixed_juxing#200_200">200*200
                                                 <div style="width:32px;height:32px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="fixed_juxing#336_280">336*280
+                                                <input type="radio" name="options" autocomplete="off" value="fixed_juxing#336_280">336*280
                                                 <div style="width:40px;height:32px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="fixed_juxing#125_125">125*125
+                                                <input type="radio" name="options" autocomplete="off" value="fixed_juxing#125_125">125*125
                                                 <div style="width:32px;height:32px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" id="adOff" autocomplete="off" value="fixed_juxing#360_300">360*300
+                                                <input type="radio" name="options" autocomplete="off" value="fixed_juxing#360_300">360*300
                                                 <div style="width:40px;height:32px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                         </div>
@@ -325,7 +325,7 @@
                                            <fieldset style="margin:15px 15px 15px 35px">
                                                 <div class="row">
                                                     <div class="col-md-1">宽:</div>
-                                                    <div class="col-md-3"><input type="number" name="width" value="300" class="form-control"></div>
+                                                    <div class="col-md-3"><input type="number" name="height" id="cheight" value="300" class="form-control"></div>
                                                     <div class="col-md-3">
                                                         <select style="width:80px;" name="widthunit" class="form-control">
                                                             <option value="px">px</option>
@@ -335,12 +335,14 @@
 
                                                 <div class="row" style="margin-top:10px;">
                                                     <div class="col-md-1">高:</div>
-                                                    <div class="col-md-3"><input type="number" name="width" value="300" class="form-control"></div>
+                                                    <div class="col-md-3"><input type="number" name="width" id="cwidth" value="300" class="form-control"></div>
                                                     <div class="col-md-3">
                                                         <select style="width:80px;" name="widthunit" class="form-control">
                                                             <option value="px">px</option>
                                                         </select>
                                                     </div>
+                                                    <button type="button" class="btn btn-warning" onclick="customClick()">确定</button>
+                                                    <input type="radio" name="options" id="customRadio" value="guding_custom#" style="display:none;">
                                                 </div>
                                             </fieldset>
                                         </div>
@@ -460,6 +462,12 @@ function showCode(slotId, pid, type, position, width, height) {
     $("#codeModal").modal();
 }
 
+function customClick() {
+    var width = $("#cwidth").val();
+    var height = $("#cheight").val();
+    $("#customRadio").val("guding_custom#"+height+"_"+width);
+    $("#customRadio").attr("checked", "checked");
+}
 </script>
 
 
