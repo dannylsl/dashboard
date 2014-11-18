@@ -105,6 +105,15 @@ class Dashboard_model extends CI_Model {
         $query = $this->db->query($sql);
         return $query->result_array();
     }
+    
+    public function getSlotInfo($acc_id, $slot_id) {
+        $query = $this->db->get_where('slotlist', array('acc_id'=>$acc_id, 'slot_id'=>$slot_id));
+        if($query->num_rows() > 0) {
+            return $query->row_array(); 
+        }else{
+            return false; 
+        }
+    }
 
     public function getSlotData($slot_id, $start, $end) {
         $sql = "SELECT SUM(pv) as sum_pv, SUM(click) as sum_click, SUM(income) as sum_income FROM `stat` WHERE `date`>='{$start}' AND `date`<='{$end}' AND `slot_id`='{$slot_id}'"; 

@@ -52,12 +52,10 @@
                 echo "<td>{$slot['type']}</td>";
                 echo "<td>{$slot['width']}</td>";
                 echo "<td>{$slot['height']}</td>";
-                echo "<td>修改 | <a style='cursor:pointer;' onclick=\"showCode({$slot_id},{$pidinfo['pid']},'{$slot['type']}','{$slot['position']}',{$slot['width']},{$slot['height']})\">代码</a></td></tr>";
+                echo "<td><a style='cursor:pointer;' onclick='editDialog({$slot_id})'>修改</a> | <a style='cursor:pointer;' onclick=\"showCode({$slot_id},{$pidinfo['pid']},'{$slot['type']}','{$slot['position']}',{$slot['width']},{$slot['height']})\">代码</a></td></tr>";
                 $slot_id++;
             }
             echo "</table></div>";
-//                    echo $pidinfo['pid_name'];
-
         ?>
 
         </td></tr>
@@ -148,7 +146,7 @@
                 <?php echo form_open("dashboard/newSlot");?>
                 <div class="row">
                     <div class="col-md-1"><h4>广告名称</h4></div>
-                    <div class="col-md-2"><input type="text" class="form-control" name="slotname" placeholder="请输入广告名称"></div>
+                    <div class="col-md-2"><input type="text" class="form-control" id="slotname" name="slotname" placeholder="请输入广告名称"></div>
                     <input type="hidden" value="0" id="pid" name="pid">
                 </div>
 
@@ -341,7 +339,7 @@
                                                             <option value="px">px</option>
                                                         </select>
                                                     </div>
-                                                    <button type="button" class="btn btn-warning" onclick="customClick()">确定</button>
+                                                    <button type="button" class="btn btn-warning" id="custombtn" onclick="customClick()">确定</button>
                                                     <input type="radio" name="options" id="customRadio" value="guding_custom#" style="display:none;">
                                                 </div>
                                             </fieldset>
@@ -368,12 +366,12 @@
 
                 <div class="row" style="margin-top:10px;">
                     <div class="col-md-1"><h4>关键字黑名单</h4></div>
-                    <div class="col-md-4"><textarea class="form-control" name="keywords_blacklist"></textarea></div>
+                    <div class="col-md-4"><textarea class="form-control" name="keywords_blacklist" id="keywords_blacklist"></textarea></div>
                 </div>
 
                 <div class="row" style="margin-top:10px;">
                     <div class="col-md-1"><h4>url黑名单</h4></div>
-                    <div class="col-md-4"><textarea class="form-control" name="url_blacklist"></textarea></div>
+                    <div class="col-md-4"><textarea class="form-control" name="url_blacklist" id="url_blacklist"></textarea></div>
                 </div>
 
               </div>
@@ -443,6 +441,21 @@ function openDialog(pid) {
     $("#pid").val(pid);
 }
 
+function editDialog(slot_id) {
+    $.ajax({
+        url:"<?php echo base_url();?>index.php/dashboard/getSlotInfo/"+slot_id,
+        async: false,
+        dataType: "json",
+        success: function(data) {
+            console.log(data['slot_name']);
+            $("#slotname").val(data['slot_name']); 
+            $("#keywords_blacklist").val(data['keywords_blacklist']); 
+            $("#url_blacklist").val(data['url_blacklist']); 
+            $("#adDialog").modal(); 
+        }
+    }); 
+}
+
 function toggleTable(pid) {
     $("#pid_slot_"+pid).toggle(300);
     if($("#expand_btn_"+pid).html() == "展开") {
@@ -467,7 +480,7 @@ function customClick() {
     var height = $("#cheight").val();
     $("#customRadio").val("guding_custom#"+height+"_"+width);
     $("#customRadio").attr("checked", "checked");
+    $("#custombtn").attr("disabled", "disabled");
 }
+
 </script>
-
-

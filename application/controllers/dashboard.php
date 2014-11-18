@@ -287,6 +287,14 @@ class DashBoard extends CI_Controller {
 
     }
 
+    public function getSlotInfo($slot_id) {
+        $data['acc_id'] = $this->islogined();
+        $slotinfo = $this->dashboard_model->getSlotInfo($data['acc_id'], $slot_id);
+        if($slotinfo != false) {
+            echo json_encode($slotinfo);
+        }
+    }
+
     public function slotdetail($pid, $slot_id, $start, $end) { //Ajax Json return
         $data['acc_id'] = $this->islogined();
         $this->dashboard_model->getSlotDataDetail($data['acc_id'], $pid, $slot_id, $start, $end); 
