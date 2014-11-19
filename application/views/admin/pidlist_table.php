@@ -52,7 +52,7 @@
                 echo "<td>{$slot['type']}</td>";
                 echo "<td>{$slot['width']}</td>";
                 echo "<td>{$slot['height']}</td>";
-                echo "<td><a style='cursor:pointer;' onclick='editDialog({$slot_id})'>修改</a> | <a style='cursor:pointer;' onclick=\"showCode({$slot_id},{$pidinfo['pid']},'{$slot['type']}','{$slot['position']}',{$slot['width']},{$slot['height']})\">代码</a></td></tr>";
+                echo "<td><a style='cursor:pointer;' onclick='editDialog({$slot['slot_id']})'>修改</a> | <a style='cursor:pointer;' onclick=\"showCode({$slot_id},{$pidinfo['pid']},'{$slot['type']}','{$slot['position']}',{$slot['width']},{$slot['height']})\">代码</a></td></tr>";
                 $slot_id++;
             }
             echo "</table></div>";
@@ -64,74 +64,6 @@
     ?>
     </table></div>
     <button id="pidbtn" class="btn btn-danger"><i class="fa fa-plus"></i> 添加PID</button>
-
-
-
-
-<!--
-        <ul class="nav nav-tabs">
-            <?php
-                $pid_count = 1;
-                foreach($pidlist as $pidinfo) {
-                    if($pid_count == 1) {
-                        echo "<li class='active'>"; 
-                    }else{
-                        echo "<li>"; 
-                    }
-                    echo "<a href='#pid_{$pidinfo['pid']}' data-toggle='tab' aria-expanded='true'>".$pidinfo['pid_name']."</a></li>";
-                    $pid_count++;
-                }
-                echo "<input type='hidden' id='pid_index' value='{$pid_count}'>";
-            ?>
-            <button id="pidbtn" class="btn btn-default" style="margin-left: 30px;"><i class="fa fa-plus"></i> 添加PID</button>
-        </ul>
-
-        <div class="tab-content">
-            <?php 
-                $pid_count = 1;
-                foreach($pidlist as $pidinfo) {
-                    if($pid_count == 1) {
-                        echo "<div class=\"tab-pane fade active in\" id=\"pid_{$pidinfo['pid']}\">";
-                    }else{
-                        echo "<div class=\"tab-pane fade \" id=\"pid_{$pidinfo['pid']}\">";
-                    }
-                    $pid_count++;
-            ?>  
-                <div class="table-responsive" style="margin-top:10px;">
-                    <table class="table table-striped">
-                        <tr> 
-                            <th>序号</th>
-                            <th>广告位名称</th>
-                            <th>广告位状态</th>
-                            <th>广告类型</th>
-                            <th>宽度</th>
-                            <th>高度</th>
-                            <th>操作</th>
-                        </tr>
-            <?php
-                    $slot_id = 1;
-                    foreach( $slotlist_arr[$pidinfo['pid_name']] as $slot) {
-                        echo "<tr><td>{$slot_id}</td>";
-                        echo "<td>[{$slot['pid_name']}] {$slot['slot_name']}</td>";
-                        echo "<td>{$slot['status']}</td>";
-                        echo "<td>{$slot['type']}</td>";
-                        echo "<td>{$slot['width']}</td>";
-                        echo "<td>{$slot['height']}</td>";
-                        echo "<td>修改 | <a style='cursor:pointer;' onclick=\"showCode({$slot_id},{$pidinfo['pid']},'{$slot['type']}','{$slot['position']}',{$slot['width']},{$slot['height']})\">代码</a></td></tr>";
-                        $slot_id++;
-                    }
-                    echo "</table></div>";
-//                    echo $pidinfo['pid_name'];
-
-                    echo "<br><button class=\"btn btn-primary\" data-toggle=\"modal\" role=\"button\" data-target=\"#adDialog\" id=\"btnDialog\" onClick=\"openDialog({$pidinfo['pid']})\"><i class=\"fa fa-plus\"></i> 添加广告位</button>";
-                    echo "<a href=\"".base_url()."index.php/dashboard/detail/{$pidinfo['pid']}\" class=\"btn btn-default\" style=\"margin-left:10px;\">查看详情</a>";
-                    echo "</div>";
-                }
-            ?>
-        </div>
-    </div>
--->
-    
 
 
         <div class="modal fade" id="adDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -168,14 +100,14 @@
                     <div class="col-md-1"><h4>广告形态</h4></div>
                     <div class="col-md-5">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a href="#ADfloat" data-toggle="tab" aria-expanded="true">浮动广告</a></li>
-                            <li><a href="#ADfixed" data-toggle="tab">固定广告</a></li>
+                            <li id="type_float"><a href="#ADfloat" data-toggle="tab" aria-expanded="true">浮动广告</a></li>
+                            <li id="type_fixed" ><a href="#ADfixed" data-toggle="tab">固定广告</a></li>
                         </ul>
                         <div class="tab-content">
-                            <div class="tab-pane fade active in" id="ADfloat">
+                            <div class="tab-pane fade" id="ADfloat">
                             <!-- 浮动广告 -->
                                 <div class="tab-content"> 
-                                    <div class="tab-pane fade active in" id="duilian"> 
+                                    <div class="tab-pane fade" id="duilian"> 
 
                                         <div class="btn-group" data-toggle="buttons" style="margin: 10px;">
                                             <label class="btn btn-default">
@@ -252,16 +184,16 @@
 
                                 </div>
                                 <ul class="nav nav-pills">
-                                    <li class="active">
+                                    <li id="float_duilian">
                                         <a href="#duilian" data-toggle="tab" aria-expanded="fasle">对联</a>
                                     </li>
-                                    <li>
+                                    <li id="float_youxiajiao">
                                         <a href="#youxiajiao" data-toggle="tab" aria-expanded="fasle">右下角</a>
                                     </li>
-                                    <li>
+                                    <li id="float_dilan">
                                         <a href="#dilan" data-toggle="tab" aria-expanded="fasle">底栏</a>
                                     </li>
-                                    <li>
+                                    <li id="float_celan">
                                         <a href="#celan" data-toggle="tab" aria-expanded="fasle">侧栏</a>
                                     </li>
                                 </ul>
@@ -269,7 +201,7 @@
                             </div> <!-- 浮动广告 -->
                             <div class="tab-pane fade" id="ADfixed"> <!-- 固定广告 -->
                                 <div class="tab-content">
-                                    <div class="tab-pane fade active in" id="hengfu"> 
+                                    <div class="tab-pane fade" id="hengfu"> 
                                         <div class="btn-group" data-toggle="buttons" style="margin: 10px;">
                                             <label class="btn btn-default">
                                                 <input type="radio" name="options"  autocomplete="off" value="fixed_hengfu#760_90">760*90
@@ -319,7 +251,7 @@
                                         </div>
                                     </div>
                                
-                                    <div class="tab-pane fade" id="zidingyi"> 
+                                    <div class="tab-pane fade" id="custom"> 
                                            <fieldset style="margin:15px 15px 15px 35px">
                                                 <div class="row">
                                                     <div class="col-md-1">宽:</div>
@@ -340,21 +272,21 @@
                                                         </select>
                                                     </div>
                                                     <button type="button" class="btn btn-warning" id="custombtn" onclick="customClick()">确定</button>
-                                                    <input type="radio" name="options" id="customRadio" value="guding_custom#" style="display:none;">
+                                                    <input type="radio" name="options" id="customRadio" value="fixed_custom#" style="display:none;">
                                                 </div>
                                             </fieldset>
                                         </div>
                                     </div>
 
                                 <ul class="nav nav-pills">
-                                    <li class="active">
+                                    <li id="fixed_hengfu">
                                         <a href="#hengfu" data-toggle="tab" aria-expanded="fasle">横幅</a>
                                     </li>
-                                    <li>
+                                    <li id="fixed_juxing">
                                         <a href="#juxing" data-toggle="tab" aria-expanded="fasle">矩形</a>
                                     </li>
-                                    <li>
-                                        <a href="#zidingyi" data-toggle="tab" aria-expanded="fasle">自定义</a>
+                                    <li id="fixed_custom">
+                                        <a href="#custom" data-toggle="tab" aria-expanded="fasle">自定义</a>
                                     </li>
                                 </ul>
 
@@ -437,6 +369,35 @@ $(document).ready(function() {
 
 }); 
 
+function activeClear() {
+    $("#ADfloat").attr("class","tab-pane fade");    
+    $("#duilian").attr("class","tab-pane fade");
+    $("#youxiajiao").attr("class","tab-pane fade");
+    $("#dilan").attr("class","tab-pane fade");
+    $("#celan").attr("class","tab-pane fade");
+    $("#float_duilian").attr("class","");
+    $("#float_youxiajiao").attr("class","");
+    $("#float_dilan").attr("class","");
+    $("#float_celan").attr("class","");
+
+    $("#ADfixed").attr("class","tab-pane fade");    
+    $("#hengfu").attr("class","tab-pane fade");
+    $("#juxing").attr("class","tab-pane fade");
+    $("#custom").attr("class","tab-pane fade");
+
+    $("#fixed_hengfu").attr("class","");
+    $("#fixed_juxing").attr("class","");
+    $("#fixed_custom").attr("class","");
+
+    $("#type_float").attr("class","");
+    $("#type_fixed").attr("class","");
+
+    $("input[type='radio'][name='options']").each(function () {
+        $(this).parent().attr('class','btn btn-default');
+    })
+    $("#customRadio").parent().attr('class','row');
+}
+
 function openDialog(pid) {
     $("#pid").val(pid);
 }
@@ -448,7 +409,17 @@ function editDialog(slot_id) {
         dataType: "json",
         success: function(data) {
             console.log(data['slot_name']);
+            activeClear();
             $("#slotname").val(data['slot_name']); 
+            $("#type_"+data['type']).attr("class", "active");
+            $("#AD"+data['type']).attr("class","tab-pane fade active in");
+            $("#"+data['position']).attr("class","tab-pane fade active in");
+            $("#"+data['type']+'_'+data['position']).attr("class","active");
+            var radioValue = data['type'] + '_' + data['position'] + '#' + data['width'] + '_' +data['height'];
+            console.log(radioValue);
+            $("input[type='radio'][value='"+radioValue+"']").attr("checked","checked");
+            $("input[type='radio'][value='"+radioValue+"']").parent().attr("class","btn btn-default active");
+
             $("#keywords_blacklist").val(data['keywords_blacklist']); 
             $("#url_blacklist").val(data['url_blacklist']); 
             $("#adDialog").modal(); 
