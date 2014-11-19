@@ -8,8 +8,9 @@ class Dashboard_model extends CI_Model {
         $sql = "SELECT * FROM `accinfo` WHERE `accemail`= ? AND password = ?"; 
         $binds = array($accemail, md5($password));
         $query =  $this->db->query($sql, $binds);
-        $row = $query->row();
-        return $row->acc_id;
+        $row = $query->row_array();
+//        return $row->acc_id;
+        return $row;
     }
 
     public function isUserExist($email) {
@@ -96,6 +97,14 @@ class Dashboard_model extends CI_Model {
     public function newSlot($data_arr) {
         $this->db->insert('slotlist', $data_arr); 
         if($this->db->affected_rows() > 0)
+            return true;
+        return false;
+    }
+
+    public function updateSlot($data_arr, $slot_id) {
+        $this->db->where('slot_id', $slot_id); 
+        $this->db->update("slotlist", $data_arr);    
+        if($this->db->affected_rows() > 0) 
             return true;
         return false;
     }

@@ -97,7 +97,7 @@
                                 if($total_pv != 0)
                                     $rate = round($total_click/$total_pv * 100, 2)."%";
                                 echo "<td>{$rate}</td>";
-                                echo "<td>&yen;{$detail['income']}</td>";
+                                echo "<td>&yen;{$total_income}</td>";
                                 echo "</tr>";
 
                                 ?>

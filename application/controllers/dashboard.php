@@ -13,9 +13,14 @@ class DashBoard extends CI_Controller {
         $this->load->helper("url");
         $this->load->library('session');
         $acc_id = $this->session->userdata('acc_id');
+        $acc_status = $this->session->userdata('status'); 
+            
         if( $acc_id <= 0) {
             header("Location:".base_url()."index.php/dashboard/login"); 
+            return;
         }else{
+            if($acc_status == 0)
+                header("Location:".base_url()."index.php/dashboard/settings"); 
             return $acc_id;
         }
     } 
@@ -64,7 +69,8 @@ class DashBoard extends CI_Controller {
         $password = $this->input->post("password");
         $captcha = $this->input->post("captcha");
 
-        header("content-type:text/html;charset=utf-8");
+        //header("content-type:text/html;charset=utf-8");
+        echo "<meta charset='utf-8'>";
         if ( $this->captcha_model->checkCaptcha($captcha) == false ) {
             echo "<script>alert('验证码错误');history.back(-1);</script>";
         }else {
@@ -74,7 +80,7 @@ class DashBoard extends CI_Controller {
             }
             if( $acc_id = $this->dashboard_model->newUser($accemail, $password) ) {
                 $this->active_email($acc_id);
-                echo "<script>alert('注册成功,账号激活邮件已发送到您的邮箱');location.href=\'".base_url()."\'</script>";
+                echo "<script>alert('注册成功,账号激活邮件已发送到您的邮箱');location.href='".base_url()."'</script>";
             }else
                 echo "<script>alert('添加失败.');history.back(-1);</script>";
         }
@@ -91,11 +97,16 @@ class DashBoard extends CI_Controller {
             header("content-type:text/html;charset=utf-8");
             echo "<script>alert('验证码错误');location.href=\"".base_url()."index.php/dashboard/login\"</script>";
         }else{
-            $acc_id = $this->dashboard_model->userValidate($accemail, $password);
+            $accinfo = $this->dashboard_model->userValidate($accemail, $password);
+            $acc_id = $accinfo['acc_id'];
             if( $acc_id  > 0 ) {
-                $this->session->set_userdata(array("accemail"=>$accemail));
-                $this->session->set_userdata(array("acc_id"=>$acc_id));
-                $this->session->set_userdata(array("password"=>md5($password)));
+                $info = array(
+                    "accemail" => $accemail,
+                    "acc_id" => $acc_id,
+                    "password" => md5($password),
+                    "status" => $accinfo['status'],
+                );
+                $this->session->set_userdata($info);
                 $this->dashboard_model->userlogin($acc_id);
                 //echo base_url();
                 header("Location:".base_url()); 
@@ -396,6 +407,7 @@ class DashBoard extends CI_Controller {
     public function newSlot() {
         $data['acc_id'] = $this->islogined();
         $pid = $this->input->post('pid'); 
+        $slot_id = $this->input->post('slot_id'); 
 
         $slotname = $this->input->post('slotname');
         $status = $this->input->post('status');
@@ -413,7 +425,6 @@ class DashBoard extends CI_Controller {
 
         $data_arr = array(
             'acc_id'=>$data['acc_id'],
-            'pid'=>$pid,
             'slot_name'=> $slotname,
             'status'=> $status,
             'type'=>$type,
@@ -424,12 +435,22 @@ class DashBoard extends CI_Controller {
             'url_blacklist'=> $url_blacklist,
         );
 
-        if($this->dashboard_model->newSlot($data_arr)) {
-            header("Location:".base_url()."index.php/dashboard/pidlist"); 
-        }else{
-            echo "<script>alert('failed');</script>";
-        };
-         
+        if($slot_id == 0) { //插入新数据
+            $data_arr['pid'] = $pid;
+            if($this->dashboard_model->newSlot($data_arr)) {
+                header("Location:".base_url()."index.php/dashboard/pidlist"); 
+            }else{
+                echo "<script>alert('failed');</script>";
+            };
+
+        }else{ // 更新数据
+            if($this->dashboard_model->updateSlot($data_arr, $slot_id)) {
+                header("Location:".base_url()."index.php/dashboard/pidlist"); 
+            }else{
+                echo "<script>alert('failed');</script>";
+            };
+              
+        } 
     }
 
     public function revenue() {
@@ -486,7 +507,9 @@ class DashBoard extends CI_Controller {
         $this->load->helper("url");
         $this->load->helper("form");
         $data['navbar'] = "8";
-        $data['acc_id'] = $this->islogined();
+//        $data['acc_id'] = $this->islogined();
+        $this->load->library('session');
+        $data['acc_id'] = $this->session->userdata('acc_id');
         $data['accemail'] = $this->session->userdata("accemail");
         $data['settings'] = $this->dashboard_model->get_settings($data['acc_id']);
         $data['userinfo'] = $this->dashboard_model->userinfo($data['acc_id']);
@@ -557,9 +580,13 @@ class DashBoard extends CI_Controller {
     }
 
     public function activeuser($acc_id, $email_md5) {
+        $this->load->helper("url");
+        $this->load->library('session');
+        echo "<meta charset='utf-8'>";
         if($this->dashboard_model->activeuser($acc_id, $email_md5)) {
         //active success
-            echo "<script>alert(\"账号激活成功\");</script>"; 
+            $this->session->set_userdata('status',1);
+            echo "<script>alert(\"账号激活成功\");location.href='".base_url()."index.php/dashboard/settings'</script>"; 
         }else {
         //active failed
             echo "<script>alert(\"账号激活失败\");</script>"; 

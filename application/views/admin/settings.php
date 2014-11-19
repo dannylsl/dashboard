@@ -49,7 +49,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">修改密码</div>
                 <div class="panel-body">
-                <div style="margin-bottom: 10px;">账号状态: <?php echo $userinfo['status']?"<span class='btn btn-success'>已激活</span>":"<span class='btn btn-danger'>未激活</span>";?></div>
+                <div style="margin-bottom: 10px;">账号状态: <?php echo $userinfo['status']?"<span class='btn btn-success'>已激活</span>":"<span class='btn btn-danger'>未激活</span><button class='btn btn-success' style='margin-left:10px;' onclick='reSendActiveMail({$acc_id})' id='email_btn'>重新发送激活邮件</button>";?></div>
                     <div id="pwd_msg" style="display:none;"></div>
                     <?php  echo form_open("dashboard/password_update");?>
                         <div class="table-reponsive">
@@ -85,6 +85,7 @@ function msg(id, content,type) {
     div.attr("class", "alert alert-"+type); 
     div.fadeIn(500,function(){div.fadeOut(2000)});
 }
+
 function updatePwd() {
     var src = $("input[name='src_pwd']").val();
     var newpwd = $("input[name='new_pwd']").val();
@@ -129,5 +130,14 @@ function updatePwd() {
             }
         }   
     });
+}
+
+function reSendActiveMail(acc_id) {
+    $.ajax({
+        url:"<?php echo base_url();?>index.php/dashboard/active_email/"+acc_id,
+        async: false
+    });
+    $('#email_btn').html('邮件已发送，请查收');
+    $('#email_btn').attr('disabled', 'disabeld');
 }
 </script>

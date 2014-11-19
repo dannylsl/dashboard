@@ -80,6 +80,7 @@
                     <div class="col-md-1"><h4>广告名称</h4></div>
                     <div class="col-md-2"><input type="text" class="form-control" id="slotname" name="slotname" placeholder="请输入广告名称"></div>
                     <input type="hidden" value="0" id="pid" name="pid">
+                    <input type="hidden" value="0" id="slot_id" name="slot_id">
                 </div>
 
                 <div class="row">
@@ -87,10 +88,10 @@
                     <div class="col-md-3">
                         <div class="btn-group" data-toggle="buttons">
                             <label class="btn btn-primary">
-                                <input type="radio" name="status" id="adOn" autocomplete="off" checked>开启 
+                                <input type="radio" name="status" id="adOn" value='1' autocomplete="off" checked>开启 
                             </label>
                             <label class="btn btn-primary">
-                                <input type="radio" name="status" id="adOff" autocomplete="off">关闭
+                                <input type="radio" name="status" id="adOff" value='0' autocomplete="off">关闭
                             </label>
                         </div>
                     </div>
@@ -272,7 +273,7 @@
                                                         </select>
                                                     </div>
                                                     <button type="button" class="btn btn-warning" id="custombtn" onclick="customClick()">确定</button>
-                                                    <input type="radio" name="options" id="customRadio" value="fixed_custom#" style="display:none;">
+                                                    <input type="radio" name="options" id="customRadio" value="" style="display:none;">
                                                 </div>
                                             </fieldset>
                                         </div>
@@ -318,28 +319,52 @@
 
     <!-- Code -->
         <div class="modal fade" id="codeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
+          <div class="modal-dialog" style="width:40%;min-width:900px;">
             <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title" id="myModalLabel">代码</h4>
               </div>
               <div class="modal-body">
-                <div class="highlight">
-
+HTML形式
+<div class="highlight">
 <pre><code>&lt;script&gt;
 var ad_param = new Array();
 ad_param["pid"] = '<span id="code_pid"></span>';
-ad_param["id"] = '<span id="code_slotid"></span>';
+ad_param["sid"] = '<span id="code_slotid"></span>';
 ad_param["adtype"] = '<span id="code_type"></span>';
 ad_param["adloc"] = '<span id="code_pos"></span>';
 ad_param["iw"] = '<span id="code_width"></span>';
 ad_param["ih"] = '<span id="code_height"></span>';
 &lt;/script&gt;
-&lt;script src="http://adhouyi.com/ad_test/hs.js"&gt;&lt;/script&gt;
+&lt;script src="http://adhouyi.com/js/v1/hs.js"&gt;
+&lt;/script&gt;
 </pre></code>
+</div>
 
-                </div>
+JavaScript形式
+<div class="highlight">
+<pre><code>
+var adhouyi = document.createElement('script');
+
+adhouyi.src = 'http://adhouyi.com/js/v1/hs.js';
+adhouyi.type = 'text/javascript';
+document.body.insertBefore(adhouyi, document.body.children.item(0));
+
+var adhouyi_pars = document.createElement('script');
+adhouyi_pars.type = 'text/javascript';
+adhouyi_pars.text = 'var ad_param = new Array();';
+adhouyi_pars.text += 'ad_param["pid"] = "<span id="jscode_pid"></span>";';
+adhouyi_pars.text += 'ad_param["sid"] = "<span id="jscode_slotid"></span>";';
+adhouyi_pars.text += 'ad_param["iw"] = "<span id="jscode_type"></span>";';
+adhouyi_pars.text += 'ad_param["ih"] = "<span id="jscode_pos"></span>";';
+adhouyi_pars.text += 'ad_param["adtype"] = "<span id="jscode_width"></span>";';
+adhouyi_pars.text += 'ad_param["adloc"] = "<span id="jscode_height"></span>";';
+document.body.insertBefore(adhouyi_pars,      document.body.children.item(0));
+</pre></code>
+</div>
+
+
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -395,11 +420,25 @@ function activeClear() {
     $("input[type='radio'][name='options']").each(function () {
         $(this).parent().attr('class','btn btn-default');
     })
+
     $("#customRadio").parent().attr('class','row');
 }
 
 function openDialog(pid) {
+    activeClear();
     $("#pid").val(pid);
+    $("#slot_id").val(0);
+
+    $("#type_float").attr("class","active");
+    $("#ADfloat").attr("class","tab-pane fade in active");    
+    $("#duilian").attr("class","tab-pane fade in active");
+    $("#float_duilian").attr("class","active");
+
+    $("#hengfu").attr("class","tab-pane fade in active");
+    $("#fixed_hengfu").attr("class","active");
+
+    $("ADfixed").attr("class", "active");
+
 }
 
 function editDialog(slot_id) {
@@ -408,8 +447,8 @@ function editDialog(slot_id) {
         async: false,
         dataType: "json",
         success: function(data) {
-            console.log(data['slot_name']);
             activeClear();
+            $("#slot_id").val(slot_id);
             $("#slotname").val(data['slot_name']); 
             if(data['status'] == 0) {
                 $("#adOff").attr("checked","checked");
@@ -423,9 +462,18 @@ function editDialog(slot_id) {
             $("#"+data['position']).attr("class","tab-pane fade active in");
             $("#"+data['type']+'_'+data['position']).attr("class","active");
             var radioValue = data['type'] + '_' + data['position'] + '#' + data['width'] + '_' +data['height'];
-            console.log(radioValue);
+            $("#customRadio").val(radioValue);
             $("input[type='radio'][value='"+radioValue+"']").attr("checked","checked");
             $("input[type='radio'][value='"+radioValue+"']").parent().attr("class","btn btn-default active");
+            $("#customRadio").parent().attr('class','row');
+    
+            if(data['type'] == 'fixed') {
+                $("#duilian").attr("class","tab-pane fade in active");
+                $("#float_duilian").attr("class","active");
+            }else if(data['type'] == 'float') {
+                $("#hengfu").attr("class","tab-pane fade in active");
+                $("#fixed_hengfu").attr("class","active");
+            }
 
             $("#keywords_blacklist").val(data['keywords_blacklist']); 
             $("#url_blacklist").val(data['url_blacklist']); 
@@ -450,13 +498,20 @@ function showCode(slotId, pid, type, position, width, height) {
     $('#code_pos').html(position);
     $('#code_width').html(width);
     $('#code_height').html(height);
+
+    $('#jscode_pid').html(pid);
+    $('#jscode_slotid').html(slotId);
+    $('#jscode_type').html(type);
+    $('#jscode_pos').html(position);
+    $('#jscode_width').html(width);
+    $('#jscode_height').html(height);
     $("#codeModal").modal();
 }
 
 function customClick() {
     var width = $("#cwidth").val();
     var height = $("#cheight").val();
-    $("#customRadio").val("guding_custom#"+height+"_"+width);
+    $("#customRadio").val("fixed_custom#"+height+"_"+width);
     $("#customRadio").attr("checked", "checked");
     $("#custombtn").attr("disabled", "disabled");
 }
