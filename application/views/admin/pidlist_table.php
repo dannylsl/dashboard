@@ -411,6 +411,13 @@ function editDialog(slot_id) {
             console.log(data['slot_name']);
             activeClear();
             $("#slotname").val(data['slot_name']); 
+            if(data['status'] == 0) {
+                $("#adOff").attr("checked","checked");
+                $("#adOff").parent().attr("class","btn btn-primary active");
+            }else{
+                $("#adOn").attr("checked","checked");
+                $("#adOn").parent().attr("class","btn btn-primary active");
+            }
             $("#type_"+data['type']).attr("class", "active");
             $("#AD"+data['type']).attr("class","tab-pane fade active in");
             $("#"+data['position']).attr("class","tab-pane fade active in");
