@@ -144,15 +144,16 @@ class Dashboard_model extends CI_Model {
 
     public function getSlotDataDetail($acc_id, $pid, $slot_id, $start, $end) {
         if($start == $end) { //HOUR
-            $sql = "SELECT time,pv,click,income FROM `stat` WHERE `date`>='{$start}' AND `date`<='{$end}' AND `slot_id`='{$slot_id}'"; 
+            $sql = "SELECT hour(time) as hour,sum(pv) as pv,sum(click) as click, sum(income) as income FROM `stat` WHERE `date`>='{$start}' AND `date`<='{$end}' AND `slot_id`='{$slot_id}' GROUP BY hour(time)"; 
             $query = $this->db->query($sql);
             $arr = $query->result_array();
             $pv_arr = array_fill(0,24, 0);
             $click_arr = array_fill(0,24, 0);
             $rate_arr = array_fill(0,24, 0);
             foreach($arr as $v) {
-                $time_arr = explode(':', $v['time']);
-                $time_arr[0] = intval($time_arr[0]);
+//                $time_arr = explode(':', $v['time']);
+//                $time_arr[0] = intval($time_arr[0]);
+                $time_arr[0] = $v['hour'];
                 $pv_arr[$time_arr[0]] = (int)$v['pv'];
                 $click_arr[$time_arr[0]] = (int)$v['click'];
 
@@ -168,7 +169,7 @@ class Dashboard_model extends CI_Model {
                 $tableHtml .= "<td>{$start} {$i}:00</td>";
                 $tableHtml .= "<td>{$pv_arr[$i]}</td>";
                 $tableHtml .= "<td>{$click_arr[$i]}</td>";
-                $tableHtml .= "<td>{$rate_arr[$i]}</td>";
+                $tableHtml .= "<td>".round($rate_arr[$i],2)."%</td>";
                 
                 $tableHtml .= "</tr>";
             };
@@ -345,9 +346,9 @@ class Dashboard_model extends CI_Model {
 
     public function getPidHourData($start, $end, $pid, $acc_id) {
         if($pid != 0)
-            $sql = "SELECT date, time, sum(pv) as sum_pv, sum(click) as sum_click, sum(income) as sum_income FROM `stat` WHERE `date`>='{$start}' AND `date`<='{$end}' AND `pid`='{$pid}' AND `acc_id`='{$acc_id}' GROUP BY date, time ";
+            $sql = "SELECT date, hour(time) as hour, sum(pv) as sum_pv, sum(click) as sum_click, sum(income) as sum_income FROM `stat` WHERE `date`>='{$start}' AND `date`<='{$end}' AND `pid`='{$pid}' AND `acc_id`='{$acc_id}' GROUP BY date, hour(time) ";
         else
-            $sql = "SELECT date, time, sum(pv) as sum_pv, sum(click) as sum_click, sum(income) as sum_income FROM `stat` WHERE `date`>='{$start}' AND `date`<='{$end}' AND `acc_id`='{$acc_id}' GROUP BY date, time ";
+            $sql = "SELECT date, hour(time) as hour, sum(pv) as sum_pv, sum(click) as sum_click, sum(income) as sum_income FROM `stat` WHERE `date`>='{$start}' AND `date`<='{$end}' AND `acc_id`='{$acc_id}' GROUP BY date, hour(time) ";
         $query = $this->db->query($sql);
         $arr = $query->result_array();
         //print_r($arr);
@@ -361,8 +362,9 @@ class Dashboard_model extends CI_Model {
         foreach($arr as $v) {
             $obj_date = date_create($v['date']); 
             $day_index = $obj_start->diff($obj_date)->days;
-            $time_arr = explode(':', $v['time']); 
-            $time_index = (int)$time_arr[0];
+//            $time_arr = explode(':', $v['time']); 
+//            $time_index = (int)$time_arr[0];
+            $time_index = (int)$v['hour'];
             $index = $day_index*24+$time_index;
             $pv_arr[$index] = $v['sum_pv'];
             $click_arr[$index] = $v['sum_click'];
@@ -379,9 +381,9 @@ class Dashboard_model extends CI_Model {
         $acc_id = $this->session->userdata('acc_id');
 
         if($slot_id != 0)
-            $sql = "SELECT time, pv, click FROM `stat` WHERE `date`='{$sel_date}' AND `slot_id`='{$slot_id}' AND `acc_id` = '{$acc_id}' ORDER BY time"; 
+            $sql = "SELECT hour(time) as hour, pv, click FROM `stat` WHERE `date`='{$sel_date}' AND `slot_id`='{$slot_id}' AND `acc_id` = '{$acc_id}' GROUP BY date,time ORDER BY time"; 
         else
-            $sql = "SELECT time, sum(pv) as pv, sum(click) as click FROM `stat` WHERE `date`='{$sel_date}' AND `acc_id`='{$acc_id}' GROUP BY `time` ORDER BY time"; 
+            $sql = "SELECT hour(time) as hour, sum(pv) as pv, sum(click) as click FROM `stat` WHERE `date`='{$sel_date}' AND `acc_id`='{$acc_id}' GROUP BY date,hour(time) ORDER BY time"; 
 
         $query = $this->db->query($sql);
         $arr = $query->result_array();
@@ -390,8 +392,9 @@ class Dashboard_model extends CI_Model {
         $rate_arr = array_fill(0,24, 0);
 
         foreach($arr as $v) {
-            $time_arr = explode(':', $v['time']);
-            $time_arr[0] = intval($time_arr[0]);
+//            $time_arr = explode(':', $v['time']);
+//            $time_arr[0] = intval($time_arr[0]);
+            $time_arr[0] = $v['hour'];
             $pv_arr[$time_arr[0]] = $v['pv'];
             $click_arr[$time_arr[0]] = $v['click'];
 

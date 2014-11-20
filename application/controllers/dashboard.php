@@ -406,7 +406,7 @@ class DashBoard extends CI_Controller {
         $data['acc_id'] = $this->islogined();
         $accemail = $this->session->userdata('accemail');
         $email_arr = explode('@', $accemail);
-        $pidinfo = $email_arr[0].'_'.$pidinfo;
+        $pidinfo = $email_arr[0].'_'.$data['acc_id'].'_'.$pidinfo;
         if($this->dashboard_model->newpid($data['acc_id'], $pidinfo)) {
             echo "1";
         }else {
@@ -609,7 +609,7 @@ class DashBoard extends CI_Controller {
         if($this->dashboard_model->activeuser($acc_id, $email_md5)) {
         //active success
             $this->session->set_userdata('status',1);
-            echo "<script>alert(\"账号激活成功\");location.href='".base_url()."index.php/dashboard/settings'</script>"; 
+            echo "<script>alert(\"账号激活成功\");location.href='".base_url()."index.php/dashboard/login'</script>"; 
         }else {
         //active failed
             echo "<script>alert(\"账号激活失败\");</script>"; 

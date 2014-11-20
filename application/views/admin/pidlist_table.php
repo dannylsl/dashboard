@@ -52,7 +52,7 @@
                 echo "<td>{$slot['type']}</td>";
                 echo "<td>{$slot['width']}</td>";
                 echo "<td>{$slot['height']}</td>";
-                echo "<td><a style='cursor:pointer;' onclick='editDialog({$slot['slot_id']})'>修改</a> | <a style='cursor:pointer;' onclick=\"showCode({$slot_id},{$pidinfo['pid']},'{$slot['type']}','{$slot['position']}',{$slot['width']},{$slot['height']})\">代码</a></td></tr>";
+                echo "<td><a style='cursor:pointer;' onclick='editDialog({$slot['slot_id']})'>修改</a> | <a style='cursor:pointer;' onclick=\"showCode({$slot_id},'{$pidinfo['pid']}','{$slot['type']}','{$slot['position']}',{$slot['width']},{$slot['height']})\">代码</a></td></tr>";
                 $slot_id++;
             }
             echo "</table></div>";
