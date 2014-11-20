@@ -95,7 +95,8 @@ class DashBoard extends CI_Controller {
 
         if ( $this->captcha_model->checkCaptcha($captcha) == false ) {
             header("content-type:text/html;charset=utf-8");
-            echo "<script>alert('验证码错误');location.href=\"".base_url()."index.php/dashboard/login\"</script>";
+            //echo "<script>alert('验证码错误');location.href=\"".base_url()."index.php/dashboard/login\"</script>";
+            echo "<script>alert('验证码错误');history.back()</script>";
         }else{
             $accinfo = $this->dashboard_model->userValidate($accemail, $password);
             $acc_id = $accinfo['acc_id'];
@@ -464,10 +465,21 @@ class DashBoard extends CI_Controller {
 
     public function revenue() {
         $this->load->helper("url");
+        $this->load->helper("form");
         $data['navbar'] = "4";
         $data['acc_id'] = $this->islogined();
         $data['accemail'] = $this->session->userdata("accemail");
 
+        $start = $this->input->post('startdate');
+        $end = $this->input->post('enddate');
+        $data['start'] = $start;
+        $data['end'] = $end;
+
+        if($start == "" || $end == "") 
+            $data['revenue_data'] = $this->dashboard_model->getDayDataForRevenue($data['acc_id']); 
+        else
+            $data['revenue_data'] = $this->dashboard_model->getDayDataForRevenue($data['acc_id'],$start,$end); 
+            
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);
         $this->load->view('admin/revenue');

@@ -11,19 +11,21 @@
                 <div class="panel-heading">收益优化报表</div>
                 <div class="panel-body">
                     <div class="row">
+                        <?php echo form_open("dashboard/revenue");?>
                         <div class="col-md-2">
                             <div class="form-group input-group">
                                 <span class="input-group-addon">起始</span>
-                                <input type="text" class="form-control" id="startdate" data-date-format="yyyy-mm-dd">
+                                <input type="text" class="form-control" id="startdate" name="startdate" data-date-format="yyyy-mm-dd" value="<?php echo $start;?>">
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group input-group">
                                 <span class="input-group-addon">终止</span>
-                                <input type="text" class="form-control" id="enddate" data-date-format="yyyy-mm-dd">
+                                <input type="text" class="form-control" id="enddate" name="enddate" data-date-format="yyyy-mm-dd" value="<?php echo $end;?>">
                             </div>
                         </div>
                         <button class="btn btn-primary">搜索</button>
+                        </form>
                     </div>
                     <div class="row">
                         <div class="table-responsive">
@@ -36,22 +38,23 @@
                                     <th>点击率</th>
                                     <th>收入(元)</th>
                                 </tr>
-                                <tr>
-                                    <td>1111</td>
-                                    <td>2014-11-03</td>
-                                    <td>228514</td>
-                                    <td>279</td>
-                                    <td>0.122%</td>
-                                    <td>&yen;0.00</td>
-                                </tr>
-                                <tr>
-                                    <td>1111</td>
-                                    <td>2014-11-03</td>
-                                    <td>228514</td>
-                                    <td>279</td>
-                                    <td>0.122%</td>
-                                    <td>&yen;0.00</td>
-                                </tr>
+                                <?php
+                                    $index = 1;
+                                    foreach($revenue_data as $data) {
+                                        echo "<tr>";
+                                            echo "<td>{$index}</td>";
+                                            echo "<td>{$data['date']}</td>";
+                                            echo "<td>{$data['sum_pv']}</td>";
+                                            echo "<td>{$data['sum_click']}</td>";
+                                            $rate = "0.00%";
+                                            if($data['sum_pv'] != 0)
+                                                $rate = round($data['sum_click']/$data['sum_pv']*100, 2);
+                                            echo "<td>{$rate}</td>";
+                                            echo "<td>{$data['sum_income']}</td>";
+                                        echo "</tr>";
+                                        $index ++;
+                                    }
+                                ?>
                             </table>
                         </div>
                     </div>

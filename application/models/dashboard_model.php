@@ -127,7 +127,13 @@ class Dashboard_model extends CI_Model {
     public function getSlotData($slot_id, $start, $end) {
         $sql = "SELECT SUM(pv) as sum_pv, SUM(click) as sum_click, SUM(income) as sum_income FROM `stat` WHERE `date`>='{$start}' AND `date`<='{$end}' AND `slot_id`='{$slot_id}'"; 
         $query = $this->db->query($sql);
-        return $query->row_array();
+        $row = $query->row_array();
+        foreach($row as $k=>$v) {
+            if($v == "") {
+                $row[$k] = 0;
+            } 
+        }
+        return $row;
     }
 
     public function getStatiticData($acc_id,$start,$end) {
@@ -422,5 +428,15 @@ class Dashboard_model extends CI_Model {
         $query = $this->db->get_where('payment', array("acc_id"=>$acc_id));
         return $query->result_array();
     } 
+
+    public function getDayDataForRevenue($acc_id, $start = 0, $end = 0 ) {
+        if($start != 0 && $end != 0) {
+            $sql = "SELECT date,SUM(pv) as sum_pv, SUM(click) as sum_click, SUM(income) as sum_income FROM `stat` WHERE `date`>='{$start}' AND `date`<='{$end}' AND `acc_id` = '{$acc_id}' GROUP BY `date` ";
+        }else {
+            $sql = "SELECT date,SUM(pv) as sum_pv, SUM(click) as sum_click, SUM(income) as sum_income FROM `stat` WHERE `acc_id` = '{$acc_id}' GROUP BY `date` ";
+        }
+        $query = $this->db->query($sql);
+        return $query->result_array();
+    }
 
 }

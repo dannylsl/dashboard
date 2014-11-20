@@ -45,6 +45,7 @@ $(function () {
             shared: true,
         },
         yAxis: [{ // Primary yAxis
+            min:0,
             labels: {
                 enabled:false,
                 formatter: function() {
@@ -63,6 +64,7 @@ $(function () {
             opposite: true
 
         }, { // Secondary yAxis
+            min:0,
             gridLineWidth: 0,
             title: {
                 text: '总点击量',
@@ -81,6 +83,7 @@ $(function () {
             }
 
         }, { // Tertiary yAxis
+            min:0,
             gridLineWidth: 0,
             title: {
                 text: '总展示量',

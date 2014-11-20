@@ -61,6 +61,7 @@
         </td></tr>
     <?php
         endforeach;            
+        echo "<input type='hidden' id='pid_index' value='{$pid_index}'>";
     ?>
     </table></div>
     <button id="pidbtn" class="btn btn-danger"><i class="fa fa-plus"></i> 添加PID</button>
