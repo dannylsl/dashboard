@@ -407,6 +407,7 @@ class Dashboard_model extends CI_Model {
         $this->db->where('acc_id', $acc_id); 
         $this->db->update('accinfo', $settings);
     }
+
     public function update_pwd($acc_id, $password) {
         $this->db->where('acc_id', $acc_id);
         $this->db->update('accinfo', array("password"=>$password));
@@ -416,5 +417,10 @@ class Dashboard_model extends CI_Model {
             return false; 
         }
     }
+
+    public function get_payments($acc_id) {
+        $query = $this->db->get_where('payment', array("acc_id"=>$acc_id));
+        return $query->result_array();
+    } 
 
 }

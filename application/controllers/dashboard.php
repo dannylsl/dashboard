@@ -124,9 +124,18 @@ class DashBoard extends CI_Controller {
         $data['acc_id'] = $this->islogined();
         $data['accemail'] = $this->session->userdata("accemail");
 
+ 
+        $pid = 0;
+        $data['end_date'] = date("Y-m-d");
+        $data['start_date'] = date("Y-m-d", time() - 86400*14);
+
+        $data['xAxis'] = $this->dashboard_model->getStartAndInterval($data['start_date'], 'day');
+        $data['yAxis'] = $this->dashboard_model->getDayData($data['start_date'], $data['end_date'], $pid, $data['acc_id']);
+        $data['chartTitle'] = $this->dashboard_model->getChartTitle($data['acc_id'], $pid, 0, $data['start_date'], $data['end_date'],"day");
+
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);
-        $this->load->view('admin/index');
+        $this->load->view('admin/overview');
         $this->load->view('admin/footer');
     }
 
@@ -471,6 +480,8 @@ class DashBoard extends CI_Controller {
         $data['navbar'] = "5";
         $data['acc_id'] = $this->islogined();
         $data['accemail'] = $this->session->userdata("accemail");
+
+        $data['payments'] = $this->dashboard_model->get_payments($data['acc_id']);
 
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);
