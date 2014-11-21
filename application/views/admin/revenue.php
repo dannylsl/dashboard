@@ -15,13 +15,13 @@
                         <div class="col-md-2">
                             <div class="form-group input-group">
                                 <span class="input-group-addon">起始</span>
-                                <input type="text" class="form-control" id="startdate" name="startdate" data-date-format="yyyy-mm-dd" value="<?php echo $start;?>">
+                                <input type="text" class="form-control" id="startdate" name="startdate" data-date-format="YYYY-MM-DD" value="<?php echo $start;?>">
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group input-group">
                                 <span class="input-group-addon">终止</span>
-                                <input type="text" class="form-control" id="enddate" name="enddate" data-date-format="yyyy-mm-dd" value="<?php echo $end;?>">
+                                <input type="text" class="form-control" id="enddate" name="enddate" data-date-format="YYYY-MM-DD" value="<?php echo $end;?>">
                             </div>
                         </div>
                         <button class="btn btn-primary">搜索</button>
@@ -50,7 +50,7 @@
                                             if($data['sum_pv'] != 0)
                                                 $rate = number_format(round($data['sum_click']/$data['sum_pv']*100, 2),2)."%";
                                             echo "<td>{$rate}</td>";
-                                            echo "<td>&yen;".number_format($data['sum_income'],2)."</td>";
+                                            echo "<td>&yen;".number_format($data['sum_income']/100,2)."</td>";
                                         echo "</tr>";
                                         $index ++;
                                     }
@@ -64,8 +64,9 @@
 </div>
 
     <!-- Datepicker JavaScript -->
+    <script src="<?php echo base_url();?>js/moment.js"></script>
     <script src="<?php echo base_url();?>js/bootstrap-datepicker.js"></script>
     <script>
-        $("#startdate").datepicker();
-        $("#enddate").datepicker();
+        $("#startdate").datetimepicker({pickTime:false,maxDate:'<?php echo date('Y-m-d')?>'});
+        $("#enddate").datetimepicker({pickTime:false,maxDate:'<?php echo date('Y-m-d')?>'});
     </script>

@@ -19,8 +19,12 @@ class DashBoard extends CI_Controller {
             header("Location:".base_url()."index.php/dashboard/login"); 
             return;
         }else{
-            if($acc_status == 0)
-                header("Location:".base_url()."index.php/dashboard/settings"); 
+            if($acc_status == 0) {
+                header("content-type:text/html;charset=utf-8");
+              //  header("Location:".base_url()."index.php/dashboard/settings"); 
+                echo "<script>alert('账户未激活前，无法使用其他功能');location.href='".base_url()."index.php/dashboard/settings';</script>";
+                
+            }
             return $acc_id;
         }
     } 
@@ -114,6 +118,7 @@ class DashBoard extends CI_Controller {
                 header("Location:".base_url()); 
             }else {
                 //header("Location:".base_url()."index.php/dashboard/login"); 
+                header("content-type:text/html;charset=utf-8");
                 echo "<script>alert('用户名或密码错误');history.back()</script>";
                 //echo base_url()."index.php/dashboard/login";
             };
@@ -212,7 +217,7 @@ class DashBoard extends CI_Controller {
                 $rate = number_format(round($sdata['click']/$sdata['pv']*100, 2),2)."%";
             }
 //            echo $sdata['date'].",".$sdata['pv'].",".$sdata['click'].",".$rate.",".$sdata['income']."\r\n";
-            echo "{$sdata['date']},{$sdata['pv']},{$sdata['click']},{$rate},{$sdata['income']}\r\n";
+            echo "{$sdata['date']},{$sdata['pv']},{$sdata['click']},{$rate},".($sdata['income']/100)."\r\n";
         }
     }
 
@@ -428,11 +433,14 @@ class DashBoard extends CI_Controller {
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="pidlist.csv"');
         header('Cache-Control: max-age=0');
-        echo iconv("utf-8","gb2312","序号,PID名称")."\r\n";
+        echo iconv("utf-8","gb2312","序号,PID名称,广告位名称,广告位状态,广告类型,宽度,高度")."\r\n";
         $index = 1;
-        foreach($pidlist as $pid) {
-            echo "{$index},{$pid['pid_name']}\r\n";
-            $index++;
+        foreach($pidlist as $pidinfo) {
+            $slot_arr = $this->dashboard_model->getSlotList($pidinfo['pid'], $data['acc_id']);
+            foreach($slot_arr as $slot) {
+                echo "{$index},{$pidinfo['pid_name']},{$slot['slot_name']},{$slot['status']},{$slot['type']},{$slot['width']},{$slot['height']}\r\n";
+                $index++;
+            }
         }
     }
     

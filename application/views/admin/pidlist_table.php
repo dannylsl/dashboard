@@ -44,16 +44,16 @@
             echo "<th>高度</th>";
             echo "<th>操作</th>";
             echo "</tr>";
-            $slot_id = 1;
+            $slot_index = 1;
             foreach( $slotlist_arr[$pidinfo['pid_name']] as $slot) {
-                echo "<tr><td>{$slot_id}</td>";
+                echo "<tr><td>{$slot_index}</td>";
                 echo "<td>[{$slot['pid_name']}] {$slot['slot_name']}</td>";
                 echo "<td>{$slot['status']}</td>";
                 echo "<td>{$slot['type']}</td>";
                 echo "<td>{$slot['width']}</td>";
                 echo "<td>{$slot['height']}</td>";
-                echo "<td><a style='cursor:pointer;' onclick='editDialog({$slot['slot_id']})'>修改</a> | <a style='cursor:pointer;' onclick=\"showCode({$slot_id},'{$pidinfo['pid']}','{$slot['type']}','{$slot['position']}',{$slot['width']},{$slot['height']})\">代码</a></td></tr>";
-                $slot_id++;
+                echo "<td><a style='cursor:pointer;' onclick='editDialog({$slot['slot_id']})'>修改</a> | <a style='cursor:pointer;' onclick=\"showCode({$slot['slot_id']},'{$pidinfo['pid']}','{$slot['type']}','{$slot['position']}',{$slot['width']},{$slot['height']})\">代码</a></td></tr>";
+                $slot_index++;
             }
             echo "</table></div>";
         ?>
@@ -65,6 +65,7 @@
     ?>
     </table></div>
     <button id="pidbtn" class="btn btn-danger"><i class="fa fa-plus"></i> 添加PID</button>
+    <a class="btn btn-success" href="<?php echo base_url();?>index.php/dashboard/download_pidlist"><i class="fa fa-download"></i> 导出数据</a>
 
 
         <div class="modal fade" id="adDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -77,18 +78,23 @@
              <div class="modal-body">
                  
                 <?php echo form_open("dashboard/newSlot");?>
-                <div class="row">
+                <div class="row" style="position:absolute;z-index:2;right:50px;">
+                    预览:<br>
+                    <img id="preview" src="<?php echo base_url();?>images/ads/float/couplet/120_270.png" style="max-width: 800px;">
+                </div>
+
+                <div class="row" style="margin-top:20px;">
                     <div class="col-md-1"><h4>广告名称</h4></div>
                     <div class="col-md-2"><input type="text" class="form-control" id="slotname" name="slotname" placeholder="请输入广告名称"></div>
                     <input type="hidden" value="0" id="pid" name="pid">
                     <input type="hidden" value="0" id="slot_id" name="slot_id">
                 </div>
 
-                <div class="row">
+                <div class="row" style="margin-top:20px;">
                     <div class="col-md-1"><h4>投放开关</h4></div>
                     <div class="col-md-3">
                         <div class="btn-group" data-toggle="buttons">
-                            <label class="btn btn-primary">
+                            <label class="btn btn-primary active">
                                 <input type="radio" name="status" id="adOn" value='1' autocomplete="off" checked>开启 
                             </label>
                             <label class="btn btn-primary">
@@ -98,7 +104,7 @@
                     </div>
                 </div>
 
-                <div class="row" id="pc">
+                <div class="row" id="pc" style="margin-top:20px;">
                     <div class="col-md-1"><h4>广告形态</h4></div>
                     <div class="col-md-5">
                         <ul class="nav nav-tabs">
@@ -109,76 +115,86 @@
                             <div class="tab-pane fade" id="ADfloat">
                             <!-- 浮动广告 -->
                                 <div class="tab-content"> 
-                                    <div class="tab-pane fade" id="duilian"> 
+                                    <div class="tab-pane fade" id="couplet"> 
 
                                         <div class="btn-group" data-toggle="buttons" style="margin: 10px;">
+                                            <!--
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" autocomplete="off" value="float_duilian#120_240">120*240
+                                                <input type="radio" name="options" autocomplete="off" value="float_couplet#120_240">120*240
                                                 <div style="width:17px;height:32px;background:#00DD77;margin-left:20px;"></div>
                                             </label>
+                                            -->
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" autocomplete="off" value="float_duilian#120_270">120*270
+                                                <input type="radio" name="options" autocomplete="off" value="float_couplet#120_270">120*270
                                                 <div style="width:17px;height:32px;background:#00DD77;margin-left:20px;"></div>
                                             </label>
+                                            <!--
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" autocomplete="off" value="float_duilian#120_600">120*600
+                                                <input type="radio" name="options" autocomplete="off" value="float_couplet#120_600">120*600
                                                 <div style="width:10px;height:32px;background:#00DD77;margin-left:20px;"></div>
                                             </label>
+                                            -->
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" autocomplete="off" value="float_duilian#160_600">160*600
+                                                <input type="radio" name="options" autocomplete="off" value="float_couplet#160_600">160*600
                                                 <div style="width:11px;height:32px;background:#00DD77;margin-left:20px;"></div>
                                             </label>
                                         </div>
                                         
                                     </div>
-                                    <div class="tab-pane fade" id="youxiajiao"> 
+                                    <div class="tab-pane fade" id="br"> 
 
                                         <div class="btn-group" data-toggle="buttons" style="margin: 10px;">
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" autocomplete="off" value="float_youxiajiao#300_250">300*250
+                                                <input type="radio" name="options" autocomplete="off" value="float_br#300_250">300*250
                                                 <div style="width:40px;height:31px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" autocomplete="off" value="float_youxiajiao#300_300">300*300
+                                                <input type="radio" name="options" autocomplete="off" value="float_br#300_300">300*300
                                                 <div style="width:40px;height:31px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
+                                            <!--
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" autocomplete="off" value="float_youxiajiao#250_250">250*250
+                                                <input type="radio" name="options" autocomplete="off" value="float_br#250_250">250*250
                                                 <div style="width:40px;height:31px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
+                                            -->
                                         </div>
 
                                     </div>
 
-                                    <div class="tab-pane fade" id="dilan"> 
+                                    <div class="tab-pane fade" id="bottom"> 
                                         <div class="btn-group" data-toggle="buttons" style="margin: 10px;">
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" autocomplete="off">95%*20
+                                                <input type="radio" name="options" autocomplete="off" value="float_bottom#95_20">95%*20
                                                 <div style="width:40px;height:31px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" autocomplete="off">95%*30
+                                                <input type="radio" name="options" autocomplete="off" value="float_bottom#95_30">95%*30
                                                 <div style="width:40px;height:31px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                         </div>
                                     </div>
 
-                                    <div class="tab-pane fade" id="celan"> 
+                                    <div class="tab-pane fade" id="sidebar"> 
                                         <div class="btn-group" data-toggle="buttons" style="margin: 10px;">
+                                            <!--
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" autocomplete="off" value="float_celan#120_240">120*240
+                                                <input type="radio" name="options" autocomplete="off" value="float_sidebar#120_240">120*240
                                                 <div style="width:17px;height:32px;background:#00DD77;margin-left:20px;"></div>
                                             </label>
+                                            -->
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" autocomplete="off" value="float_celan#120_270">120*270
+                                                <input type="radio" name="options" autocomplete="off" value="float_sidebar#120_270">120*270
                                                 <div style="width:17px;height:32px;background:#00DD77;margin-left:20px;"></div>
                                             </label>
+                                            <!--
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" autocomplete="off" value="float_celan#120_600">120*600
+                                                <input type="radio" name="options" autocomplete="off" value="float_sidebar#120_600">120*600
                                                 <div style="width:10px;height:32px;background:#00DD77;margin-left:20px;"></div>
                                             </label>
+                                            -->
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" autocomplete="off" value="float_celan#160_600">160*600
+                                                <input type="radio" name="options" autocomplete="off" value="float_sidebar#160_600">160*600
                                                 <div style="width:11px;height:32px;background:#00DD77;margin-left:20px;"></div>
                                             </label>
                                         </div>
@@ -186,68 +202,74 @@
 
                                 </div>
                                 <ul class="nav nav-pills">
-                                    <li id="float_duilian">
-                                        <a href="#duilian" data-toggle="tab" aria-expanded="fasle">对联</a>
+                                    <li id="float_couplet">
+                                        <a href="#couplet" data-toggle="tab" aria-expanded="fasle">对联</a>
                                     </li>
-                                    <li id="float_youxiajiao">
-                                        <a href="#youxiajiao" data-toggle="tab" aria-expanded="fasle">右下角</a>
+                                    <li id="float_br">
+                                        <a href="#br" data-toggle="tab" aria-expanded="fasle">右下角</a>
                                     </li>
-                                    <li id="float_dilan">
-                                        <a href="#dilan" data-toggle="tab" aria-expanded="fasle">底栏</a>
+                                    <li id="float_bottom">
+                                        <a href="#bottom" data-toggle="tab" aria-expanded="fasle">底栏</a>
                                     </li>
-                                    <li id="float_celan">
-                                        <a href="#celan" data-toggle="tab" aria-expanded="fasle">侧栏</a>
+                                    <li id="float_sidebar">
+                                        <a href="#sidebar" data-toggle="tab" aria-expanded="fasle">侧栏</a>
                                     </li>
                                 </ul>
 
                             </div> <!-- 浮动广告 -->
                             <div class="tab-pane fade" id="ADfixed"> <!-- 固定广告 -->
                                 <div class="tab-content">
-                                    <div class="tab-pane fade" id="hengfu"> 
+                                    <div class="tab-pane fade" id="banner"> 
                                         <div class="btn-group" data-toggle="buttons" style="margin: 10px;">
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options"  autocomplete="off" value="fixed_hengfu#760_90">760*90
+                                                <input type="radio" name="options"  autocomplete="off" value="fixed_banner#760_90">760*90
                                                 <div style="width:60px;height:10px;background:#00DD77;margin-bottom:23px"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options"  autocomplete="off" value="fixed_hengfu#728_90">728*90
+                                                <input type="radio" name="options"  autocomplete="off" value="fixed_banner#728_90">728*90
                                                 <div style="width:57px;height:10px;background:#00DD77;margin-bottom:23px"></div>
                                             </label>
+                                            <!--
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options"  autocomplete="off" value="fixed_hengfu#640_60">640*60
+                                                <input type="radio" name="options"  autocomplete="off" value="fixed_banner#640_60">640*60
                                                 <div style="width:60px;height:15px;background:#00DD77;margin-bottom:18px"></div>
                                             </label>
+                                            -->
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options"  autocomplete="off" value="fixed_hengfu#960_90">960*90
+                                                <input type="radio" name="options"  autocomplete="off" value="fixed_banner#960_90">960*90
                                                 <div style="width:60px;height:8px;background:#00DD77;margin-bottom:25px"></div>
                                             </label>
                                         </div>
                                     </div>
 
-                                    <div class="tab-pane fade" id="juxing"> 
+                                    <div class="tab-pane fade" id="rectangle"> 
                                         <div class="btn-group" data-toggle="buttons" style="margin: 10px;">
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" autocomplete="off" value="fixed_juxing#320_250">320*250
+                                                <input type="radio" name="options" autocomplete="off" value="fixed_rectangle#300_250">300*250
+                                                <div style="width:40px;height:32px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
+                                            </label>
+                                            <!--
+                                            <label class="btn btn-default">
+                                                <input type="radio" name="options" autocomplete="off" value="fixed_rectangle#250_250">250*250
+                                                <div style="width:32px;height:32px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
+                                            </label>
+                                            -->
+                                            <label class="btn btn-default">
+                                                <input type="radio" name="options" autocomplete="off" value="fixed_rectangle#200_200">200*200
+                                                <div style="width:32px;height:32px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
+                                            </label>
+                                            <!--
+                                            <label class="btn btn-default">
+                                                <input type="radio" name="options" autocomplete="off" value="fixed_rectangle#336_280">336*280
                                                 <div style="width:40px;height:32px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" autocomplete="off" value="fixed_juxing#250_250">250*250
+                                                <input type="radio" name="options" autocomplete="off" value="fixed_rectangle#125_125">125*125
                                                 <div style="width:32px;height:32px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
+                                            -->
                                             <label class="btn btn-default">
-                                                <input type="radio" name="options" autocomplete="off" value="fixed_juxing#200_200">200*200
-                                                <div style="width:32px;height:32px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
-                                            </label>
-                                            <label class="btn btn-default">
-                                                <input type="radio" name="options" autocomplete="off" value="fixed_juxing#336_280">336*280
-                                                <div style="width:40px;height:32px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
-                                            </label>
-                                            <label class="btn btn-default">
-                                                <input type="radio" name="options" autocomplete="off" value="fixed_juxing#125_125">125*125
-                                                <div style="width:32px;height:32px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
-                                            </label>
-                                            <label class="btn btn-default">
-                                                <input type="radio" name="options" autocomplete="off" value="fixed_juxing#360_300">360*300
+                                                <input type="radio" name="options" autocomplete="off" value="fixed_rectangle#360_300">360*300
                                                 <div style="width:40px;height:32px;background:#00DD77;margin-bottom:1px;margin-left:9px"></div>
                                             </label>
                                         </div>
@@ -281,11 +303,11 @@
                                     </div>
 
                                 <ul class="nav nav-pills">
-                                    <li id="fixed_hengfu">
-                                        <a href="#hengfu" data-toggle="tab" aria-expanded="fasle">横幅</a>
+                                    <li id="fixed_banner">
+                                        <a href="#banner" data-toggle="tab" aria-expanded="fasle">横幅</a>
                                     </li>
-                                    <li id="fixed_juxing">
-                                        <a href="#juxing" data-toggle="tab" aria-expanded="fasle">矩形</a>
+                                    <li id="fixed_rectangle">
+                                        <a href="#rectangle" data-toggle="tab" aria-expanded="fasle">矩形</a>
                                     </li>
                                     <li id="fixed_custom">
                                         <a href="#custom" data-toggle="tab" aria-expanded="fasle">自定义</a>
@@ -298,20 +320,20 @@
                 </div> <!-- row 广告形态 -->
 
 
-                <div class="row" style="margin-top:10px;">
+                <div class="row" style="margin-top:20px;">
                     <div class="col-md-1"><h4>关键字黑名单</h4></div>
-                    <div class="col-md-4"><textarea class="form-control" name="keywords_blacklist" id="keywords_blacklist"></textarea></div>
+                    <div class="col-md-4"><textarea class="form-control" name="keywords_blacklist" id="keywords_blacklist" style="height: 120px;"></textarea></div>
                 </div>
 
-                <div class="row" style="margin-top:10px;">
+                <div class="row" style="margin-top:20px;">
                     <div class="col-md-1"><h4>url黑名单</h4></div>
-                    <div class="col-md-4"><textarea class="form-control" name="url_blacklist" id="url_blacklist"></textarea></div>
+                    <div class="col-md-4"><textarea class="form-control" name="url_blacklist" id="url_blacklist" style="height: 120px;"></textarea></div>
                 </div>
-
+                <div style="height:50px;"></div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary" id="save_btn">Save changes</button>
               </div>
             </form>
             </div>
@@ -393,26 +415,72 @@ $(document).ready(function() {
         });
     });
 
+    $("label").click(function() {
+        var sel_val = $(this).children().val();
+        console.log(sel_val);
+        if(sel_val.length > 5) {
+            var words = sel_val.split('#');
+            var type = words[0].split('_')[0];
+            var position = words[0].split('_')[1];
+            $("#preview").attr('src', "<?php echo base_url();?>images/ads/"+type+"/"+position+"/"+words[1]+".png");
+
+            if($(this).children().attr('name') == "options")
+                $("input[name='options']").removeAttr("checked");
+            else if($(this).children().attr('name') == "status")
+                $("input[name='status']").removeAttr("checked");
+
+            $(this).children().attr("checked","checked");
+        }
+    });
+
+    $("#save_btn").click( function(){
+        if($("#slotname").val() == "") {
+            alert("广告名称不能为空");
+            $("#slotname").focus();
+            return;
+        }
+
+        if($("input[name='status']").val() == "") {
+            alert("请选择投放开关");
+            $("input[name='status']").focus();
+            return;
+        }
+
+        if($("input[name='options'][checked]").val() == undefined) {
+            alert("请选择广告形态");
+            return;
+        }
+        console.log($("input[name='options'][checked]").val());
+
+        $("form").submit();
+    });
 }); 
 
 function activeClear() {
+
+    $("#adOn").parent().attr("class","btn btn-primary active");
+    $("#adOff").parent().attr("class","btn btn-primary");
+    $("#adOn").attr("checked","checked");
+    
+    $("input[name='options']").removeAttr("checked");
+
     $("#ADfloat").attr("class","tab-pane fade");    
-    $("#duilian").attr("class","tab-pane fade");
-    $("#youxiajiao").attr("class","tab-pane fade");
-    $("#dilan").attr("class","tab-pane fade");
-    $("#celan").attr("class","tab-pane fade");
-    $("#float_duilian").attr("class","");
-    $("#float_youxiajiao").attr("class","");
-    $("#float_dilan").attr("class","");
-    $("#float_celan").attr("class","");
+    $("#couplet").attr("class","tab-pane fade");
+    $("#br").attr("class","tab-pane fade");
+    $("#bottom").attr("class","tab-pane fade");
+    $("#sidebar").attr("class","tab-pane fade");
+    $("#float_couplet").attr("class","");
+    $("#float_br").attr("class","");
+    $("#float_bottom").attr("class","");
+    $("#float_sidebar").attr("class","");
 
     $("#ADfixed").attr("class","tab-pane fade");    
-    $("#hengfu").attr("class","tab-pane fade");
-    $("#juxing").attr("class","tab-pane fade");
+    $("#banner").attr("class","tab-pane fade");
+    $("#rectangle").attr("class","tab-pane fade");
     $("#custom").attr("class","tab-pane fade");
 
-    $("#fixed_hengfu").attr("class","");
-    $("#fixed_juxing").attr("class","");
+    $("#fixed_banner").attr("class","");
+    $("#fixed_rectangle").attr("class","");
     $("#fixed_custom").attr("class","");
 
     $("#type_float").attr("class","");
@@ -432,11 +500,11 @@ function openDialog(pid) {
 
     $("#type_float").attr("class","active");
     $("#ADfloat").attr("class","tab-pane fade in active");    
-    $("#duilian").attr("class","tab-pane fade in active");
-    $("#float_duilian").attr("class","active");
+    $("#couplet").attr("class","tab-pane fade in active");
+    $("#float_couplet").attr("class","active");
 
-    $("#hengfu").attr("class","tab-pane fade in active");
-    $("#fixed_hengfu").attr("class","active");
+    $("#banner").attr("class","tab-pane fade in active");
+    $("#fixed_banner").attr("class","active");
 
     $("ADfixed").attr("class", "active");
 
@@ -452,10 +520,12 @@ function editDialog(slot_id) {
             $("#slot_id").val(slot_id);
             $("#slotname").val(data['slot_name']); 
             if(data['status'] == 0) {
+                $("#adOn").parent().attr("class", "btn btn-primary");
                 $("#adOff").attr("checked","checked");
                 $("#adOff").parent().attr("class","btn btn-primary active");
             }else{
                 $("#adOn").attr("checked","checked");
+                $("#adOff").parent().attr("class","btn btn-primary");
                 $("#adOn").parent().attr("class","btn btn-primary active");
             }
             $("#type_"+data['type']).attr("class", "active");
@@ -468,12 +538,14 @@ function editDialog(slot_id) {
             $("input[type='radio'][value='"+radioValue+"']").parent().attr("class","btn btn-default active");
             $("#customRadio").parent().attr('class','row');
     
+            $("#preview").attr('src', "<?php echo base_url();?>images/ads/"+data['type']+"/"+data['position']+"/"+data['width']+"_"+data['height']+".png");
+
             if(data['type'] == 'fixed') {
-                $("#duilian").attr("class","tab-pane fade in active");
-                $("#float_duilian").attr("class","active");
+                $("#couplet").attr("class","tab-pane fade in active");
+                $("#float_couplet").attr("class","active");
             }else if(data['type'] == 'float') {
-                $("#hengfu").attr("class","tab-pane fade in active");
-                $("#fixed_hengfu").attr("class","active");
+                $("#banner").attr("class","tab-pane fade in active");
+                $("#fixed_banner").attr("class","active");
             }
 
             $("#keywords_blacklist").val(data['keywords_blacklist']); 

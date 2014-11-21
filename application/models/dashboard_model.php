@@ -149,18 +149,16 @@ class Dashboard_model extends CI_Model {
             $arr = $query->result_array();
             $pv_arr = array_fill(0,24, 0);
             $click_arr = array_fill(0,24, 0);
-            $rate_arr = array_fill(0,24, "0.00%");
+            $rate_arr = array_fill(0,24, 0);
             foreach($arr as $v) {
-//                $time_arr = explode(':', $v['time']);
-//                $time_arr[0] = intval($time_arr[0]);
                 $time_arr[0] = $v['hour'];
                 $pv_arr[$time_arr[0]] = (int)$v['pv'];
                 $click_arr[$time_arr[0]] = (int)$v['click'];
 
                 if($pv_arr[$time_arr[0]] != 0)
-                    $rate_arr[$time_arr[0]] = number_format(round($click_arr[$time_arr[0]]/$pv_arr[$time_arr[0]]*100,2),2)."%";
+                    $rate_arr[$time_arr[0]] = round($click_arr[$time_arr[0]]/$pv_arr[$time_arr[0]]*100,2);
                 else
-                    $rate_arr[$time_arr[0]] = "0.00%";
+                    $rate_arr[$time_arr[0]] = 0;
             }
             $tableHtml = "<div align='right'><i class='fa fa-times' onclick='closeInfo({$slot_id})' style='cursor:pointer'></i></div>";
             $tableHtml  .= "<div class='table-responsive'><table class='table table-hover'><tr><th>日期 时间</th><th>展示量</th><th>点击量</th><th>点击率</th></tr>";
@@ -170,7 +168,7 @@ class Dashboard_model extends CI_Model {
                 $tableHtml .= "<td>{$start} {$i}:00</td>";
                 $tableHtml .= "<td>".number_format($pv_arr[$i])."</td>";
                 $tableHtml .= "<td>".number_format($click_arr[$i])."</td>";
-                $tableHtml .= "<td>".$rate_arr[$i]."</td>";
+                $tableHtml .= "<td>".number_format($rate_arr[$i],2)."%</td>";
                 
                 $tableHtml .= "</tr>";
             };
@@ -188,7 +186,7 @@ class Dashboard_model extends CI_Model {
             $size = $obj_start->diff($obj_end)->days + 1;
             $pv_arr = array_fill(0,$size, 0);
             $click_arr = array_fill(0, $size, 0);
-            $rate_arr = array_fill(0, $size, "0.00%");
+            $rate_arr = array_fill(0, $size, 0);
 
 
             foreach( $arr as $v) {
@@ -198,9 +196,9 @@ class Dashboard_model extends CI_Model {
                 $click_arr[$index] = (int)$v['sum_click'];
 
                 if($pv_arr[$index] != 0) {
-                    $rate_arr[$index] = number_format(round($click_arr[$index]/$pv_arr[$index] * 100, 2),2)."%";   
+                    $rate_arr[$index] = round($click_arr[$index]/$pv_arr[$index] * 100, 2);   
                 }else {
-                    $rate_arr[$index] = "0.00%";   
+                    $rate_arr[$index] = 0;   
                 } 
             }
 
@@ -212,7 +210,7 @@ class Dashboard_model extends CI_Model {
                 $tableHtml .= "<td>{$date_arr[$i]} </td>";
                 $tableHtml .= "<td>".number_format($pv_arr[$i])."</td>";
                 $tableHtml .= "<td>".number_format($click_arr[$i])."</td>";
-                $tableHtml .= "<td>".$rate_arr[$i]."</td>";
+                $tableHtml .= "<td>".number_format($rate_arr[$i], 2)."%</td>";
                 
                 $tableHtml .= "</tr>";
             };

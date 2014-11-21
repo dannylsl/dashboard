@@ -10,7 +10,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading" style="overflow:auto;">
                     <div class="col-md-10" align="right">
-                        <div class="btn btn-primary" style="float:left;cursor:pointer;" OnClick="daySearch()">所有广告位走势图</div>
+                        <div class="btn btn-primary" style="float:left;cursor:pointer;" OnClick="hourSearch()">所有广告位走势图</div>
                         <div class="col-md-1" style="margin-left:10px;"> 
                             <select style="width:100px;" name="widthunit" class="form-control">
                                 <option value="0">ALL</option>
@@ -26,11 +26,11 @@
                         </div>
                         <div class="form-group input-group" style="width:150px;float:left;margin: 0px 3px;">
                             <span class="input-group-addon">起始</span>
-                            <input type="text" class="form-control" id="startdate" data-date-format="yyyy-mm-dd" value="<?php echo $start_date;?>">
+                            <input type="text" class="form-control" id="startdate" data-date-format="YYYY-MM-DD" value="<?php echo $start_date;?>">
                         </div>
                         <div class="form-group input-group" style="width:150px;float:left;margin: 0px 3px;">
                             <span class="input-group-addon">终止</span>
-                            <input type="text" class="form-control" id="enddate" data-date-format="yyyy-mm-dd" value="<?php echo $end_date;?>">
+                            <input type="text" class="form-control" id="enddate" data-date-format="YYYY-MM-DD" value="<?php echo $end_date;?>">
                         </div>
                         <button class="btn btn-default" style="float:left;margin-left:5px;" OnClick="daySearch()">天查询</button>
                         <button class="btn btn-default" style="float:left;margin-left:5px;" Onclick="hourSearch()">时查询</button>
@@ -74,7 +74,7 @@
                             echo "<td>".number_format($slotData[$slot['slot_name']]['sum_pv'])."</td>";
                             echo "<td>".number_format($slotData[$slot['slot_name']]['sum_click'])."</td>";
                             echo "<td>{$clickRate}</td>";
-                            echo "<td>&yen;".number_format($slotData[$slot['slot_name']]['sum_income'],2)."</td>";
+                            echo "<td>&yen;".number_format($slotData[$slot['slot_name']]['sum_income']/100,2)."</td>";
                             echo "<td><a onClick=\"detailInfo({$slot['pid']},{$slot['slot_id']}, '{$start_date}', '{$end_date}')\" style=\"cursor:pointer;\">每日详细</a> ";
                             //echo " | <a onClick=\"closeInfo({$slot['slot_id']})\" style=\"cursor:pointer\">关闭</a>"; 
                             echo "</td>";
@@ -88,7 +88,7 @@
                                 $total_rate = number_format(round($total_click/$total_pv*100,2),2)."%";
                         }
                         if($total_flag)
-                            echo "<tr class='success'><td>小计</td><td>".number_format($total_pv)."</td><td>".number_format($total_click)."</td><td>".$total_rate."</td><td>&yen;".number_format($total_income,2)."</td><td></td></tr>";
+                            echo "<tr class='success'><td>小计</td><td>".number_format($total_pv)."</td><td>".number_format($total_click)."</td><td>".$total_rate."</td><td>&yen;".number_format($total_income/100,2)."</td><td></td></tr>";
                         ?>
                     </table>
                 </div>
@@ -398,8 +398,9 @@ function closeInfo(slot_id) {
 </script>
 
     <!-- Datepicker JavaScript -->
+    <script src="<?php echo base_url();?>js/moment.js"></script>
     <script src="<?php echo base_url();?>js/bootstrap-datepicker.js"></script>
     <script>
-        $("#startdate").datepicker();
-        $("#enddate").datepicker();
+        $("#startdate").datetimepicker({pickTime:false,maxDate:'<?php echo date('Y-m-d')?>'});
+        $("#enddate").datetimepicker({pickTime:false,maxDate:'<?php echo date('Y-m-d')?>'});
     </script>

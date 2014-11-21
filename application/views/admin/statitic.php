@@ -15,11 +15,11 @@
                 <div class="panel-body">
                     <div class="form-group input-group" style="width:150px;float:left;margin: 0px 3px;">
                         <span class="input-group-addon">起始</span>
-                        <input type="text" class="form-control" id="startdate" data-date-format="yyyy-mm-dd" value="<?php echo $start_date;?>">
+                        <input type="text" class="form-control" id="startdate" data-date-format="YYYY-MM-DD" value="<?php echo $start_date;?>">
                     </div>
                     <div class="form-group input-group" style="width:150px;float:left;margin: 0px 3px;">
                         <span class="input-group-addon">终止</span>
-                        <input type="text" class="form-control" id="enddate" data-date-format="yyyy-mm-dd" value="<?php echo $end_date;?>">
+                        <input type="text" class="form-control" id="enddate" data-date-format="YYYY-MM-DD" value="<?php echo $end_date;?>">
                     </div>
                     <button class="btn btn-default" style="float:left;margin-left:5px;" OnClick="weekCmp()">查询</button>
                     <div id="container"></div>
@@ -38,11 +38,11 @@
                 <div class="panel-body">
                     <div class="form-group input-group" style="width:150px;float:left;margin: 0px 3px;">
                         <span class="input-group-addon">起始</span>
-                        <input type="text" class="form-control" id="startMonth" data-date-format="yyyy-mm-dd" value="<?php echo $last_month;?>">
+                        <input type="text" class="form-control" id="startMonth" data-date-format="YYYY-MM" value="<?php echo $last_month;?>">
                     </div>
                     <div class="form-group input-group" style="width:150px;float:left;margin: 0px 3px;">
                         <span class="input-group-addon">终止</span>
-                        <input type="text" class="form-control" id="endMonth" data-date-format="yyyy-mm-dd" value="<?php echo $cur_month;?>">
+                        <input type="text" class="form-control" id="endMonth" data-date-format="YYYY-MM" value="<?php echo $cur_month;?>">
                     </div>
                     <button class="btn btn-default" style="float:left;margin-left:5px;" OnClick="monthCmp()">查询</button>
                     <div id="container2"></div>
@@ -83,7 +83,7 @@
                                     if($detail['pv'] != 0)
                                         $rate = number_format(round($detail['click']/$detail['pv']*100, 2),2)."%";
                                     echo "<td>{$rate}</td>";
-                                    echo "<td>&yen;".number_format($detail['income'], 2)."</td>";
+                                    echo "<td>&yen;".number_format($detail['income']/100, 2)."</td>";
                                     echo "</tr>";
                                     $total_pv += $detail['pv'];
                                     $total_click += $detail['click'];
@@ -431,11 +431,12 @@ function download() {
     </script>
 
     <!-- Datepicker JavaScript -->
+    <script src="<?php echo base_url();?>js/moment.js"></script>
     <script src="<?php echo base_url();?>js/bootstrap-datepicker.js"></script>
     <script>
-        $("#startdate").datepicker();
-        $("#enddate").datepicker();
-        $("#startMonth").datepicker({format:"yyyy-mm"});
-        $("#endMonth").datepicker({format:"yyyy-mm"});
+        $("#startdate").datetimepicker({pickTime:false,maxDate:'<?php echo date('Y-m-d')?>'});
+        $("#enddate").datetimepicker({pickTime:false,maxDate:'<?php echo date('Y-m-d')?>'});
+        $("#startMonth").datetimepicker({pickTime:false,maxDate:'<?php echo date('Y-m-d')?>'});
+        $("#endMonth").datetimepicker({pickTime:false,maxDate:'<?php echo date('Y-m-d')?>'});
     </script>
     
