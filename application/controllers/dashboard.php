@@ -99,8 +99,9 @@ class DashBoard extends CI_Controller {
             echo "<script>alert('验证码错误');history.back()</script>";
         }else{
             $accinfo = $this->dashboard_model->userValidate($accemail, $password);
-            $acc_id = $accinfo['acc_id'];
-            if( $acc_id  > 0 ) {
+            if(!empty($accinfo)) {
+            //if( $acc_id  > 0 ) {
+                $acc_id = $accinfo['acc_id'];
                 $info = array(
                     "accemail" => $accemail,
                     "acc_id" => $acc_id,
@@ -112,7 +113,8 @@ class DashBoard extends CI_Controller {
                 //echo base_url();
                 header("Location:".base_url()); 
             }else {
-                header("Location:".base_url()."index.php/dashboard/login"); 
+                //header("Location:".base_url()."index.php/dashboard/login"); 
+                echo "<script>alert('用户名或密码错误');history.back()</script>";
                 //echo base_url()."index.php/dashboard/login";
             };
         }
@@ -195,6 +197,23 @@ class DashBoard extends CI_Controller {
         $this->load->view('admin/navbar',$data);
         $this->load->view('admin/statitic');
         $this->load->view('admin/footer');
+    }
+
+    public function download_statitic() {
+        $data['acc_id'] = $this->islogined();
+        $statiticData = $this->dashboard_model->getStatiticData($data['acc_id'], date("Y-m-d",time() - 86400*14), date("Y-m-d"));
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="statitic.csv"');
+        header('Cache-Control: max-age=0');
+        echo iconv("utf-8","gb2312","日期,展示量,总点击量,点击率,收入（元）")."\r\n";
+        foreach($statiticData as $sdata)  {
+            $rate = "0.00%";
+            if($sdata['pv'] != 0) {
+                $rate = number_format(round($sdata['click']/$sdata['pv']*100, 2),2)."%";
+            }
+//            echo $sdata['date'].",".$sdata['pv'].",".$sdata['click'].",".$rate.",".$sdata['income']."\r\n";
+            echo "{$sdata['date']},{$sdata['pv']},{$sdata['click']},{$rate},{$sdata['income']}\r\n";
+        }
     }
 
     public function weekCmp($start, $end) {
@@ -401,7 +420,22 @@ class DashBoard extends CI_Controller {
         $this->load->view('admin/footer');
 
     }
+    
+    public function download_pidlist() {
+        $data['acc_id'] = $this->islogined();
+        $pidlist = $this->dashboard_model->getPidList($data['acc_id']); 
 
+        header('Content-Type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment;filename="pidlist.csv"');
+        header('Cache-Control: max-age=0');
+        echo iconv("utf-8","gb2312","序号,PID名称")."\r\n";
+        $index = 1;
+        foreach($pidlist as $pid) {
+            echo "{$index},{$pid['pid_name']}\r\n";
+            $index++;
+        }
+    }
+    
     public function newpid($pidinfo) {
         $data['acc_id'] = $this->islogined();
         $accemail = $this->session->userdata('accemail');

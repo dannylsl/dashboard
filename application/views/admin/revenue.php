@@ -44,13 +44,13 @@
                                         echo "<tr>";
                                             echo "<td>{$index}</td>";
                                             echo "<td>{$data['date']}</td>";
-                                            echo "<td>{$data['sum_pv']}</td>";
-                                            echo "<td>{$data['sum_click']}</td>";
+                                            echo "<td>".number_format($data['sum_pv'])."</td>";
+                                            echo "<td>".number_format($data['sum_click'])."</td>";
                                             $rate = "0.00%";
                                             if($data['sum_pv'] != 0)
-                                                $rate = round($data['sum_click']/$data['sum_pv']*100, 2);
+                                                $rate = number_format(round($data['sum_click']/$data['sum_pv']*100, 2),2)."%";
                                             echo "<td>{$rate}</td>";
-                                            echo "<td>{$data['sum_income']}</td>";
+                                            echo "<td>&yen;".number_format($data['sum_income'],2)."</td>";
                                         echo "</tr>";
                                         $index ++;
                                     }

@@ -54,8 +54,8 @@
         <!-- /.col-lg-6 -->
         <div class="col-lg-12">
             <div class="panel panel-default">
-                <div class="panel-heading">最近两周详细数据
-
+                <div class="panel-heading" style="overflow:auto">最近两周详细数据
+                <a style="float:right" class="btn btn-primary btn-sm" href="<?php echo base_url();?>index.php/dashboard/download_statitic"><i class="fa fa-download"></i> 下载数据</a>
                 </div>
 
                 <div class="panel-body">
@@ -77,13 +77,13 @@
                                 foreach( $statiticData as $detail) {
                                     echo "<tr>";
                                     echo "<td>{$detail['date']}</td>";
-                                    echo "<td>{$detail['pv']}</td>";
-                                    echo "<td>{$detail['click']}</td>";
+                                    echo "<td>".number_format($detail['pv'])."</td>";
+                                    echo "<td>".number_format($detail['click'])."</td>";
                                     $rate = "0.00%";
                                     if($detail['pv'] != 0)
-                                        $rate = round($detail['click']/$detail['pv']*100, 2)."%";
+                                        $rate = number_format(round($detail['click']/$detail['pv']*100, 2),2)."%";
                                     echo "<td>{$rate}</td>";
-                                    echo "<td>&yen;{$detail['income']}</td>";
+                                    echo "<td>&yen;".number_format($detail['income'], 2)."</td>";
                                     echo "</tr>";
                                     $total_pv += $detail['pv'];
                                     $total_click += $detail['click'];
@@ -91,13 +91,13 @@
                                 } 
                                 echo "<tr class='info'>";
                                 echo "<td>小计</td>";
-                                echo "<td>{$total_pv}</td>";
-                                echo "<td>{$total_click}</td>";
+                                echo "<td>".number_format($total_pv)."</td>";
+                                echo "<td>".number_format($total_click)."</td>";
                                 $rate = "0.00%";
                                 if($total_pv != 0)
-                                    $rate = round($total_click/$total_pv * 100, 2)."%";
+                                    $rate = number_format(round($total_click/$total_pv * 100, 2),2)."%";
                                 echo "<td>{$rate}</td>";
-                                echo "<td>&yen;{$total_income}</td>";
+                                echo "<td>&yen;".number_format($total_income,2)."</td>";
                                 echo "</tr>";
 
                                 ?>
@@ -133,6 +133,7 @@ $(function () {
             shared: true,
         },
         yAxis: [{ // Primary yAxis
+            min:0,
             labels: {
                 enabled:false,
                 formatter: function() {
@@ -151,6 +152,7 @@ $(function () {
             opposite: true
 
         }, { // Secondary yAxis
+            min:0,
             gridLineWidth: 0,
             title: {
            //     text: '总点击量',
@@ -170,6 +172,7 @@ $(function () {
             }
 
         }, { // Tertiary yAxis
+            min:0,
             gridLineWidth: 0,
             title: {
           //      text: '总展示量',
@@ -277,6 +280,7 @@ $(function () {
             shared: true,
         },
         yAxis: [{ // Primary yAxis
+            min:0,
             labels: {
                 enabled:false,
                 formatter: function() {
@@ -295,6 +299,7 @@ $(function () {
             opposite: true
 
         }, { // Secondary yAxis
+            min:0,
             gridLineWidth: 0,
             title: {
            //     text: '总点击量',
@@ -314,6 +319,7 @@ $(function () {
             }
 
         }, { // Tertiary yAxis
+            min:0,
             gridLineWidth: 0,
             title: {
           //      text: '总展示量',
@@ -415,6 +421,13 @@ function monthCmp() {
 
     location.href = "<?php echo base_url();?>index.php/dashboard/monthCmp/"+start+"/"+end;
 }
+
+function download() {
+    $.ajax({
+        url:"<?php echo base_url();?>index.php/dashboard/download_statitic",
+    }); 
+}
+
     </script>
 
     <!-- Datepicker JavaScript -->
