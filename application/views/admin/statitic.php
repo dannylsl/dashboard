@@ -127,6 +127,11 @@ $(function () {
         },
         xAxis: [{
             type: 'datetime', 
+            dateTimeLabelFormats: { 
+                day: '%m-%d',
+                week: '%m-%d',
+                month: '%m-%d',
+            }
         }],
         tooltip: {
             xDateFormat:'%Y-%m-%d %H 时',
@@ -274,6 +279,9 @@ $(function () {
         },
         xAxis: [{
             type: 'datetime', 
+            dateTimeLabelFormats: { 
+                day: '%m-%d',
+            }
         }],
         tooltip: {
             xDateFormat:'%Y-%m-%d %H 时',

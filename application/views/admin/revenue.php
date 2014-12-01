@@ -29,7 +29,7 @@
                     </div>
                     <div class="row">
                         <div class="table-responsive">
-                            <table class="table table-striped">
+                            <table class="table table-striped table-hover">
                                 <tr>
                                     <th>序号</th>
                                     <th>日期</th>

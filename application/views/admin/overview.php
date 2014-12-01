@@ -24,7 +24,7 @@
 
 
     <!-- high charts -->
-    <script src="<?php echo base_url();?>js/highcharts.js"></script>
+    <script src="<?php echo base_url();?>js/highcharts.src.js"></script>
     <script>
 $(function () {
     $('#container').highcharts({
@@ -39,6 +39,10 @@ $(function () {
         },
         xAxis: [{
             type: 'datetime', 
+            dateTimeLabelFormats: { 
+                day: '%Y-%m-%d',
+                //day: '%m-%d',
+            }
         }],
         tooltip: {
             xDateFormat:'%Y-%m-%d %H 时',

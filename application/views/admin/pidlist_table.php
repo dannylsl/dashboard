@@ -9,7 +9,7 @@
 
 
     <div class="table-responsive" style="margin-top:10px;">
-    <table class="table table-striped">
+    <table class="table table-striped table-hover">
         <tr> 
             <th>序号</th>
             <th>PID名称</th>

@@ -48,7 +48,7 @@
         <div class="col-lg-12">
             <div class="row">
                 <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table table-striped table-hover">
                         <tr>
                             <th>名称</th>
                             <th>展示量</th>
@@ -99,7 +99,7 @@
 
 
     <!-- high charts -->
-    <script src="<?php echo base_url();?>js/highcharts.js"></script>
+    <script src="<?php echo base_url();?>js/highcharts.src.js"></script>
     <script>
 $(function () {
     $('#container').highcharts({
@@ -114,6 +114,11 @@ $(function () {
         },
         xAxis: [{
             type: 'datetime', 
+            dateTimeLabelFormats: { 
+                day: '%Y-%m-%d',
+                week: '%Y-%m-%d',
+                month: '%Y-%m-%d',
+            }
         }],
         tooltip: {
             xDateFormat:'%Y-%m-%d %H',
@@ -244,6 +249,9 @@ function showChart(title, subtitle, xAxisData, pvData, clickData, rateData) {
         xAxis: [{
             type: 'datetime', 
 //            categories:  xAxisData ,
+            dateTimeLabelFormats: { 
+                day: '%m-%d',
+            }
         }],
         yAxis: [{ // Primary yAxis
             min:0,

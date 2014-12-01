@@ -3020,8 +3020,24 @@ SVGRenderer.prototype = {
 
 		// Skip tspans, add text directly to text node
 		if (!hasMarkup && textStr.indexOf(' ') === -1) {
-			textNode.appendChild(doc.createTextNode(textStr));
-			return;
+            var weekNo = new Date(textStr).getDay();
+            if( weekNo == 0) {
+                textStr += '日'; 
+				var textTag = doc.createElementNS(SVG_NS, 'tspan');
+                textTag.appendChild(doc.createTextNode(textStr));
+                attr(textTag, 'style', 'fill:red');
+                textNode.appendChild(textTag);
+            }else if(weekNo == 6) {
+                textStr += '六'; 
+				var textTag = doc.createElementNS(SVG_NS, 'tspan');
+                textTag.appendChild(doc.createTextNode(textStr));
+                attr(textTag, 'style', 'fill:red');
+                textNode.appendChild(textTag);
+
+            }else{
+                textNode.appendChild(doc.createTextNode(textStr));
+                return;
+            }
 
 		// Complex strings, add more logic
 		} else {
@@ -3060,6 +3076,8 @@ SVGRenderer.prototype = {
 				spans = line.split('|||');
 
 				each(spans, function (span) {
+                    console.log("SPAN:")
+                    console.log(span); 
 					if (span !== '' || spans.length === 1) {
 						var attributes = {},
 							tspan = doc.createElementNS(SVG_NS, 'tspan'),
@@ -3073,16 +3091,20 @@ SVGRenderer.prototype = {
 							css(tspan, { cursor: 'pointer' });
 						}
 
+                        console.log("TSPAN:");
+                        console.log(tspan); 
+                        //attr(tspan,'style',"fill:red");
+                        console.log("brefore:"+span); 
 						span = (span.replace(/<(.|\n)*?>/g, '') || ' ')
 							.replace(/&lt;/g, '<')
 							.replace(/&gt;/g, '>');
 
 						// Nested tags aren't supported, and cause crash in Safari (#1596)
+                        console.log("after:"+span); 
 						if (span !== ' ') {
 
 							// add the text node
 							tspan.appendChild(doc.createTextNode(span));
-
 							if (!spanNo) { // first span in a line, align it to the left
 								if (lineNo && parentX !== null) {
 									attributes.x = parentX;
@@ -3093,7 +3115,6 @@ SVGRenderer.prototype = {
 
 							// add attributes
 							attr(tspan, attributes);
-
 							// first span on subsequent line, add the line height
 							if (!spanNo && lineNo) {
 
