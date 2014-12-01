@@ -7,7 +7,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="">SB Admin v2.0</a>
+                <a class="navbar-brand" href="">广告管理后台</a>
             </div>
             <!-- /.navbar-header -->
 
