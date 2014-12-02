@@ -29,7 +29,35 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+<style>
+.rotation {
+    -webkit-transition-property: -webkit-transform; 
+    -webkit-transition-duration: 1s;
+    -moz-transition-property: -moz-transform; 
+    -moz-transition-duration: 1s;
+    -webkit-animation: rotate 2s linear infinite; 
+    -moz-animation: rotate 2s linear infinite; 
+    -o-animation: rotate 2s linear infinite; 
+    animation: rotate 2s linear infinite; 
+}
+@-webkit-keyframes rotate{
+    from{-webkit-transform: rotate(0deg)}
+    to{-webkit-transform: rotate(360deg)}
+}
+@-moz-keyframes rotate{
+    from{-moz-transform: rotate(0deg)}
+    to{-moz-transform: rotate(359deg)}
+}
+@-o-keyframes rotate{
+    from{-o-transform: rotate(0deg)}
+    to{-o-transform: rotate(359deg)}
+}
+@keyframes rotate{
+    from{transform: rotate(0deg)}
+    to{transform: rotate(359deg)}
+}
 
+</style>
 </head>
 
 <body>
@@ -42,7 +70,7 @@
                         <h3 class="panel-title">登录页面</h3>
                     </div>
                     <div class="panel-body">
-                        <?php  echo form_open("dashboard/usercheck");?>
+                        <?php  echo form_open("c=dashboard&m=usercheck");?>
                             <fieldset>
                                 <div class="form-group">
                                     <label>邮箱</label>
@@ -55,7 +83,7 @@
                                 <div class="form-group">
                                     <div>验证码</div>
                                     <input class="form-control"  name="captcha" style= "width:120px;float:left;margin-right:10px;" placeholder="" value="" >
-                                    <?php echo $cap; ?>
+                                    <?php echo $cap; ?>  <i class='fa fa-refresh' id='cap_btn' style='font-size: 20px; margin: 2px 10px; color:#449d44;cursor:pointer' onclick="refreshCaptcha()"></i>
                                 </div>
                             <!-- 
                                 <div class="checkbox">
@@ -81,6 +109,22 @@
         </div>
     </div>
 
+<script src="<?php echo base_url();?>js/jquery.js"></script>
+<script src="<?php echo base_url();?>js/jqueryRotate.js"></script>
+<script>
+function refreshCaptcha() {
 
+    $.ajax({
+        url:"<?php echo base_url(); ?>index.php/dashboard/newcaptcha",
+        beforeSend:function() {
+            $("#cap_btn").addClass('rotation');
+        },
+        success: function(data) {
+            $("img").attr("src",data);
+            $("#cap_btn").removeClass('rotation');
+        }
+    });
+}
+</script>
 </body>
 </html>

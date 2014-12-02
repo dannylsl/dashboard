@@ -372,7 +372,8 @@ function daySearch() {
     var end = $("#enddate").val();
     var pid = $("select").val();
 
-    location.href="<?php echo base_url();?>index.php/dashboard/daySearch/"+pid+"/"+start+"/"+end; 
+    //location.href="<?php echo base_url();?>index.php/dashboard/daySearch/"+pid+"/"+start+"/"+end; 
+    location.href="<?php echo base_url();?>index.php?c=dashboard&m=daySearch&pid="+pid+"&start="+start+"&end="+end; 
 }
 
 function hourSearch() {
@@ -380,7 +381,7 @@ function hourSearch() {
     var end = $("#enddate").val();
     var pid = $("select").val();
 
-    location.href="<?php echo base_url();?>index.php/dashboard/hourSearch/"+pid+"/"+start+"/"+end; 
+    location.href="<?php echo base_url();?>index.php?c=dashboard&m=hourSearch&pid="+pid+"&start="+start+"&end="+end; 
 }
 
 function detailInfo(pid, slot_id, start,end) {

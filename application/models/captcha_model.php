@@ -25,9 +25,33 @@ class Captcha_model extends CI_Model {
         return $cap['image'];
     }
 
+    public function newCaptcha() {
+        $this->load->helper('captcha');
+        $vals = array(
+            'img_path' => dirname(BASEPATH).'/images/captcha/',
+            'img_url' => base_url('images/captcha').'/',
+            'img_width'=> 60,
+            'img_height'=> 30,
+        );
+
+        $cap = create_captcha($vals);
+        $data = array(
+            'captcha_time' => $cap['time'],
+            'ip_address' => $this->input->ip_address(),
+            'word' => $cap['word']
+        );
+
+        $query = $this->db->insert_string('captcha', $data);
+        $this->db->query($query);
+        $img_url = base_url()."images/captcha/".$cap['time'].".jpg";
+        return $img_url;
+    }
+
+
+
     public function checkCaptcha($captcha) {
     
-        $expiration = time()-7200; // 2小时限制
+        $expiration = time()-1800; // 0.5小时限制
         $this->db->query("DELETE FROM captcha WHERE captcha_time < ".$expiration); 
 
         // 然后再看是否有验证码存在:
