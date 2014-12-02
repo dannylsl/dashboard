@@ -51,7 +51,7 @@
                                     <a href="<?php echo base_url();?>index.php/dashboard/statitic" <?php echo $navbar==2?"class='active'":" "?>>统计信息</a>
                                 </li>
                                 <li>
-                                    <a href="<?php echo base_url();?>index.php/dashboard/hourSearch/0/<?php echo date('Y-m-d').'/'.date('Y-m-d');?>"  <?php echo $navbar==3?"class='active'":" "?> >广告位置</a>
+                                    <a href="<?php echo base_url();?>index.php?c=dashboard&m=hourSearch&pid=0&start=<?php echo date('Y-m-d').'&end='.date('Y-m-d');?>"  <?php echo $navbar==3?"class='active'":" "?> >广告位置</a>
                                 </li>
                                 <li>
                                     <a href="<?php echo base_url();?>index.php/dashboard/revenue" <?php echo $navbar==4?"class='active'":" "?>>收益优化</a>

@@ -143,7 +143,8 @@ class Dashboard_model extends CI_Model {
     }
 
     public function getSlotDataDetail($acc_id, $pid, $slot_id, $start, $end) {
-        if($start == $end) { //HOUR
+        //if($start == $end) { //HOUR
+        if(false) {
             $sql = "SELECT hour(time) as hour,sum(pv) as pv,sum(click) as click, sum(income) as income FROM `stat` WHERE `date`>='{$start}' AND `date`<='{$end}' AND `slot_id`='{$slot_id}' GROUP BY hour(time)"; 
             $query = $this->db->query($sql);
             $arr = $query->result_array();
@@ -203,22 +204,21 @@ class Dashboard_model extends CI_Model {
             }
 
             $date_arr = $this->getXAxisDayJSON($start,$end);
-             $tableHtml  = "<div class='table-responsive'><table class='table table-hover'><tr><th>日期 时间</th><th>展示量</th><th>点击量</th><th>点击率</th></tr>";
+            $tableHtml  = "<div class='table-responsive'>";
+            $tableHtml .= "<div align='right'><i class='fa fa-times' onclick='closeInfo({$slot_id})' style='cursor:pointer'></i></div>";
+            $tableHtml .= "<table class='table table-hover'><tr><th>日期 时间</th><th>展示量</th><th>点击量</th><th>点击率</th></tr>";
             for($i=0; $i < $size; $i++) {
                 $tableHtml .= "<tr>";
-
                 $tableHtml .= "<td>{$date_arr[$i]} </td>";
                 $tableHtml .= "<td>".number_format($pv_arr[$i])."</td>";
                 $tableHtml .= "<td>".number_format($click_arr[$i])."</td>";
                 $tableHtml .= "<td>".number_format($rate_arr[$i], 2)."%</td>";
-                
                 $tableHtml .= "</tr>";
             };
             $tableHtml .= "</table></div>";
 
             $title = $this->getChartTitle($acc_id, $pid, $slot_id, $start, $end, "day");
             echo json_encode(array("xAxis"=>$this->getStartAndInterval($start,'day'),"pv" =>$pv_arr,"click" => $click_arr, "rate"=>$rate_arr, "title" =>$title['title'] ,  "subtitle"=>$title['subtitle'], "table"=>$tableHtml));
-
 
         } 
     }
@@ -237,6 +237,7 @@ class Dashboard_model extends CI_Model {
             $pidinfo['pid_name'] = "所有广告位"; 
             $slotinfo['slot_name'] = "";
         }
+
         if($dayOrHour == "day")
             $scale = "天查询";
         else if($dayOrHour == "hour")

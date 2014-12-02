@@ -8,7 +8,7 @@
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                近两周数据概况 <a href="<?php echo base_url();?>index.php/dashboard/daySearch/0/<?php echo $start_date.'/'.$end_date.'/1';?>" class="btn btn-primary">查看详情</a>
+                近两周数据概况 <a href="<?php echo base_url();?>index.php?c=dashboard&m=daySearch&pid=0&start=<?php echo $start_date.'&end='.$end_date.'&total=1';?>" class="btn btn-primary">查看详情</a>
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">

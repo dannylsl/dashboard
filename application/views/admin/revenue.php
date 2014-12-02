@@ -11,7 +11,7 @@
                 <div class="panel-heading">收益优化报表</div>
                 <div class="panel-body">
                     <div class="row">
-                        <?php echo form_open("dashboard/revenue");?>
+                        <?php echo form_open("c=dashboard&m=revenue");?>
                         <div class="col-md-2">
                             <div class="form-group input-group">
                                 <span class="input-group-addon">起始</span>

@@ -46,6 +46,10 @@ class DashBoard extends CI_Controller {
         $this->load->view('login', $data);
     }
 
+    public function newcaptcha() {
+        $this->load->helper("url");
+        echo $this->captcha_model->newCaptcha();
+    }
 
     public function register() {
         $this->load->helper("url"); 
@@ -98,8 +102,8 @@ class DashBoard extends CI_Controller {
         $captcha  = $this->input->post('captcha');
 
         if ( $this->captcha_model->checkCaptcha($captcha) == false ) {
-            header("content-type:text/html;charset=utf-8");
             //echo "<script>alert('验证码错误');location.href=\"".base_url()."index.php/dashboard/login\"</script>";
+            echo "<meta charset='utf-8'>";
             echo "<script>alert('验证码错误');history.back()</script>";
         }else{
             $accinfo = $this->dashboard_model->userValidate($accemail, $password);
@@ -118,7 +122,7 @@ class DashBoard extends CI_Controller {
                 header("Location:".base_url()); 
             }else {
                 //header("Location:".base_url()."index.php/dashboard/login"); 
-                header("content-type:text/html;charset=utf-8");
+                echo "<meta charset='utf-8'>";
                 echo "<script>alert('用户名或密码错误');history.back()</script>";
                 //echo base_url()."index.php/dashboard/login";
             };
@@ -345,7 +349,46 @@ class DashBoard extends CI_Controller {
         $this->dashboard_model->getSlotDataDetail($data['acc_id'], $pid, $slot_id, $start, $end); 
     }
 
-    public function daySearch($pid, $start, $end, $total = 0) {
+    public function daySearch() {
+        $this->load->helper("url"); 
+        $pid = $this->input->get("pid");
+        $start = $this->input->get("start");
+        $end = $this->input->get("end");
+        if( null == $this->input->get("total") ) {
+            $total = 0;
+        }else{
+            $total = $this->input->get("total");
+        }
+
+        $data['navbar'] = "3";
+        $data['acc_id'] = $this->islogined();
+        $data['accemail'] = $this->session->userdata("accemail");
+        $data['sel_pid'] = $pid;
+        $data['total_flag'] = $total;
+        $data['start_date'] = $start;
+        $data['end_date'] = $end;
+        $data['slotlist'] = $this->dashboard_model->getSlotList($pid, $data['acc_id']);
+        $data['pidlist'] = $this->dashboard_model->getPidList($data['acc_id']); 
+
+        $slotData = array();
+        foreach($data['slotlist'] as $slot) {
+            $slotData[$slot['slot_name']] = $this->dashboard_model->getSlotData($slot['slot_id'],  $data['start_date'], $data['end_date']); 
+        }
+        $data['slotData'] = $slotData;
+    //  $data['xAxis'] = $this->dashboard_model->getXAxisDay($data['start_date'], $data['end_date']);
+        $data['xAxis'] = $this->dashboard_model->getStartAndInterval($data['start_date'], 'day');
+        $data['yAxis'] = $this->dashboard_model->getDayData($data['start_date'], $data['end_date'], $pid, $data['acc_id']);
+        $data['chartTitle'] = $this->dashboard_model->getChartTitle($data['acc_id'], $pid, 0, $data['start_date'], $data['end_date'],"day");
+
+        $this->load->view('admin/header');
+        $this->load->view('admin/navbar',$data);
+        $this->load->view('admin/detail',$data);
+        $this->load->view('admin/footer');
+        
+    }
+
+
+    public function daySearch2($pid, $start, $end, $total = 0) {
         $this->load->helper("url"); 
         $data['navbar'] = "3";
         $data['acc_id'] = $this->islogined();
@@ -374,7 +417,42 @@ class DashBoard extends CI_Controller {
         
     }
 
-    public function hourSearch($pid, $start, $end) {
+    public function hourSearch() {
+        $this->load->helper("url"); 
+        $pid = $this->input->get("pid");
+        $start = $this->input->get("start");
+        $end = $this->input->get("end");
+
+        $data['navbar'] = "3";
+        $data['acc_id'] = $this->islogined();
+        $data['accemail'] = $this->session->userdata("accemail");
+        $data['sel_pid'] = $pid;
+        $data['start_date'] = $start;
+        $data['total_flag'] = 0;
+        $data['end_date'] = $end;
+        $data['slotlist'] = $this->dashboard_model->getSlotList($pid, $data['acc_id']);
+        $data['pidlist'] = $this->dashboard_model->getPidList($data['acc_id']); 
+        
+        $slotData = array();
+        foreach($data['slotlist'] as $slot) {
+            $slotData[$slot['slot_name']] = $this->dashboard_model->getSlotData($slot['slot_id'],  $data['start_date'], $data['end_date']); 
+        }
+        $data['slotData'] = $slotData;
+        //$data['xAxis'] = $this->dashboard_model->getXAxisDayHours($data['start_date'], $data['end_date']);
+        $data['xAxis'] = $this->dashboard_model->getStartAndInterval($data['start_date'], 'hour');
+        $data['yAxis'] = $this->dashboard_model->getPidHourData($data['start_date'], $data['end_date'], $pid, $data['acc_id']);
+        $data['chartTitle'] = $this->dashboard_model->getChartTitle($data['acc_id'], $pid, 0, $data['start_date'], $data['end_date'],"hour");
+
+        $this->load->view('admin/header');
+        $this->load->view('admin/navbar',$data);
+        $this->load->view('admin/detail',$data);
+        $this->load->view('admin/footer');
+       
+        
+    }
+
+
+    public function hourSearch2($pid, $start, $end) {
         $this->load->helper("url"); 
         $data['navbar'] = "3";
         $data['acc_id'] = $this->islogined();

@@ -77,7 +77,7 @@
               </div>
              <div class="modal-body">
                  
-                <?php echo form_open("dashboard/newSlot");?>
+                <?php echo form_open("c=dashboard&m=newSlot");?>
                 <div class="row" style="position:absolute;z-index:2;right:50px;">
                     预览:<br>
                     <img id="preview" src="<?php echo base_url();?>images/ads/float/couplet/120_270.png" style="max-width: 800px;">
