@@ -48,11 +48,15 @@
             foreach( $slotlist_arr[$pidinfo['pid_name']] as $slot) {
                 echo "<tr><td>{$slot_index}</td>";
                 echo "<td>[{$slot['pid_name']}] {$slot['slot_name']}</td>";
-                echo "<td>{$slot['status']}</td>";
-                echo "<td>{$slot['type']}</td>";
+
+                echo "<td>".($slot['status']?"开启":"关闭")."</td>";
+                if($slot['type']=="fixed") $type= "固定广告";
+                else if($slot['type']=="float") $type= "浮动广告";
+                else if($slot['type']=="float") $type= "浮动广告";
+                echo "<td>{$type}</td>";
                 echo "<td>{$slot['width']}</td>";
                 echo "<td>{$slot['height']}</td>";
-                echo "<td><a style='cursor:pointer;' onclick='editDialog({$slot['slot_id']})'>修改</a> | <a style='cursor:pointer;' onclick=\"showCode({$slot['slot_id']},'{$pidinfo['pid']}','{$slot['type']}','{$slot['position']}',{$slot['width']},{$slot['height']})\">代码</a></td></tr>";
+                echo "<td><a style='cursor:pointer;' onclick='editDialog({$slot['pid']},{$slot['slot_id']})'>修改</a> | <a style='cursor:pointer;' onclick=\"showCode({$slot['slot_id']},'{$pidinfo['pid']}','{$slot['type']}','{$slot['position']}',{$slot['width']},{$slot['height']})\">代码</a></td></tr>";
                 $slot_index++;
             }
             echo "</table></div>";
@@ -417,13 +421,14 @@ $(document).ready(function() {
 
     $("label").click(function() {
         var sel_val = $(this).children().val();
+        $("label[class='btn btn-default active']").attr("class", "btn btn-default");
+        $("#custombtn").attr("disabled",false);
         console.log(sel_val);
         if(sel_val.length > 5) {
             var words = sel_val.split('#');
             var type = words[0].split('_')[0];
             var position = words[0].split('_')[1];
             $("#preview").attr('src', "<?php echo base_url();?>images/ads/"+type+"/"+position+"/"+words[1]+".png");
-
             if($(this).children().attr('name') == "options")
                 $("input[name='options']").removeAttr("checked");
             else if($(this).children().attr('name') == "status")
@@ -510,7 +515,7 @@ function openDialog(pid) {
 
 }
 
-function editDialog(slot_id) {
+function editDialog(pid,slot_id) {
     $.ajax({
         url:"<?php echo base_url();?>index.php/dashboard/getSlotInfo/"+slot_id,
         async: false,
@@ -518,6 +523,7 @@ function editDialog(slot_id) {
         success: function(data) {
             activeClear();
             $("#slot_id").val(slot_id);
+            $("#pid").val(pid);
             $("#slotname").val(data['slot_name']); 
             if(data['status'] == 0) {
                 $("#adOn").parent().attr("class", "btn btn-primary");
@@ -584,6 +590,7 @@ function showCode(slotId, pid, type, position, width, height) {
 function customClick() {
     var width = $("#cwidth").val();
     var height = $("#cheight").val();
+    $("label[class='btn btn-default active']").attr("class", "btn btn-default");
     $("#customRadio").val("fixed_custom#"+height+"_"+width);
     $("#customRadio").attr("checked", "checked");
     $("#custombtn").attr("disabled", "disabled");

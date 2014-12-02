@@ -42,7 +42,7 @@
                         <h3 class="panel-title">用户注册</h3>
                     </div>
                     <div class="panel-body">
-                        <?php  echo form_open("dashboard/newuser");?>
+                        <?php  echo form_open("c=dashboard&m=newuser");?>
                             <fieldset>
 
                                 <div class="form-group">

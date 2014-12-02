@@ -374,6 +374,7 @@ class DashBoard extends CI_Controller {
         foreach($data['slotlist'] as $slot) {
             $slotData[$slot['slot_name']] = $this->dashboard_model->getSlotData($slot['slot_id'],  $data['start_date'], $data['end_date']); 
         }
+
         $data['slotData'] = $slotData;
     //  $data['xAxis'] = $this->dashboard_model->getXAxisDay($data['start_date'], $data['end_date']);
         $data['xAxis'] = $this->dashboard_model->getStartAndInterval($data['start_date'], 'day');
@@ -516,7 +517,12 @@ class DashBoard extends CI_Controller {
         foreach($pidlist as $pidinfo) {
             $slot_arr = $this->dashboard_model->getSlotList($pidinfo['pid'], $data['acc_id']);
             foreach($slot_arr as $slot) {
-                echo "{$index},{$pidinfo['pid_name']},{$slot['slot_name']},{$slot['status']},{$slot['type']},{$slot['width']},{$slot['height']}\r\n";
+                $status = iconv("utf-8","gb2312",$slot['status']?"开启":"关闭");
+                if($slot['type'] == "fixed") $type = "固定广告"; 
+                else if($slot['type'] == "float") $type = "浮动广告"; 
+                $type = iconv("utf-8","gb2312", $type);
+
+                echo "{$index},{$pidinfo['pid_name']},".iconv("utf-8","gb2312",$slot['slot_name']).",{$status},{$type},{$slot['width']},{$slot['height']}\r\n";
                 $index++;
             }
         }
@@ -565,21 +571,29 @@ class DashBoard extends CI_Controller {
             'url_blacklist'=> $url_blacklist,
         );
 
+        if($this->dashboard_model->slotTypeRepeat($data['acc_id'], $pid, $type, $position, $width, $height)) {
+            // Type repeat  
+            echo "<script>alert('广告类型重复,无法添加');history.back(-1);</script>";
+            return;
+        }
+
         if($slot_id == 0) { //插入新数据
             $data_arr['pid'] = $pid;
             if($this->dashboard_model->newSlot($data_arr)) {
                 header("Location:".base_url()."index.php/dashboard/pidlist"); 
             }else{
-                echo "<script>alert('failed');</script>";
+                echo "<script>alert('添加失败,请重试');</script>";
             };
 
         }else{ // 更新数据
             if($this->dashboard_model->updateSlot($data_arr, $slot_id)) {
                 header("Location:".base_url()."index.php/dashboard/pidlist"); 
-            }else{
+            }
+            /*
+            else{
                 echo "<script>alert('failed');</script>";
             };
-              
+            */
         } 
     }
 
@@ -708,14 +722,15 @@ class DashBoard extends CI_Controller {
         $config['smtp_pass']    = 'ad123456';
         $config['smtp_port']    = '465';
         $config['charset']      = 'utf-8';
-        $config['mailtype']     = 'text';
+        $config['mailtype']     = 'html';
         $config['smtp_timeout'] = '5';
         $config['newline'] = "\r\n";
         $this->load->library ('email', $config);
         $this->email->from ('ad@adhouyi.com', '宏聚时代');
         $this->email->to ($to, 'AAA');
         $this->email->subject ('账号激活通知');
-        $content = "你好\r\n 感谢您注册我们的服务，请点击下面的连接激活您的账号\r\n".base_url()."index.php/dashboard/activeuser/{$acc_id}/".md5($to)."/\r\n\r\n".date("Y-m-d");
+        $url = base_url()."index.php/dashboard/activeuser/{$acc_id}/".md5($to)."/";
+        $content = "你好<br> 感谢您注册我们的服务，请点击下面的连接激活您的账号<br> <a href='{$url}'>{$url}</a><br>".date("Y-m-d");
         $this->email->message ($content);
         $this->email->send (); 
 
