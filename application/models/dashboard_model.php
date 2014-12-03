@@ -94,7 +94,7 @@ class Dashboard_model extends CI_Model {
         return false;
     }
 
-    public function slotTypeRepeat($acc_id, $pid, $type, $position, $width,$height ) {
+    public function slotTypeRepeat($acc_id, $pid, $slot_id, $type, $position, $width,$height ) {
         $query = $this->db->get_where('slotlist', array('acc_id'=>$acc_id, 'pid'=>$pid, 'type'=>$type, 'position'=>$position, 'width'=> $width, 'height'=>$height ));
         //echo $this->db->last_query();
         if($query->num_rows() > 0) {
@@ -102,6 +102,23 @@ class Dashboard_model extends CI_Model {
             return true;
         }else{
         //    echo "FALSE";
+            return false;
+        }
+    }
+
+
+    public function slotTypeRepeat4update($acc_id, $pid, $slot_id, $type, $position, $width,$height ) {
+        $query = $this->db->get_where('slotlist',array('slot_id'=>$slot_id));    
+        $slotinfo = $query->row_array(); 
+        //print_r($slotinfo);
+        if( $type == $slotinfo['type'] && $position == $slotinfo['position'] && $width == $slotinfo['width'] && $height == $slotinfo['height']) {
+            return false; 
+        }else{
+            $query = $this->db->get_where('slotlist', array('acc_id'=>$acc_id, 'pid'=>$pid, 'type'=>$type, 'position'=>$position, 'width'=> $width, 'height'=>$height ));
+         //   print_r($query->row_array());
+            if($query->num_rows() > 0) {
+                return true;
+            }  
             return false;
         }
     }

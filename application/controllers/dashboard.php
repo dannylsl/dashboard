@@ -571,13 +571,15 @@ class DashBoard extends CI_Controller {
             'url_blacklist'=> $url_blacklist,
         );
 
-        if($this->dashboard_model->slotTypeRepeat($data['acc_id'], $pid, $type, $position, $width, $height)) {
-            // Type repeat  
-            echo "<script>alert('广告类型重复,无法添加');history.back(-1);</script>";
-            return;
-        }
 
         if($slot_id == 0) { //插入新数据
+
+            if($this->dashboard_model->slotTypeRepeat($data['acc_id'], $pid, $type, $position, $width, $height)) {
+                // Type repeat  
+                echo "<script>alert('广告类型重复,无法添加');history.back(-1);</script>";
+                return;
+            }
+
             $data_arr['pid'] = $pid;
             if($this->dashboard_model->newSlot($data_arr)) {
                 header("Location:".base_url()."index.php/dashboard/pidlist"); 
@@ -586,14 +588,20 @@ class DashBoard extends CI_Controller {
             };
 
         }else{ // 更新数据
+
+            if($this->dashboard_model->slotTypeRepeat4update($data['acc_id'], $pid, $slot_id, $type, $position, $width, $height)) {
+                // Type repeat  
+                echo "<script>alert('广告类型重复,无法添加');history.back(-1);</script>";
+                return;
+            }
+
             if($this->dashboard_model->updateSlot($data_arr, $slot_id)) {
                 header("Location:".base_url()."index.php/dashboard/pidlist"); 
             }
-            /*
             else{
-                echo "<script>alert('failed');</script>";
+                header("Location:".base_url()."index.php/dashboard/pidlist"); 
+        //        echo "<script>alert('failed');</script>";
             };
-            */
         } 
     }
 
