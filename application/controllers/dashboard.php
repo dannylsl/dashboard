@@ -23,7 +23,6 @@ class DashBoard extends CI_Controller {
                 header("content-type:text/html;charset=utf-8");
               //  header("Location:".base_url()."index.php/dashboard/settings"); 
                 echo "<script>alert('账户未激活前，无法使用其他功能');location.href='".base_url()."index.php/dashboard/settings';</script>";
-                
             }
             return $acc_id;
         }
@@ -512,7 +511,7 @@ class DashBoard extends CI_Controller {
         header('Content-Type: application/vnd.ms-excel');
         header('Content-Disposition: attachment;filename="pidlist.csv"');
         header('Cache-Control: max-age=0');
-        echo iconv("utf-8","gb2312","序号,PID名称,广告位名称,广告位状态,广告类型,宽度,高度")."\r\n";
+        echo iconv("utf-8","gb2312","序号,PID名称,广告位名称,广告位状态,广告类型,广告位置,宽度,高度")."\r\n";
         $index = 1;
         foreach($pidlist as $pidinfo) {
             $slot_arr = $this->dashboard_model->getSlotList($pidinfo['pid'], $data['acc_id']);
@@ -522,7 +521,16 @@ class DashBoard extends CI_Controller {
                 else if($slot['type'] == "float") $type = "浮动广告"; 
                 $type = iconv("utf-8","gb2312", $type);
 
-                echo "{$index},{$pidinfo['pid_name']},".iconv("utf-8","gb2312",$slot['slot_name']).",{$status},{$type},{$slot['width']},{$slot['height']}\r\n";
+                if($slot['position'] == "couplet") $position = "对联";
+                else if($slot['position'] == "br") $position = "右下角";
+                else if($slot['position'] == "bottom") $position = "底栏";
+                else if($slot['position'] == "sidebar") $position = "侧栏";
+                else if($slot['position'] == "banner") $position = "横幅";
+                else if($slot['position'] == "rectangle") $position = "矩形";
+                else if($slot['position'] == "custom") $position = "自定义";
+                $position = iconv("utf-8", "gb2312", $position);
+
+                echo "{$index},{$pidinfo['pid_name']},".iconv("utf-8","gb2312",$slot['slot_name']).",{$status},{$type},{$position},{$slot['width']},{$slot['height']}\r\n";
                 $index++;
             }
         }
@@ -576,6 +584,7 @@ class DashBoard extends CI_Controller {
 
             if($this->dashboard_model->slotTypeRepeat($data['acc_id'], $pid, $type, $position, $width, $height)) {
                 // Type repeat  
+                echo "<meta charset='utf-8'>";
                 echo "<script>alert('广告类型重复,无法添加');history.back(-1);</script>";
                 return;
             }
@@ -584,6 +593,7 @@ class DashBoard extends CI_Controller {
             if($this->dashboard_model->newSlot($data_arr)) {
                 header("Location:".base_url()."index.php/dashboard/pidlist"); 
             }else{
+                echo "<meta charset='utf-8'>";
                 echo "<script>alert('添加失败,请重试');</script>";
             };
 
@@ -591,6 +601,7 @@ class DashBoard extends CI_Controller {
 
             if($this->dashboard_model->slotTypeRepeat4update($data['acc_id'], $pid, $slot_id, $type, $position, $width, $height)) {
                 // Type repeat  
+                echo "<meta charset='utf-8'>";
                 echo "<script>alert('广告类型重复,无法添加');history.back(-1);</script>";
                 return;
             }

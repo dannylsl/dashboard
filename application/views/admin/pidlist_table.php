@@ -34,12 +34,13 @@
         <tr><td colspan="3" class="info" id="pid_slot_<?php echo $pidinfo['pid']?>" style="display:none;">
         <?php 
             echo "<div class=\"table-responsive\" style=\"margin-top:10px;\">";
-            echo "<table class=\"table table-striped\">";
+            echo "<table class=\"table table-striped table-hover\">";
             echo "<tr>"; 
             echo "<th>序号</th>";
             echo "<th>广告位名称</th>";
             echo "<th>广告位状态</th>";
             echo "<th>广告类型</th>";
+            echo "<th>广告位置</th>";
             echo "<th>宽度</th>";
             echo "<th>高度</th>";
             echo "<th>操作</th>";
@@ -47,13 +48,22 @@
             $slot_index = 1;
             foreach( $slotlist_arr[$pidinfo['pid_name']] as $slot) {
                 echo "<tr><td>{$slot_index}</td>";
-                echo "<td>[{$slot['pid_name']}] {$slot['slot_name']}</td>";
+                echo "<td><!-- [{$slot['pid_name']}] -->{$slot['slot_name']}</td>";
 
                 echo "<td>".($slot['status']?"开启":"关闭")."</td>";
                 if($slot['type']=="fixed") $type= "固定广告";
                 else if($slot['type']=="float") $type= "浮动广告";
-                else if($slot['type']=="float") $type= "浮动广告";
                 echo "<td>{$type}</td>";
+
+                if($slot['position'] == "couplet") $position = "对联";
+                else if($slot['position'] == "br") $position = "右下角";
+                else if($slot['position'] == "bottom") $position = "底栏";
+                else if($slot['position'] == "sidebar") $position = "侧栏";
+                else if($slot['position'] == "banner") $position = "横幅";
+                else if($slot['position'] == "rectangle") $position = "矩形";
+                else if($slot['position'] == "custom") $position = "自定义";
+                
+                echo "<td>{$position}</td>";
                 echo "<td>{$slot['width']}</td>";
                 echo "<td>{$slot['height']}</td>";
                 echo "<td><a style='cursor:pointer;' onclick='editDialog({$slot['pid']},{$slot['slot_id']})'>修改</a> | <a style='cursor:pointer;' onclick=\"showCode({$slot['slot_id']},'{$pidinfo['pid']}','{$slot['type']}','{$slot['position']}',{$slot['width']},{$slot['height']})\">代码</a></td></tr>";
