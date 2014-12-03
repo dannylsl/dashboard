@@ -636,6 +636,25 @@ class DashBoard extends CI_Controller {
         } 
     }
 
+    public function slotTypeRepeat($pid, $type, $position, $width, $height) {
+
+        $data['acc_id'] = $this->islogined();
+        if($this->dashboard_model->slotTypeRepeat($data['acc_id'], $pid, $type, $position, $width, $height)) {
+            echo "Repeat";  
+        }else {
+            echo "NoRepeat";  
+        }
+    }
+
+    public function slotTypeRepeat4update($pid, $slot_id, $type, $position, $width, $height) {
+        $data['acc_id'] = $this->islogined();
+        if($this->dashboard_model->slotTypeRepeat4update($data['acc_id'], $pid, $slot_id, $type, $position, $width, $height)) {
+            echo  "Repeat";
+        }else{
+            echo  "NoRepeat";
+        }
+    }
+
     public function revenue() {
         $this->load->helper("url");
         $this->load->helper("form");

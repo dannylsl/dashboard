@@ -172,7 +172,7 @@ class Dashboard_model extends CI_Model {
     }
 
     public function getStatiticData($acc_id,$start,$end) {
-        $sql = "SELECT date as date, sum(pv) as pv, sum(click) as click, sum(income) as income FROM `stat` WHERE `date` >='{$start}' AND `date` <= '{$end}' AND `acc_id`='{$acc_id}' GROUP BY date ORDER BY date";
+        $sql = "SELECT date as date, sum(pv) as pv, sum(click) as click, sum(income) as income FROM `stat` WHERE `date` >='{$start}' AND `date` <= '{$end}' AND `acc_id`='{$acc_id}' GROUP BY date ORDER BY date DESC";
         $query = $this->db->query($sql);
         return $query->result_array();
     }

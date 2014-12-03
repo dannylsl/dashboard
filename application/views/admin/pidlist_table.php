@@ -433,6 +433,9 @@ $(document).ready(function() {
 
     $("label[class='btn btn-default']").click(function() {
         var sel_val = $(this).children().val();
+        var slot_id = $("#slot_id").val();
+        var pid = $("#pid").val();
+
         $("label[class='btn btn-default active']").attr("class", "btn btn-default");
         $("#custombtn").attr("disabled",false);
         console.log(sel_val);
@@ -440,12 +443,36 @@ $(document).ready(function() {
             var words = sel_val.split('#');
             var type = words[0].split('_')[0];
             var position = words[0].split('_')[1];
+            var width = words[1].split('_')[0];
+            var height = words[1].split('_')[1];
             $("#preview").attr('src', "<?php echo base_url();?>images/ads/"+type+"/"+position+"/"+words[1]+".png");
             if($(this).children().attr('name') == "options")
                 $("input[name='options']").removeAttr("checked");
             else if($(this).children().attr('name') == "status")
                 $("input[name='status']").removeAttr("checked");
-
+            if(slot_id == 0) {  //插入数据
+                $.ajax({
+                    url:"<?php echo base_url();?>index.php/dashboard/slotTypeRepeat/"+pid+"/"+type+"/"+position+"/"+width+"/"+height+"/",
+                    success:function(data) {
+                        if(data == "Repeat") {
+                            alert("该类型广告位已经存在，请重新选择");
+                            $("input[name='options']").removeAttr("checked");
+                            $("label[class='btn btn-default active']").attr('class','btn btn-default');
+                        }
+                    }
+                });
+            }else{ //更新数据
+                $.ajax({
+                    url:"<?php echo base_url();?>index.php/dashboard/slotTypeRepeat4update/"+pid+"/"+slot_id+"/"+type+"/"+position+"/"+width+"/"+height+"/",
+                    success:function(data) {
+                        if(data == "Repeat") {
+                            alert("该类型广告位已经存在，请重新选择");
+                            $("input[name='options']").removeAttr("checked");
+                            $("label[class='btn btn-default active']").attr('class','btn btn-default');
+                        }
+                    }
+                });
+            }
             $(this).children().attr("checked","checked");
         }
     });
