@@ -74,9 +74,10 @@
                                 $total_click = 0;
                                 $total_rate = 0;
                                 $total_income = 0;
+                                $week_arr = ["周日","周一","周二","周三","周四","周五","周六"];
                                 foreach( $statiticData as $detail) {
                                     echo "<tr>";
-                                    echo "<td>{$detail['date']}</td>";
+                                    echo "<td>".$detail['date'].' '.$week_arr[date('w', strtotime($detail['date']))]."</td>";
                                     echo "<td>".number_format($detail['pv'])."</td>";
                                     echo "<td>".number_format($detail['click'])."</td>";
                                     $rate = "0.00%";
