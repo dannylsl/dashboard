@@ -3022,13 +3022,13 @@ SVGRenderer.prototype = {
 		if (!hasMarkup && textStr.indexOf(' ') === -1) {
             var weekNo = new Date(textStr).getDay();
             if( weekNo == 0) {
-                textStr += '日'; 
+                textStr += ' 周日'; 
 				var textTag = doc.createElementNS(SVG_NS, 'tspan');
                 textTag.appendChild(doc.createTextNode(textStr));
                 attr(textTag, 'style', 'fill:red');
                 textNode.appendChild(textTag);
             }else if(weekNo == 6) {
-                textStr += '六'; 
+                textStr += ' 周六'; 
 				var textTag = doc.createElementNS(SVG_NS, 'tspan');
                 textTag.appendChild(doc.createTextNode(textStr));
                 attr(textTag, 'style', 'fill:red');
