@@ -9,8 +9,9 @@ class Captcha_model extends CI_Model {
         $vals = array(
             'img_path' => dirname(BASEPATH).'/images/captcha/',
             'img_url' => base_url('images/captcha').'/',
-            'img_width'=> 60,
-            'img_height'=> 30,
+            'img_width'=> 80,
+            'img_height'=> 32,
+            'font_path'=>  dirname(BASEPATH).'/fonts/WishfulWaves.ttf',
         );
 
         $cap = create_captcha($vals);
@@ -30,8 +31,9 @@ class Captcha_model extends CI_Model {
         $vals = array(
             'img_path' => dirname(BASEPATH).'/images/captcha/',
             'img_url' => base_url('images/captcha').'/',
-            'img_width'=> 60,
-            'img_height'=> 30,
+            'img_width'=> 80,
+            'img_height'=> 32,
+            'font_path'=>  dirname(BASEPATH).'/fonts/WishfulWaves.ttf',
         );
 
         $cap = create_captcha($vals);
