@@ -94,7 +94,7 @@ class Dashboard_model extends CI_Model {
         return false;
     }
 
-    public function slotTypeRepeat($acc_id, $pid, $slot_id, $type, $position, $width,$height ) {
+    public function slotTypeRepeat($acc_id, $pid, $type, $position, $width,$height ) {
         $query = $this->db->get_where('slotlist', array('acc_id'=>$acc_id, 'pid'=>$pid, 'type'=>$type, 'position'=>$position, 'width'=> $width, 'height'=>$height ));
         //echo $this->db->last_query();
         if($query->num_rows() > 0) {
