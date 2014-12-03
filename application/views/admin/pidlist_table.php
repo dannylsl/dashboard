@@ -419,7 +419,7 @@ $(document).ready(function() {
         });
     });
 
-    $("label").click(function() {
+    $("label[class='btn btn-default']").click(function() {
         var sel_val = $(this).children().val();
         $("label[class='btn btn-default active']").attr("class", "btn btn-default");
         $("#custombtn").attr("disabled",false);
