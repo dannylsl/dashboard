@@ -236,9 +236,10 @@ class Dashboard_model extends CI_Model {
             $tableHtml  = "<div class='table-responsive'>";
             $tableHtml .= "<div align='right'><i class='fa fa-times' onclick='closeInfo({$slot_id})' style='cursor:pointer'></i></div>";
             $tableHtml .= "<table class='table table-hover'><tr><th>日期 时间</th><th>展示量</th><th>点击量</th><th>点击率</th></tr>";
-            for($i=0; $i < $size; $i++) {
+            $week_arr = ["周日","周一","周二","周三","周四","周五","周六"];
+            for($i=$size-1; $i >= 0; $i--) {
                 $tableHtml .= "<tr>";
-                $tableHtml .= "<td>{$date_arr[$i]} </td>";
+                $tableHtml .= "<td>{$date_arr[$i]} ".$week_arr[date('w', strtotime($date_arr[$i]))]."</td>";
                 $tableHtml .= "<td>".number_format($pv_arr[$i])."</td>";
                 $tableHtml .= "<td>".number_format($click_arr[$i])."</td>";
                 $tableHtml .= "<td>".number_format($rate_arr[$i], 2)."%</td>";
