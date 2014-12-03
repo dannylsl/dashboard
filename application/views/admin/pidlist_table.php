@@ -415,6 +415,7 @@ document.body.insertBefore(adhouyi_pars,      document.body.children.item(0));
 <script>
 
 $(document).ready(function() {
+
     $("#pidbtn").click(function() {
         var index= $("#pid_index").val();
         $.ajax({
@@ -428,6 +429,7 @@ $(document).ready(function() {
             }
         });
     });
+
 
     $("label[class='btn btn-default']").click(function() {
         var sel_val = $(this).children().val();
@@ -469,6 +471,27 @@ $(document).ready(function() {
 
         $("form").submit();
     });
+
+
+    $("td[class='info']").each(function(){
+        if(localStorage) {
+            var key = $(this).attr('id');
+            var pid = key.split('_')[2];
+            console.log(pid); 
+            if(localStorage.getItem(key) == null) {
+                localStorage.setItem(key, 'off');
+            }else{
+                if(localStorage.getItem(key) == "off") {
+                    $("#"+key).hide();
+                    $("#expand_btn_"+pid).html("展开");
+                }else {
+                    $("#"+key).show();
+                    $("#expand_btn_"+pid).html("收缩");
+                }
+            } 
+        }
+    }); 
+
 }); 
 
 function activeClear() {
@@ -512,7 +535,7 @@ function openDialog(pid) {
     activeClear();
     $("#pid").val(pid);
     $("#slot_id").val(0);
-
+    $("#slotname").val("");
     $("#type_float").attr("class","active");
     $("#ADfloat").attr("class","tab-pane fade in active");    
     $("#couplet").attr("class","tab-pane fade in active");
@@ -522,7 +545,9 @@ function openDialog(pid) {
     $("#fixed_banner").attr("class","active");
 
     $("ADfixed").attr("class", "active");
-
+    if(localStorage) {
+        localStorage.setItem("pid_slot_"+pid, "on");
+    }
 }
 
 function editDialog(pid,slot_id) {
@@ -575,8 +600,14 @@ function toggleTable(pid) {
     $("#pid_slot_"+pid).toggle(300);
     if($("#expand_btn_"+pid).html() == "展开") {
         $("#expand_btn_"+pid).html("收缩");
+        if(localStorage) {
+            localStorage.setItem("pid_slot_"+pid, "on");
+        }
     }else{
         $("#expand_btn_"+pid).html("展开");
+        if(localStorage) {
+            localStorage.setItem("pid_slot_"+pid, "off");
+        }
     };
 }
 
