@@ -59,55 +59,36 @@
                         </tr>
                         <?php
 //                        print_r($slotData);
-                        if($sel_pid == 0) { 
-                            foreach($pidlist as $pidinfo) {
-                                if($pidData[$pidinfo['pid_name']]['sum_pv'] != 0)
-                                    $clickRate = number_format(round($pidData[$pidinfo['pid_name']]['sum_click']/$pidData[$pidinfo['pid_name']]['sum_pv']*100, 2), 2)."%";
-                                else 
-                                    $clickRate = "0.00%";
+                        $total_pv = 0;
+                        $total_click = 0;
+                        $total_income = 0;
+                        $total_rate = "0.00%";
 
-                                echo "<tr>";
-                                echo "<td>{$pidinfo['pid_name']}</td>";
-                                echo "<td>".number_format($pidData[$pidinfo['pid_name']]['sum_pv'])."</td>";
-                                echo "<td>".number_format($pidData[$pidinfo['pid_name']]['sum_click'])."</td>";
-                                echo "<td>{$clickRate}</td>";
-                                echo "<td>&yen;".number_format($pidData[$pidinfo['pid_name']]['sum_income']/100,2)."</td>";
-                                echo "<td><a onClick=\"pidDetailInfo({$pidinfo['pid']}, '{$start_date}', '{$end_date}')\" style=\"cursor:pointer;\">每日详细</a> ";
-                                echo "</tr>";
-                                echo "<tr><td colspan='6' class='warning' style='display:none;' id='pidTable_{$pidinfo['pid']}'></td></tr>";
-                            }    
-                        }else if($sel_pid != 0) { 
-                            $total_pv = 0;
-                            $total_click = 0;
-                            $total_income = 0;
-                            $total_rate = "0.00%";
+                        foreach($slotlist as $slot) {
+                            if($slotData[$slot['slot_name']]['sum_pv'] != 0)
+                                $clickRate = number_format(round($slotData[$slot['slot_name']]['sum_click']/$slotData[$slot['slot_name']]['sum_pv']*100, 2), 2)."%";
+                            else 
+                                $clickRate = "0.00%";
+                            echo "<tr>";
+                            echo "<td>[{$slot['pid_name']}] {$slot['slot_name']}</td>";
+                            echo "<td>".number_format($slotData[$slot['slot_name']]['sum_pv'])."</td>";
+                            echo "<td>".number_format($slotData[$slot['slot_name']]['sum_click'])."</td>";
+                            echo "<td>{$clickRate}</td>";
+                            echo "<td>&yen;".number_format($slotData[$slot['slot_name']]['sum_income']/100,2)."</td>";
+                            echo "<td><a onClick=\"detailInfo({$slot['pid']},{$slot['slot_id']}, '{$start_date}', '{$end_date}')\" style=\"cursor:pointer;\">每日详细</a> ";
+                            //echo " | <a onClick=\"closeInfo({$slot['slot_id']})\" style=\"cursor:pointer\">关闭</a>"; 
+                            echo "</td>";
+                            echo "</tr>";
+                            echo "<tr><td colspan='6' class='warning' style='display:none;' id='slotTable_{$slot['slot_id']}'></td></tr>";
+                            $total_pv += $slotData[$slot['slot_name']]['sum_pv'];
+                            $total_click += $slotData[$slot['slot_name']]['sum_click'];
+                            $total_income += $slotData[$slot['slot_name']]['sum_income'];
 
-                            foreach($slotlist as $slot) {
-                                if($slotData[$slot['slot_name']]['sum_pv'] != 0)
-                                    $clickRate = number_format(round($slotData[$slot['slot_name']]['sum_click']/$slotData[$slot['slot_name']]['sum_pv']*100, 2), 2)."%";
-                                else 
-                                    $clickRate = "0.00%";
-                                echo "<tr>";
-                                echo "<td><!-- [{$slot['pid_name']}] -->{$slot['slot_name']}</td>";
-                                echo "<td>".number_format($slotData[$slot['slot_name']]['sum_pv'])."</td>";
-                                echo "<td>".number_format($slotData[$slot['slot_name']]['sum_click'])."</td>";
-                                echo "<td>{$clickRate}</td>";
-                                echo "<td>&yen;".number_format($slotData[$slot['slot_name']]['sum_income']/100,2)."</td>";
-                                echo "<td><a onClick=\"detailInfo({$slot['pid']},{$slot['slot_id']}, '{$start_date}', '{$end_date}')\" style=\"cursor:pointer;\">每日详细</a> ";
-                                //echo " | <a onClick=\"closeInfo({$slot['slot_id']})\" style=\"cursor:pointer\">关闭</a>"; 
-                                echo "</td>";
-                                echo "</tr>";
-                                echo "<tr><td colspan='6' class='warning' style='display:none;' id='slotTable_{$slot['slot_id']}'></td></tr>";
-                                $total_pv += $slotData[$slot['slot_name']]['sum_pv'];
-                                $total_click += $slotData[$slot['slot_name']]['sum_click'];
-                                $total_income += $slotData[$slot['slot_name']]['sum_income'];
-
-                                if($total_pv != 0)
-                                    $total_rate = number_format(round($total_click/$total_pv*100,2),2)."%";
-                            }
-                            if($total_flag)
-                                echo "<tr class='success'><td>小计</td><td>".number_format($total_pv)."</td><td>".number_format($total_click)."</td><td>".$total_rate."</td><td>&yen;".number_format($total_income/100,2)."</td><td></td></tr>";
+                            if($total_pv != 0)
+                                $total_rate = number_format(round($total_click/$total_pv*100,2),2)."%";
                         }
+                        if($total_flag)
+                            echo "<tr class='success'><td>小计</td><td>".number_format($total_pv)."</td><td>".number_format($total_click)."</td><td>".$total_rate."</td><td>&yen;".number_format($total_income/100,2)."</td><td></td></tr>";
                         ?>
                     </table>
                 </div>
@@ -403,24 +384,6 @@ function hourSearch() {
     location.href="<?php echo base_url();?>index.php?c=dashboard&m=hourSearch&pid="+pid+"&start="+start+"&end="+end; 
 }
 
-
-
-function pidDetailInfo(pid,start,end) {
-    $.ajax({
-        url:"<?php echo base_url()?>index.php/dashboard/piddetail/"+pid+"/"+start+"/"+end+"/",
-        dataType:"json",
-        success:function(data) {
-            $("td[class='warning']").each(function() {
-                $(this).fadeOut();   
-                $(this).html();   
-            });
-            showChart(data['title'],data['subtitle'], data['xAxis'], data['pv'], data['click'], data['rate']);
-            $("#pidTable_"+pid).html(data['table']);
-            $("#pidTable_"+pid).fadeIn();
-        }
-    });
-}
-
 function detailInfo(pid, slot_id, start,end) {
     $.ajax({
         url:"<?php echo base_url()?>index.php/dashboard/slotdetail/"+pid+"/"+slot_id+"/"+start+"/"+end,
@@ -438,8 +401,6 @@ function detailInfo(pid, slot_id, start,end) {
 }
 
 function closeInfo(slot_id) {
-    $("#pidTable_"+slot_id).fadeOut();
-    $("#pidTable_"+slot_id).html();
     $("#slotTable_"+slot_id).fadeOut();
     $("#slotTable_"+slot_id).html();
 }

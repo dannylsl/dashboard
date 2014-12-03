@@ -73,6 +73,12 @@ class Dashboard_model extends CI_Model {
         return $query->result_array();
     }
 
+    public function getPidData($pid, $start, $end) {
+        $sql = "SELECT date, sum(pv) as sum_pv, sum(click) as sum_click, sum(income) as sum_income FROM `stat` WHERE date>='{$start}' AND date <= '{$end}' AND `pid`='{$pid}' ";
+        $query = $this->db->query($sql);
+        return $query->row_array();
+    }
+
     public function getSlotList($pid, $acc_id) {
         if($pid != 0) {
             $sql = "SELECT slotlist.*, accpidmap.pid_name FROM `slotlist` LEFT JOIN `accpidmap` ON slotlist.pid = accpidmap.pid WHERE slotlist.pid='{$pid}'";
@@ -169,6 +175,51 @@ class Dashboard_model extends CI_Model {
         $sql = "SELECT date as date, sum(pv) as pv, sum(click) as click, sum(income) as income FROM `stat` WHERE `date` >='{$start}' AND `date` <= '{$end}' AND `acc_id`='{$acc_id}' GROUP BY date ORDER BY date";
         $query = $this->db->query($sql);
         return $query->result_array();
+    }
+
+    public function getPidDataDetail($acc_id, $pid, $start, $end) {
+            $sql = "SELECT date,SUM(pv) as sum_pv, SUM(click) as sum_click, SUM(income) as sum_income FROM `stat` WHERE `date`>='{$start}' AND `date`<='{$end}' AND `pid`='{$pid}' GROUP BY `date` ";
+            $query = $this->db->query($sql);
+            $arr = $query->result_array();
+            $obj_start = date_create($start);
+            $obj_end = date_create($end);
+            $size = $obj_start->diff($obj_end)->days + 1;
+            $pv_arr = array_fill(0,$size, 0);
+            $click_arr = array_fill(0, $size, 0);
+            $rate_arr = array_fill(0, $size, 0);
+
+
+            foreach( $arr as $v) {
+                $obj_date = date_create($v['date']); 
+                $index = $obj_start->diff($obj_date)->days;
+                $pv_arr[$index] = (int)$v['sum_pv'];
+                $click_arr[$index] = (int)$v['sum_click'];
+
+                if($pv_arr[$index] != 0) {
+                    $rate_arr[$index] = round($click_arr[$index]/$pv_arr[$index] * 100, 2);   
+                }else {
+                    $rate_arr[$index] = 0;   
+                } 
+            }
+
+            $date_arr = $this->getXAxisDayJSON($start,$end);
+            $tableHtml  = "<div class='table-responsive'>";
+            $tableHtml .= "<div align='right'><i class='fa fa-times' onclick='closeInfo({$pid})' style='cursor:pointer'></i></div>";
+            $tableHtml .= "<table class='table table-hover'><tr><th>日期 时间</th><th>展示量</th><th>点击量</th><th>点击率</th></tr>";
+            $week_arr = ["周日","周一","周二","周三","周四","周五","周六"];
+            for($i=$size-1; $i >= 0; $i--) {
+                $tableHtml .= "<tr>";
+                $tableHtml .= "<td>{$date_arr[$i]} ".$week_arr[date('w', strtotime($date_arr[$i]))]."</td>";
+                $tableHtml .= "<td>".number_format($pv_arr[$i])."</td>";
+                $tableHtml .= "<td>".number_format($click_arr[$i])."</td>";
+                $tableHtml .= "<td>".number_format($rate_arr[$i], 2)."%</td>";
+                $tableHtml .= "</tr>";
+            };
+            $tableHtml .= "</table></div>";
+
+            $title = $this->getChartTitle($acc_id, $pid, 0, $start, $end, "day");
+            echo json_encode(array("xAxis"=>$this->getStartAndInterval($start,'day'),"pv" =>$pv_arr,"click" => $click_arr, "rate"=>$rate_arr, "title" =>$title['title'] ,  "subtitle"=>$title['subtitle'], "table"=>$tableHtml));
+
     }
 
     public function getSlotDataDetail($acc_id, $pid, $slot_id, $start, $end) {

@@ -210,8 +210,9 @@ class DashBoard extends CI_Controller {
     public function download_statitic() {
         $data['acc_id'] = $this->islogined();
         $statiticData = $this->dashboard_model->getStatiticData($data['acc_id'], date("Y-m-d",time() - 86400*14), date("Y-m-d"));
+        $filename= "统计数据".date("Y-m-d", time()- 86400*14)."_".date("Y-m-d").".csv";
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="statitic.csv"');
+        header('Content-Disposition: attachment;filename="'.$filename.'"');
         header('Cache-Control: max-age=0');
         echo iconv("utf-8","gb2312","日期,展示量,总点击量,点击率,收入（元）")."\r\n";
         foreach($statiticData as $sdata)  {
@@ -343,10 +344,16 @@ class DashBoard extends CI_Controller {
         }
     }
 
+    public function pidDetail($pid, $start, $end) {
+        $data['acc_id'] = $this->islogined();
+        $this->dashboard_model->getPidDataDetail($data['acc_id'], $pid, $start, $end); 
+    }
+
     public function slotdetail($pid, $slot_id, $start, $end) { //Ajax Json return
         $data['acc_id'] = $this->islogined();
         $this->dashboard_model->getSlotDataDetail($data['acc_id'], $pid, $slot_id, $start, $end); 
     }
+
 
     public function daySearch() {
         $this->load->helper("url"); 
@@ -368,6 +375,13 @@ class DashBoard extends CI_Controller {
         $data['end_date'] = $end;
         $data['slotlist'] = $this->dashboard_model->getSlotList($pid, $data['acc_id']);
         $data['pidlist'] = $this->dashboard_model->getPidList($data['acc_id']); 
+
+        $pidData = array();
+        foreach($data['pidlist'] as $pidinfo) {
+            $pidData[$pidinfo['pid_name']] = $this->dashboard_model->getPidData($pidinfo['pid'], $data['start_date'], $data['end_date']);
+        }
+        $data['pidData'] = $pidData; 
+
 
         $slotData = array();
         foreach($data['slotlist'] as $slot) {
@@ -432,7 +446,13 @@ class DashBoard extends CI_Controller {
         $data['end_date'] = $end;
         $data['slotlist'] = $this->dashboard_model->getSlotList($pid, $data['acc_id']);
         $data['pidlist'] = $this->dashboard_model->getPidList($data['acc_id']); 
-        
+
+        $pidData = array();
+        foreach($data['pidlist'] as $pidinfo) {
+            $pidData[$pidinfo['pid_name']] = $this->dashboard_model->getPidData($pidinfo['pid'], $data['start_date'], $data['end_date']);
+        }
+        $data['pidData'] = $pidData; 
+
         $slotData = array();
         foreach($data['slotlist'] as $slot) {
             $slotData[$slot['slot_name']] = $this->dashboard_model->getSlotData($slot['slot_id'],  $data['start_date'], $data['end_date']); 
