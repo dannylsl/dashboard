@@ -115,6 +115,29 @@
     <!-- high charts -->
     <script src="<?php echo base_url();?>js/highcharts.js"></script>
     <script>
+
+$(document).ready(function(){
+    $("#startdate").change(function() {
+        var startdate = $("#startdate").val();
+        $("#enddate").data('DateTimePicker').setMinDate(new Date(startdate));
+    });
+
+    $("#enddate").change(function() {
+        var enddate = $("#enddate").val();
+        $("#startdate").data('DateTimePicker').setMaxDate(new Date(enddate));
+    });
+
+    $("#startMonth").change(function() {
+        var startMonth = $("#startMonth").val(); 
+        $("#endMonth").data('DateTimePicker').setMinDate(new Date(startMonth+"-01"));
+    });
+
+    $("#endtMonth").change(function() {
+        var endMonth = $("#endMonth").val(); 
+        $("#startMonth").data('DateTimePicker').setMaxDate(new Date(endMonth)+"-01");
+    });
+});
+
 $(function () {
     $('#container').highcharts({
         chart: {

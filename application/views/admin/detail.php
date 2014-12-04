@@ -10,30 +10,28 @@
             <div class="panel panel-default">
                 <div class="panel-heading" style="overflow:auto;">
                     <div class="col-md-10" align="right">
-                        <div class="btn btn-primary" style="float:left;cursor:pointer;" OnClick="hourSearch()">所有广告位走势图</div>
-                        <div class="col-md-1" style="margin-left:10px;"> 
-                            <select style="width:100px;" name="widthunit" class="form-control">
-                                <option value="0">ALL</option>
-                            <?php
-                            foreach($pidlist as $pidinfo) {
-                                echo "<option value=\"{$pidinfo['pid']}\"";
-                                if($pidinfo['pid'] == $sel_pid)
-                                    echo "selected='selected'";
-                                echo ">{$pidinfo['pid_name']}</option>";
-                            }    
-                            ?>
-                            </select>
-                        </div>
-                        <div class="form-group input-group" style="width:150px;float:left;margin: 0px 3px;">
+                        <select style="float:left;width:100px;margin-top:5px;" name="widthunit" class="form-control">
+                            <option value="0">ALL</option>
+                        <?php
+                        foreach($pidlist as $pidinfo) {
+                            echo "<option value=\"{$pidinfo['pid']}\"";
+                            if($pidinfo['pid'] == $sel_pid)
+                                echo "selected='selected'";
+                            echo ">{$pidinfo['pid_name']}</option>";
+                        }    
+                        ?>
+                        </select>
+                        <div class="form-group input-group" style="width:150px;float:left;margin: 5px 3px;">
                             <span class="input-group-addon">起始</span>
                             <input type="text" class="form-control" id="startdate" data-date-format="YYYY-MM-DD" value="<?php echo $start_date;?>">
                         </div>
-                        <div class="form-group input-group" style="width:150px;float:left;margin: 0px 3px;">
+                        <div class="form-group input-group" style="width:150px;float:left;margin: 5px 3px;">
                             <span class="input-group-addon">终止</span>
                             <input type="text" class="form-control" id="enddate" data-date-format="YYYY-MM-DD" value="<?php echo $end_date;?>">
                         </div>
-                        <button class="btn btn-default" style="float:left;margin-left:5px;" OnClick="daySearch()">天查询</button>
-                        <button class="btn btn-default" style="float:left;margin-left:5px;" Onclick="hourSearch()">时查询</button>
+                        <button class="btn btn-default" style="float:left;margin-left:5px;margin-top:5px;" OnClick="daySearch()">天查询</button>
+                        <button class="btn btn-default" style="float:left;margin-left:5px;margin-top:5px;" Onclick="hourSearch()">时查询</button>
+                        <button class="btn btn-primary" style="float:left;width:140px;margin-left:5px;margin-top:5px;" OnClick="allSlot()">所有广告位走势图</button>
                     </div>
                 </div>
                 <div class="panel-body">
@@ -120,6 +118,20 @@
     <!-- high charts -->
     <script src="<?php echo base_url();?>js/highcharts.src.js"></script>
     <script>
+
+    $(document).ready(function(){
+        $("#startdate").change(function() {
+            var startdate = $("#startdate").val();
+            $("#enddate").data('DateTimePicker').setMinDate(new Date(startdate));
+        });
+
+        $("#enddate").change(function() {
+            var enddate = $("#enddate").val();
+            $("#startdate").data('DateTimePicker').setMaxDate(new Date(enddate));
+        });
+
+    });
+
 $(function () {
     $('#container').highcharts({
         chart: {
@@ -403,7 +415,9 @@ function hourSearch() {
     location.href="<?php echo base_url();?>index.php?c=dashboard&m=hourSearch&pid="+pid+"&start="+start+"&end="+end; 
 }
 
-
+function allSlot() {
+    location.href="<?php echo base_url();?>index.php?c=dashboard&m=hourSearch&pid=0"+"&start=<?php echo date("Y-m-d");?>"+"&end=<?php echo date("Y-m-d")?>"; 
+}
 
 function pidDetailInfo(pid,start,end) {
     $.ajax({

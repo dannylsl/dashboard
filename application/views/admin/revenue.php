@@ -67,6 +67,21 @@
     <script src="<?php echo base_url();?>js/moment.js"></script>
     <script src="<?php echo base_url();?>js/bootstrap-datepicker.js"></script>
     <script>
-        $("#startdate").datetimepicker({pickTime:false,maxDate:'<?php echo date('Y-m-d')?>'});
-        $("#enddate").datetimepicker({pickTime:false,maxDate:'<?php echo date('Y-m-d')?>'});
+
+    $("#startdate").datetimepicker({pickTime:false,maxDate:'<?php echo date('Y-m-d')?>'});
+    $("#enddate").datetimepicker({pickTime:false,maxDate:'<?php echo date('Y-m-d')?>'});
+
+    $(document).ready(function(){
+        $("#startdate").change(function() {
+            var startdate = $("#startdate").val();
+            $("#enddate").data('DateTimePicker').setMinDate(new Date(startdate));
+        });
+
+        $("#enddate").change(function() {
+            var enddate = $("#enddate").val();
+            $("#startdate").data('DateTimePicker').setMaxDate(new Date(enddate));
+        });
+
+    });
+
     </script>
