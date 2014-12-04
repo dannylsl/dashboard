@@ -335,7 +335,8 @@ class DashBoard extends CI_Controller {
         $data['slotData'] = $slotData;
         //$data['xAxis'] = $this->dashboard_model->getXAxisHour($data['start_date']);
         $data['xAxis'] = $this->dashboard_model->getStartAndInterval($data['start_date'], 'hour');
-        $data['yAxis'] = $this->dashboard_model->getSlotHourData($data['start_date'], 0);
+        //$data['yAxis'] = $this->dashboard_model->getSlotHourData($data['start_date'], 0);
+        $data['yAxis'] = $this->dashboard_model->getPidHourData($data['start_date'], $data['end_date'], $pid, $data['acc_id']);
         $data['chartTitle'] = $this->dashboard_model->getChartTitle($data['acc_id'], $pid, 0, $data['start_date'], $data['end_date'],"hour");
 
         $this->load->view('admin/header');
