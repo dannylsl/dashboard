@@ -9,7 +9,7 @@
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-heading" style="overflow:auto;">
-                    <div class="col-md-10" align="right">
+                    <div class="col-md-12" align="right">
                         <select style="float:left;width:100px;margin-top:5px;" name="widthunit" class="form-control">
                             <option value="0">ALL</option>
                         <?php

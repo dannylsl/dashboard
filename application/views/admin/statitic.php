@@ -74,7 +74,7 @@
                                 $total_click = 0;
                                 $total_rate = 0;
                                 $total_income = 0;
-                                $week_arr = ["周日","周一","周二","周三","周四","周五","周六"];
+                                $week_arr = array("周日","周一","周二","周三","周四","周五","周六");
                                 foreach( $statiticData as $detail) {
                                     echo "<tr>";
                                     echo "<td>".$detail['date'].' '.$week_arr[date('w', strtotime($detail['date']))]."</td>";
@@ -117,6 +117,16 @@
     <script>
 
 $(document).ready(function(){
+
+    var startdate = $("#startdate").val();
+    var enddate = $("#enddate").val();
+    $("#enddate").data('DateTimePicker').setMinDate(new Date(startdate));
+    $("#startdate").data('DateTimePicker').setMaxDate(new Date(enddate));
+    var startMonth = $("#startMonth").val(); 
+    var endMonth = $("#endMonth").val(); 
+    $("#endMonth").data('DateTimePicker').setMinDate(new Date(startMonth+"-01"));
+    $("#startMonth").data('DateTimePicker').setMaxDate(new Date(endMonth+"-30"));
+    
     $("#startdate").change(function() {
         var startdate = $("#startdate").val();
         $("#enddate").data('DateTimePicker').setMinDate(new Date(startdate));
@@ -132,9 +142,9 @@ $(document).ready(function(){
         $("#endMonth").data('DateTimePicker').setMinDate(new Date(startMonth+"-01"));
     });
 
-    $("#endtMonth").change(function() {
+    $("#endMonth").change(function() {
         var endMonth = $("#endMonth").val(); 
-        $("#startMonth").data('DateTimePicker').setMaxDate(new Date(endMonth)+"-01");
+        $("#startMonth").data('DateTimePicker').setMaxDate(new Date(endMonth+"-01"));
     });
 });
 
