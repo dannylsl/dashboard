@@ -440,18 +440,179 @@ $(function () {
     });
 });				
 
+function showChart(container, title, subtitle, xAxisData, xAxisData1, pvData, pvData1, clickData, clickData1) {
+    $('#'+container).highcharts({
+        chart: {
+            zoomType: 'xy'
+        },
+        title: {
+            text: title
+        },
+        subtitle: {
+            text: subtitle
+        },
+        xAxis: [{
+            type: 'datetime', 
+            dateTimeLabelFormats: { 
+                day: '%m-%d',
+                week: '%m-%d',
+                month: '%m-%d',
+            }
+        }],
+        tooltip: {
+            xDateFormat:'%Y-%m-%d %H 时',
+            shared: true,
+        },
+        yAxis: [{ // Primary yAxis
+            min:0,
+            labels: {
+                enabled:false,
+                formatter: function() {
+                    return this.value +' %';
+                },
+                style: {
+                    color: '#89A54E'
+                }
+            },
+            title: {
+                text: '',
+                style: {
+                    color: '#89A54E'
+                }
+            },
+            opposite: true
+        }, { // Secondary yAxis
+            min:0,
+            gridLineWidth: 0,
+            title: {
+                text: '',
+                style: {
+                    color: '#4572A7'
+                }
+            },
+            labels: {
+                enabled:false,
+                formatter: function() {
+                    return this.value +'';
+                },
+                style: {
+                    color: '#4572A7'
+                }
+            }
+
+        }, { // Tertiary yAxis
+            min:0,
+            gridLineWidth: 0,
+            title: {
+                text: '',
+                style: {
+                    color: '#AA4643'
+                }
+            },
+            labels: {
+                enabled:false,
+                formatter: function() {
+                    return this.value +' ';
+                },
+                style: {
+                    color: '#AA4643'
+                }
+            },
+            opposite: true
+        }],
+        legend: {
+            layout: 'horizontal',
+            align: 'left',
+            x: 0,
+            verticalAlign: 'top',
+            y: 0,
+            floating: true,
+            backgroundColor: '#FFFFFF'
+        },
+        series: [
+        {
+            name: xAxisData['start'][0]+'-'+xAxisData['start'][1]+'-'+xAxisData['start'][2]+'总展示量',
+            color: '#4572A7',
+            type: 'column',
+            yAxis: 1,
+            pointInterval: xAxisData['interval'],
+            pointStart: Date.UTC(xAxisData['start'][0], xAxisData['start'][1] - 1,xAxisData['start'][2]),
+            data:  pvData ,
+            tooltip: {
+                valueSuffix: ''
+            }
+        },{
+            name: xAxisData1['start'][0]+'-'+xAxisData1['start'][1]+'-'+xAxisData1['start'][2]+'总展示量',
+            color: '#cccccc',
+            type: 'column',
+            yAxis: 1,
+            pointInterval: xAxisData['interval'],
+            pointStart: Date.UTC(xAxisData['start'][0], xAxisData['start'][1] - 1,xAxisData['start'][2]),
+            data:  pvData1 ,
+            tooltip: {
+                valueSuffix: ''
+            }
+    },{
+            name: xAxisData['start'][0]+'-'+xAxisData['start'][1]+'-'+xAxisData['start'][2]+'总点击量',
+            type: 'spline',
+            color: '#AA4643',
+            yAxis: 2,
+            pointInterval: xAxisData['interval'],
+            pointStart: Date.UTC(xAxisData['start'][0], xAxisData['start'][1] - 1,xAxisData['start'][2]),
+            data:  clickData ,
+            marker: {
+                enabled: false
+            },
+            dashStyle: 'shortdot',
+            tooltip: {
+                valueSuffix: ''
+            }
+
+        },{
+            name: xAxisData1['start'][0]+'-'+xAxisData1['start'][1]+'-'+xAxisData1['start'][2]+'总点击量',
+            type: 'spline',
+            color: '#89A54E',
+            yAxis: 2,
+            pointInterval: xAxisData['interval'],
+            pointStart: Date.UTC(xAxisData['start'][0], xAxisData['start'][1] - 1,xAxisData['start'][2]),
+            data:  clickData1 ,
+            marker: {
+                enabled: false
+            },
+            dashStyle: 'shortdot',
+            tooltip: {
+                valueSuffix: ''
+            }
+    }]
+    })
+}
+
+
 function weekCmp() {
     var start = $("#startdate").val();
     var end = $("#enddate").val();
 
-    location.href = "<?php echo base_url();?>index.php/dashboard/weekCmp/"+start+"/"+end;
+    $.ajax({
+        url: "<?php echo base_url();?>index.php/dashboard/weekCmp/"+start+"/"+end, 
+        dataType:"json",
+        success:function(data) {
+            showChart("container",data['title'],data['subtitle'], data['xAxis'], data['xAxis1'],data['yAxis']['pv_arr'], data['yAxis1']['pv_arr'], data['yAxis']['click_arr'], data['yAxis1']['click_arr']);
+        }
+    });
 }
 
 function monthCmp() {
     var start = $("#startMonth").val();
     var end = $("#endMonth").val();
 
-    location.href = "<?php echo base_url();?>index.php/dashboard/monthCmp/"+start+"/"+end;
+//    location.href = "<?php echo base_url();?>index.php/dashboard/monthCmp/"+start+"/"+end;
+    $.ajax({
+        url: "<?php echo base_url();?>index.php/dashboard/monthCmp/"+start+"/"+end, 
+        dataType:"json",
+        success:function(data) {
+            showChart("container2",data['title'],data['subtitle'], data['xAxis'], data['xAxis1'],data['yAxis']['pv_arr'], data['yAxis1']['pv_arr'], data['yAxis']['click_arr'], data['yAxis1']['click_arr']);
+        }
+    });
 }
 
 function download() {

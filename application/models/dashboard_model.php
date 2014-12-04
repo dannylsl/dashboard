@@ -413,8 +413,8 @@ class Dashboard_model extends CI_Model {
         foreach( $arr as $v) {
             $obj_date = date_create($v['date']); 
             $index = $obj_start->diff($obj_date)->days;
-            $pv_arr[$index] = $v['sum_pv'];
-            $click_arr[$index] = $v['sum_click'];
+            $pv_arr[$index] = (int)$v['sum_pv'];
+            $click_arr[$index] = (int)$v['sum_click'];
 
             if($pv_arr[$index] != 0) {
                 $rate_arr[$index] = round($click_arr[$index]/$pv_arr[$index] * 100, 2);   
@@ -422,7 +422,7 @@ class Dashboard_model extends CI_Model {
                 $rate_arr[$index] = 0;   
             } 
         }
-        return array("pv" => implode(',',$pv_arr),"click" => implode(',',$click_arr), "rate"=>implode(',',$rate_arr));
+        return array("pv" => implode(',',$pv_arr),"click" => implode(',',$click_arr), "rate"=>implode(',',$rate_arr),"pv_arr"=>$pv_arr, "click_arr"=>$click_arr, "rate_arr"=>$rate_arr);
     }
 
     public function getPidHourData($start, $end, $pid, $acc_id) {
@@ -475,9 +475,9 @@ class Dashboard_model extends CI_Model {
         foreach($arr as $v) {
 //            $time_arr = explode(':', $v['time']);
 //            $time_arr[0] = intval($time_arr[0]);
-            $time_arr[0] = $v['hour'];
-            $pv_arr[$time_arr[0]] = $v['pv'];
-            $click_arr[$time_arr[0]] = $v['click'];
+            $time_arr[0] = (int)$v['hour'];
+            $pv_arr[$time_arr[0]] = (int)$v['pv'];
+            $click_arr[$time_arr[0]] = (int)$v['click'];
 
             if($pv_arr[$time_arr[0]] != 0)
                 $rate_arr[$time_arr[0]] = round($click_arr[$time_arr[0]]/$pv_arr[$time_arr[0]]*100,2);

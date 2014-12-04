@@ -242,6 +242,8 @@ class DashBoard extends CI_Controller {
         $data['yAxis'] = $this->dashboard_model->getSlotHourData($data['end_date'], 0);
         $data['chartTitle'] = array('title'=>'','subtitle'=>'');
 
+        echo json_encode(array("xAxis"=>$data['xAxis'],"xAxis1"=>$data['xAxis1'],"yAxis" =>$data['yAxis'],"yAxis1"=>$data['yAxis1'],"title"=>$data['chartTitle']['title'], "subtitle"=>$data['chartTitle']['subtitle']));
+/*
         $data['cur_month'] = date("Y-m");
         $data['last_month'] = date("Y-m",strtotime('-1 month'));
         $cur_month_start = date("Y-m")."-01";
@@ -258,6 +260,7 @@ class DashBoard extends CI_Controller {
         $this->load->view('admin/navbar',$data);
         $this->load->view('admin/statitic');
         $this->load->view('admin/footer');
+ */
     }
 
     public function monthCmp($start, $end) {
@@ -267,13 +270,14 @@ class DashBoard extends CI_Controller {
         $data['accemail'] = $this->session->userdata("accemail");
 
         $pid = 0;
+/*
         $data['end_date'] = date("Y-m-d");
         $data['start_date'] = date("Y-m-d", time() - 86400*7);
-
         $data['xAxis1'] = $this->dashboard_model->getStartAndInterval($data['start_date'], 'hour');
         $data['yAxis1'] = $this->dashboard_model->getSlotHourData($data['start_date'], 0);
         $data['xAxis'] = $this->dashboard_model->getStartAndInterval($data['end_date'], 'hour');
         $data['yAxis'] = $this->dashboard_model->getSlotHourData($data['end_date'], 0);
+ */
         $data['chartTitle'] = array('title'=>'','subtitle'=>'');
 
         $data['cur_month'] = $end;
@@ -283,15 +287,19 @@ class DashBoard extends CI_Controller {
         $last_month_start = date("Y-m",strtotime($start))."-01";
         $last_month_end = date("Y-m-t", strtotime($start));
         $data['xAxisMonth'] = $this->dashboard_model->getStartAndInterval($cur_month_start, 'day');
+        $data['xAxisLastMonth'] = $this->dashboard_model->getStartAndInterval($last_month_start, 'day');
         $data['yAxisMonth'] = $this->dashboard_model->getDayData($cur_month_start, $cur_month_end, $pid, $data['acc_id']);
         $data['yAxisLastMonth'] = $this->dashboard_model->getDayData($last_month_start, $last_month_end, $pid, $data['acc_id']);
 
-        $data['statiticData'] = $this->dashboard_model->getStatiticData($data['acc_id'], date("Y-m-d",time() - 86400*14), date("Y-m-d"));
+        echo json_encode(array("xAxis"=>$data['xAxisMonth'],"xAxis1"=>$data['xAxisLastMonth'],"yAxis" =>$data['yAxisMonth'],"yAxis1"=>$data['yAxisLastMonth'],"title"=>$data['chartTitle']['title'], "subtitle"=>$data['chartTitle']['subtitle']));
 
+/*
+        $data['statiticData'] = $this->dashboard_model->getStatiticData($data['acc_id'], date("Y-m-d",time() - 86400*14), date("Y-m-d"));
         $this->load->view('admin/header');
         $this->load->view('admin/navbar',$data);
         $this->load->view('admin/statitic');
         $this->load->view('admin/footer');
+ */
     }
 
 
