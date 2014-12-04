@@ -4,6 +4,7 @@ class DashBoard extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
+        header("content-type:text/html;charset=utf-8");
         $this->load->database();
         $this->load->model("dashboard_model");
         $this->load->model("captcha_model");
@@ -74,7 +75,7 @@ class DashBoard extends CI_Controller {
 
         $accemail = $this->input->post("email");
         $password = $this->input->post("password");
-        $captcha = $this->input->post("captcha");
+        $captcha = strtolower($this->input->post("captcha"));
 
         //header("content-type:text/html;charset=utf-8");
         echo "<meta charset='utf-8'>";
@@ -98,7 +99,7 @@ class DashBoard extends CI_Controller {
         $this->load->helper("url");
         $accemail = $this->input->post('email'); 
         $password = $this->input->post('password'); 
-        $captcha  = $this->input->post('captcha');
+        $captcha = strtolower($this->input->post("captcha"));
 
         if ( $this->captcha_model->checkCaptcha($captcha) == false ) {
             //echo "<script>alert('验证码错误');location.href=\"".base_url()."index.php/dashboard/login\"</script>";

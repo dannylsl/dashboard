@@ -11,14 +11,14 @@ class Captcha_model extends CI_Model {
             'img_url' => base_url('images/captcha').'/',
             'img_width'=> 80,
             'img_height'=> 32,
-            'font_path'=>  dirname(BASEPATH).'/fonts/WishfulWaves.ttf',
+            'font_path'=>  dirname(BASEPATH).'/fonts/9913.ttf',
         );
 
         $cap = create_captcha($vals);
         $data = array(
             'captcha_time' => $cap['time'],
             'ip_address' => $this->input->ip_address(),
-            'word' => $cap['word']
+            'word' => strtolower($cap['word'])
         );
 
         $query = $this->db->insert_string('captcha', $data);
@@ -33,14 +33,14 @@ class Captcha_model extends CI_Model {
             'img_url' => base_url('images/captcha').'/',
             'img_width'=> 80,
             'img_height'=> 32,
-            'font_path'=>  dirname(BASEPATH).'/fonts/WishfulWaves.ttf',
+            'font_path'=>  dirname(BASEPATH).'/fonts/9913.ttf',
         );
 
         $cap = create_captcha($vals);
         $data = array(
             'captcha_time' => $cap['time'],
             'ip_address' => $this->input->ip_address(),
-            'word' => $cap['word']
+            'word' => strtolower($cap['word'])
         );
 
         $query = $this->db->insert_string('captcha', $data);
