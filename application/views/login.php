@@ -95,7 +95,7 @@
                                 <!-- Change this to a button or input when using this as a form -->
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <button type="submit" class="btn btn-lg btn-success btn-block">Login</button>
+                                        <button type="submit" class="btn btn-lg btn-success btn-block">登陆</button>
                                     </div>
                                     <div class="col-md-6">
                                         <a href="<?php echo base_url();?>index.php/dashboard/register" class="btn btn-lg btn-default btn-block">注册</a>

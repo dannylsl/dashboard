@@ -281,7 +281,9 @@ function showChart(title, subtitle, xAxisData, pvData, clickData, rateData) {
             type: 'datetime', 
 //            categories:  xAxisData ,
             dateTimeLabelFormats: { 
-                day: '%m-%d',
+                day: '%Y-%m-%d',
+                month: '%Y-%m-%d',
+                week: '%Y-%m-%d',
             }
         }],
         yAxis: [{ // Primary yAxis
