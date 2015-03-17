@@ -47,16 +47,12 @@
 
 $active_group = 'default';
 $active_record = TRUE;
-/*
+
 $db['default']['hostname'] = 'localhost';
 $db['default']['username'] = 'ads_admin';
 $db['default']['password'] = '123456';
 $db['default']['database'] = 'adsdashboard';
- */
-$db['default']['hostname'] = '182.92.75.163';
-$db['default']['username'] = 'root';
-$db['default']['password'] = 'hongju0908';
-$db['default']['database'] = 'bd_stat';
+
 
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
