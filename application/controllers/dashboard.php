@@ -136,7 +136,6 @@ class DashBoard extends CI_Controller {
         $data['acc_id'] = $this->islogined();
         $data['accemail'] = $this->session->userdata("accemail");
 
- 
         $pid = 0;
         $data['end_date'] = date("Y-m-d");
         $data['start_date'] = date("Y-m-d", time() - 86400*14);

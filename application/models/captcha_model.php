@@ -13,7 +13,6 @@ class Captcha_model extends CI_Model {
             'img_height'=> 32,
             'font_path'=>  dirname(BASEPATH).'/fonts/9913.ttf',
         );
-
         $cap = create_captcha($vals);
         $data = array(
             'captcha_time' => $cap['time'],
